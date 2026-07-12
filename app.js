@@ -5,7 +5,7 @@ Page = function (opts) {
   if (!opts.onShareAppMessage) {
     opts.onShareAppMessage = function () {
       return {
-        title: '冒险背包',
+        title: '桌面冒险工具集',
         path: '/' + (this.route || 'pages/index/index'),
       };
     };
