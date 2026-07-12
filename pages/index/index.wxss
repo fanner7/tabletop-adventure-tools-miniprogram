@@ -18,13 +18,13 @@ page {
 /* 顶部标题区 */
 .header {
   text-align: center;
-  padding: 80rpx 20px 40px;
+  padding: 40rpx 20px 20px;
   max-width: 800px;
   width: 100%;
 }
 
 .header-title {
-  font-size: 48rpx;
+  font-size: 40rpx;
   color: #fff;
   letter-spacing: 2px;
   display: block;
@@ -32,7 +32,7 @@ page {
 }
 
 .header-subtitle {
-  font-size: 28rpx;
+  font-size: 24rpx;
   opacity: 0.8;
   display: block;
 }
@@ -42,19 +42,19 @@ page {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
-  padding: 20px;
-  max-width: 1200px;
+  gap: 14px;
+  padding: 10px;
+  max-width: 700px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .card {
   background-color: #24283b;
-  border-radius: 12px;
-  padding: 25px;
-  width: 560rpx;
-  max-width: 280px;
+  border-radius: 10px;
+  padding: 16px 10px;
+  width: calc(50% - 10px);
+  max-width: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,21 +70,21 @@ page {
 }
 
 .card-icon {
-  font-size: 64rpx;
-  margin-bottom: 15px;
+  font-size: 48rpx;
+  margin-bottom: 8px;
 }
 
 .card-title {
-  font-size: 32rpx;
+  font-size: 26rpx;
   font-weight: bold;
   color: #fff;
-  margin: 10px 0;
+  margin: 6px 0;
   display: block;
 }
 
 .card-desc {
-  font-size: 26rpx;
-  line-height: 1.5;
+  font-size: 22rpx;
+  line-height: 1.4;
   opacity: 0.7;
   display: block;
 }
