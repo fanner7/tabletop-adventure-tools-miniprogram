@@ -1,8 +1,8 @@
-/** pages/index/index.wxss — 工具箱主页样式 **/
+/** pages/index/index.wxss — 工具箱主页样式（白天模式） **/
 
 page {
-  background-color: #1a1b26;
-  color: #c0caf5;
+  background-color: #f5f0e8;
+  color: #3b2e1e;
   min-height: 100vh;
 }
 
@@ -25,7 +25,7 @@ page {
 
 .header-title {
   font-size: 40rpx;
-  color: #fff;
+  color: #3b2e1e;
   letter-spacing: 2px;
   display: block;
   margin-bottom: 10px;
@@ -33,7 +33,7 @@ page {
 
 .header-subtitle {
   font-size: 24rpx;
-  opacity: 0.8;
+  color: #8b7355;
   display: block;
 }
 
@@ -49,7 +49,7 @@ page {
 }
 
 .card {
-  background-color: #24283b;
+  background-color: #ffffff;
   border-radius: 10px;
   padding: 16px 10px;
   width: 48%;
@@ -59,14 +59,15 @@ page {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  border: 1px solid transparent;
+  border: 1px solid #e0d6c8;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
 .card:active {
-  transform: translateY(-10rpx);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  border-color: #7aa2f7;
+  transform: translateY(-6rpx);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  border-color: #8b4513;
 }
 
 .card-icon {
@@ -77,7 +78,7 @@ page {
 .card-title {
   font-size: 26rpx;
   font-weight: bold;
-  color: #fff;
+  color: #3b2e1e;
   margin: 6px 0;
   display: block;
 }
@@ -85,7 +86,7 @@ page {
 .card-desc {
   font-size: 22rpx;
   line-height: 1.4;
-  opacity: 0.7;
+  color: #8b7355;
   display: block;
 }
 
