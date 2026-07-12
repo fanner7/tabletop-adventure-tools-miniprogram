@@ -43,6 +43,9 @@
         </view>
       </view>
     </view>
+    <view class="attr-desc-box" wx:if="{{attrDesc}}">
+      <text class="attr-desc-text">{{attrDesc}}</text>
+    </view>
     <button class="btn btn-primary" bindtap="rollAllAttrs" wx:if="{{!allRolled}}">🎲 全部掷骰</button>
     <button class="btn btn-secondary btn-small" bindtap="rollAllAttrs" wx:if="{{allRolled}}">🔄 全部重掷</button>
   </block>

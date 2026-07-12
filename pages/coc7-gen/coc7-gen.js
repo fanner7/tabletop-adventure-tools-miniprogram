@@ -349,6 +349,88 @@ function makeAttrDisplay(values) {
   return Object.keys(labels).map(k => ({ label: labels[k], value: values[k] || 0 }));
 }
 
+// 属性描述文案字典
+const traits_dictionary = {
+  SIZ: [
+    '身材极其矮小瘦弱，如同未发育的孩童',   // 1-19
+    '身形相对娇小单薄',                      // 20-39
+    '有着一副并不惹眼的普通中等身材',        // 40-59
+    '体格高大魁梧',                          // 60-79
+    '宛如一尊极具压迫感的铁塔，体型庞大'     // 80+
+  ],
+  APP: [
+    '，容貌令人不敢直视，甚至带有某种可憎的缺陷。', // 1-19
+    '，样貌平庸且不修边幅。',                       // 20-39
+    '，长相大众化，很容易隐入人群中。',             // 40-59
+    '，容貌出众，举手投足间散发着迷人的魅力。',     // 60-79
+    '，拥有着惊为天人的完美容颜，让人无法移开视线。' // 80+
+  ],
+  CON: [
+    '你的身体羸弱不堪，常年被病痛折磨，',     // 1-19
+    '你的健康状况欠佳，很容易感到疲惫，',     // 20-39
+    '你有着普通人的健康体魄，',               // 40-59
+    '你的精力十分充沛，身体结实耐造，',       // 60-79
+    '你简直拥有钢铁般的强韧之躯，几乎百病不侵，' // 80+
+  ],
+  STR: [
+    '连提起稍微重一点的物品都显得极其吃力。', // 1-19
+    '力气略逊于常人，无法胜任重体力活。',     // 20-39
+    '力量表现中规中矩，和常人无异。',         // 40-59
+    '肌肉线条分明，蕴含着远超常人的爆发力。', // 60-79
+    '天生神力，举手投足间具备着可怕的破坏力。' // 80+
+  ],
+  DEX: [
+    '平时行动时，你极其笨拙，步履蹒跚，甚至容易平地摔跤。',   // 1-19
+    '你的肢体显得有些僵硬，反应总是慢人半拍。',              // 20-39
+    '你的灵活性普通，能够应付大多数日常的行动需求。',         // 40-59
+    '你身手敏捷，反应迅速，动作如行云流水般利落。',          // 60-79
+    '你的身体柔韧如猫，具备着几乎能够媲美杂技演员的惊人协调性。' // 80+
+  ],
+  INT: [
+    '在心智方面，你对复杂事物的理解极其迟缓',           // 1-19
+    '虽然你的反应不够灵敏，学习新事物颇为吃力',         // 20-39
+    '你拥有着正常水平的逻辑能力',                      // 40-59
+    '你极其聪明机警，思维敏捷得像一台精密的仪器',       // 60-79
+    '你无疑是个绝顶天才，能够轻易洞察隐秘事物的本质'    // 80+
+  ],
+  EDU: [
+    '，并且几乎毫无常识，宛如一张未受过教育的白纸。',           // 1-19
+    '，脑海中仅有最基础的生活常识，早早就告别了校园。',         // 20-39
+    '，接受过标准的教育，具备成年人应有的常识体系。',           // 40-59
+    '，而且受过良好的高等教育，学识渊博，谈吐不凡。',           // 60-79
+    '，庞大的知识储备让你如同行走的百科全书，在学术界也堪称泰斗。' // 80+
+  ],
+  POW: [
+    '然而，你的内心极其脆弱，面对未知极易陷入恐慌或被他人暗示操控。',       // 1-19
+    '在遭遇变故时，你时常优柔寡断，意志力略显薄弱。',                      // 20-39
+    '你的精神状态相对稳定，能够在大多数危机中保持理智。',                  // 40-59
+    '你意志坚定，即使面对不可名状的恐惧，也不易被动摇本心。',              // 60-79
+    '更可怕的是你那钢铁般的意志，或者说近乎狂热的信仰，足以让你直面深渊而不退缩。' // 80+
+  ]
+};
+
+function getTraitIndex(value) {
+  if (value < 20) return 0;
+  if (value < 40) return 1;
+  if (value < 60) return 2;
+  if (value < 80) return 3;
+  return 4;
+}
+
+function generateAttrDesc(values) {
+  const v = (k) => values[k] || 0;
+  const idx = (k) => getTraitIndex(v(k));
+  const siz = traits_dictionary.SIZ[idx('siz')];
+  const app = traits_dictionary.APP[idx('app')];
+  const con = traits_dictionary.CON[idx('con')];
+  const str = traits_dictionary.STR[idx('str')];
+  const dex = traits_dictionary.DEX[idx('dex')];
+  const int = traits_dictionary.INT[idx('int')];
+  const edu = traits_dictionary.EDU[idx('edu')];
+  const pow = traits_dictionary.POW[idx('pow')];
+  return `一眼望去，你${siz}${app} ${con}${str} ${dex} ${int}${edu} ${pow}`;
+}
+
 function calcDB(strSiz) {
   // COC7 规则：STR + SIZ 总和查表
   if (strSiz <= 64)  return { db: '-2', build: -2 };
@@ -506,6 +588,7 @@ Page({
     attrDiceRolling: '',
     rolled: { str: false, con: false, dex: false, app: false, pow: false, siz: false, int: false, edu: false, luck: false },
     allRolled: false,
+    attrDesc: '',
     // 基础信息
     charInfo: { name: '', player: '', age: '25', gender: '男', era: '1920s' },
     ageModSummary: '',
@@ -635,6 +718,7 @@ Page({
         step: 5,
         attrValues: attrVals,
         attrDisplay: makeAttrDisplay(attrVals),
+        attrDesc: char.attrDesc || generateAttrDesc(attrVals),
         attrRolls: char.attrRolls || {},
         rolled: { str: true, con: true, dex: true, app: true, pow: true, siz: true, int: true, edu: true },
         allRolled: true,
@@ -685,7 +769,7 @@ Page({
           rolled: { ...this.data.rolled, [a]: true },
           attrDiceRolling: (i < attrs.length - 1) ? '' : '',
         });
-        if (i === attrs.length - 1) this.setData({ allRolled: true, attrDiceRolling: '', canNext: true, attrDisplay: makeAttrDisplay(this.data.attrValues) });
+        if (i === attrs.length - 1) this.setData({ allRolled: true, attrDiceRolling: '', canNext: true, attrDisplay: makeAttrDisplay(this.data.attrValues), attrDesc: generateAttrDesc(this.data.attrValues) });
       }, i * 300);
     });
   },
@@ -695,7 +779,7 @@ Page({
     this.setData({ attrDiceRolling: attr });
     setTimeout(() => {
       const newVal = { ...this.data.attrValues, [attr]: result.value };
-      this.setData({ attrValues: newVal, attrRolls: { ...this.data.attrRolls, [attr]: result.rolls.join(',') }, attrDiceRolling: '', attrDisplay: makeAttrDisplay(newVal) });
+      this.setData({ attrValues: newVal, attrRolls: { ...this.data.attrRolls, [attr]: result.rolls.join(',') }, attrDiceRolling: '', attrDisplay: makeAttrDisplay(newVal), attrDesc: generateAttrDesc(newVal) });
     }, 200);
   },
 
