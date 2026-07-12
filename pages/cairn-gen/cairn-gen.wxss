@@ -1,6 +1,8 @@
 /* pages/cairn-gen/cairn-gen.wxss — 石冢角色生成器 */
 
 page {
+  padding-top: 90rpx;
+  box-sizing: border-box;
   background-color: #f4f5f7;
   color: #212529;
   line-height: 1.6;

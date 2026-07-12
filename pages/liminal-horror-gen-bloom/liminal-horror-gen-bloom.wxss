@@ -1,6 +1,8 @@
 /* pages/liminal-horror-gen-bloom/liminal-horror-gen-bloom.wxss */
 
 page {
+  padding-top: 90rpx;
+  box-sizing: border-box;
   background-color: #f4f5f7;
   color: #212529;
   line-height: 1.6;

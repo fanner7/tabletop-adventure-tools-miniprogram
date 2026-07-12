@@ -9,6 +9,7 @@
     "pages/coc7-gen/coc7-gen"
   ],
   "window": {
+    "navigationStyle": "custom",
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "桌面冒险工具集",
     "navigationBarBackgroundColor": "#ffffff"

@@ -1,6 +1,8 @@
 /* pages/coc7-gen/coc7-gen.wxss — COC7 调查员创建工具 */
 
 page {
+  padding-top: 90rpx;
+  box-sizing: border-box;
   background-color: #f5f0e8;
   color: #2c2c2c;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;

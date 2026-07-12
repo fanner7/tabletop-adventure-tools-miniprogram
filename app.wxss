@@ -1,4 +1,9 @@
 /**app.wxss**/
+/* 全局隐藏导航栏后，为状态栏留出空间 */
+page {
+  padding-top: 90rpx;
+  box-sizing: border-box;
+}
 .container {
   height: 100%;
   display: flex;

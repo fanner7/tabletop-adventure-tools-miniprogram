@@ -1,4 +1,6 @@
 page {
+  padding-top: 90rpx;
+  box-sizing: border-box;
   height: 100vh;
   display: flex;
   flex-direction: column;

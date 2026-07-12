@@ -1,6 +1,8 @@
 /* pages/liminal-horror-gen/liminal-horror-gen.wxss */
 
 page {
+  padding-top: 90rpx;
+  box-sizing: border-box;
   background-color: #f8f9fa;
   color: #212529;
   line-height: 1.6;
