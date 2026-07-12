@@ -18,7 +18,7 @@ Page({
       },
       {
         id: 'liminal-horror-gen-bloom',
-        icon: '🧪',
+        icon: '🫐',
         title: '阈限恐怖 调查员生成器 (繁孽版)',
         desc: '基于模组的版本。',
         url: '/pages/liminal-horror-gen-bloom/liminal-horror-gen-bloom'
