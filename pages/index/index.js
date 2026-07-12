@@ -32,7 +32,7 @@ Page({
       },
       {
         id: 'coc7-gen',
-        icon: '🎲',
+        icon: '🐙',
         title: 'COC7 调查员创建',
         desc: '克苏鲁的呼唤 7版 调查员角色创建工具。',
         url: '/pages/coc7-gen/coc7-gen'
