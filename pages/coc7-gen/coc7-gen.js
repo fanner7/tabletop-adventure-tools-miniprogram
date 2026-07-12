@@ -1202,6 +1202,11 @@ Page({
       usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
       derived: this.data.derived, timestamp: Date.now(),
       tickedSkills: this.data.tickedSkills,
+      playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
+      majorWound: this.data.majorWound,
+      charWeapons: this.data.charWeapons,
+      charBackstory: this.data.charBackstory, charGear: this.data.charGear,
+      charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
       completed: true,
     };
     try {
