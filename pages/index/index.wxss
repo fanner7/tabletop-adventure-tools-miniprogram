@@ -54,6 +54,7 @@ page {
   padding: 16px 10px;
   width: 48%;
   margin-bottom: 14px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
