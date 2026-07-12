@@ -1,0 +1,95 @@
+/** pages/index/index.wxss — 工具箱主页样式 **/
+
+page {
+  background-color: #1a1b26;
+  color: #c0caf5;
+  min-height: 100vh;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* 顶部标题区 */
+.header {
+  text-align: center;
+  padding: 80rpx 20px 40px;
+  max-width: 800px;
+  width: 100%;
+}
+
+.header-title {
+  font-size: 48rpx;
+  color: #fff;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.header-subtitle {
+  font-size: 28rpx;
+  opacity: 0.8;
+  display: block;
+}
+
+/* 导航卡片网格 */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: #24283b;
+  border-radius: 12px;
+  padding: 25px;
+  width: 560rpx;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid transparent;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+
+.card:active {
+  transform: translateY(-10rpx);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  border-color: #7aa2f7;
+}
+
+.card-icon {
+  font-size: 64rpx;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #fff;
+  margin: 10px 0;
+  display: block;
+}
+
+.card-desc {
+  font-size: 26rpx;
+  line-height: 1.5;
+  opacity: 0.7;
+  display: block;
+}
+
+/* 底部安全区 */
+.footer-safe {
+  height: 40px;
+}

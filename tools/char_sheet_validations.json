@@ -1,0 +1,544 @@
+{
+  "data_validations": [
+    {
+      "sqref": "E8",
+      "formula1": "\"公元,公元前\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "F33:H33",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "B26:B27 B90:B93 D90:D93 H37 H41 J8 L8 N8 Q8 Q140 T140:U140 Z48:Z49 AD33 AD37 AD47 AG12 AU25 AU27 AU29 AU31 AU33 AU122:AW122 BC25 BC27 BK25 BQ117:BR117",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "B16:B25 B28:B49 X16:X49",
+      "formula1": "\"☐,☑\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "E6:I7",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "G8",
+      "formula1": "32767",
+      "type": "whole",
+      "allow_blank": true
+    },
+    {
+      "sqref": "B68:K68 H49 L61 N61:O61 R61:S61 AI10",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F18:H18",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "CH8",
+      "formula1": "\"未启用,启用\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AA10",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB42:AC42",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB30:AC30",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AD27:AE27",
+      "formula1": "\"飞行器,船,\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "R11:S11",
+      "formula1": "\"清醒,临时性疯狂,不定性疯狂,永久疯狂\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "U12 X12 AB12",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AE12",
+      "formula1": "\"步式,轮式,履带,滑行,飞行,游泳,潜水,其他\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB37",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F20:G20",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB20:AC20",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB16:AC16",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F17:H17",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AI12",
+      "formula1": "\"开,关\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB27",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F16:H16",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB17:AC17",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB19:AC19",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB18:AC18",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F19:H19",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "H20:I20",
+      "formula1": "\"表演,美术,摄影,伪造,写作,书法,乐理,厨艺,裁缝,理发,建筑,舞蹈,酿酒,捕鱼,歌唱,制陶,雕塑,杂技,风水,技术制图,耕作,打字,速记,木匠,莫里斯舞蹈,歌剧歌唱,粉刷匠与油漆工,吹真空管\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "F30:H30",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F21",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AD31:AE32",
+      "formula1": "\"地质学,化学,生物学,数学,天文学,物理学,药学,植物学,动物学,密码学,工程学,气象学,司法科学,\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "F27",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "H21:I21",
+      "formula1": "\"表演,美术,摄影,伪造,写作,书法,乐理,厨艺,裁缝,理发,建筑,舞蹈,酿酒,捕鱼,歌唱,制陶,雕塑,杂技,风水,技术制图,耕作,打字,速记,木匠,莫里斯舞蹈,歌剧歌唱,粉刷匠与油漆工,吹真空管,\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB21:AC21",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB22:AC22",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F23:I23",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB38:AC38",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB23:AE23",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F24:H24",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB24:AC24",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F25:H25",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB25:AC25",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F26:H26",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F28:H28",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "P26",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB26:AC26",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB28",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB35:AC35",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F29:H29",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB29:AC29",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB36:AC36",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F31:H31",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F32:H32",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F42:H42",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "H35:I36",
+      "formula1": "\"鞭子,电锯,链枷,绞具,斧,剑,矛,\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "H39:I40",
+      "formula1": "\"步枪/霰弹枪,冲锋枪,弓术,喷射器,机枪,重武器,\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB39:AC39",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "W113",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB40:AC40",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB41:AC41",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F43:H43",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB43:AC43",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F44:H44",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB44:AC44",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F45:H45",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB45:AC45",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB46:AC46",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB47",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F49",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AR61 AR63 AR65:AR67 AR69:AR71 AR73:AR76",
+      "formula1": "\"☐,☑\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "F38:F41",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "H46:H48",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "B78",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "S139 U139",
+      "formula1": "\"1,2,3,4,5,6,7,8,9,10\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "BL129:BR129",
+      "formula1": "1890",
+      "type": "whole",
+      "allow_blank": true
+    },
+    {
+      "sqref": "F34:F37",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "F46:F48",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AA3:AA8",
+      "formula1": "0",
+      "type": "whole",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB31:AB33",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AG3:AG4",
+      "formula1": "0",
+      "type": "whole",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AU22",
+      "formula1": "\"提示当前职业,停用提示(用于更改职业的角色)\"",
+      "type": "list",
+      "allow_blank": true
+    },
+    {
+      "sqref": "AR60:AS60",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "U7:V8",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    },
+    {
+      "sqref": "AB34:AE34",
+      "formula1": "",
+      "type": null,
+      "allow_blank": true
+    }
+  ],
+  "comments": [
+    {
+      "cell": "F23",
+      "text": "在规则书Version1907版本中\n译名“魅惑”→“取悦”"
+    },
+    {
+      "cell": "AB23",
+      "text": "在规则书Version1907版本中\n译名“领航”→“导航”"
+    },
+    {
+      "cell": "AU24",
+      "text": "输入名称和基础值，再在相关技能后填写此名称，人物卡就可以显示基础值"
+    },
+    {
+      "cell": "BC26",
+      "text": "如果你选经历包，一定把这里补充完整"
+    },
+    {
+      "cell": "AB47",
+      "text": "在规则书Version2002版本中（最新版本）\n译名“学问”→“学识”"
+    },
+    {
+      "cell": "H49",
+      "text": "填写说明:\n此处填写人物的母语。例，母语为英语，则在此处填写英语"
+    },
+    {
+      "cell": "B54",
+      "text": "请不要忘记填写名称"
+    }
+  ]
+}

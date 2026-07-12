@@ -1,0 +1,186 @@
+/* pages/cairn-gen/cairn-gen.wxss — 石冢角色生成器 */
+
+page {
+  background-color: #f4f5f7;
+  color: #212529;
+  line-height: 1.6;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #dee2e6;
+  padding: 40rpx 0 20rpx;
+}
+
+.h1 {
+  font-size: 42rpx;
+  font-weight: bold;
+  display: block;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: #6c757d;
+  margin-top: 10rpx;
+  display: block;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #087f5b;
+  border-bottom: 2px solid #087f5b;
+  padding-bottom: 10rpx;
+  margin-top: 50rpx;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.generator-button {
+  width: 100%;
+  padding: 30rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #fff;
+  background-color: #087f5b;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 50rpx;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.generator-button:active {
+  background-color: #076c4e;
+}
+
+.character-sheet {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 60rpx;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.description-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #212529;
+  display: block;
+}
+
+.section-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.stat-block {
+  background-color: #f4f5f7;
+  padding: 20rpx;
+  border-radius: 6px;
+  text-align: center;
+  flex: 1;
+  min-width: 100rpx;
+}
+
+.stat-label {
+  display: block;
+  font-size: 24rpx;
+  color: #6c757d;
+}
+
+.stat-value {
+  font-size: 52rpx;
+  font-weight: bold;
+  display: block;
+}
+
+.info-row {
+  padding: 12rpx 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #495057;
+  font-weight: bold;
+  flex-shrink: 0;
+  margin-right: 10rpx;
+}
+
+.info-value {
+  color: #212529;
+  flex: 1;
+}
+
+.note-text {
+  display: block;
+  font-size: 26rpx;
+  color: #868e96;
+  margin-bottom: 10rpx;
+}
+
+/* JSON 数据导出区域 */
+.json-export-area {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 60rpx;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.json-textarea {
+  width: 100%;
+  min-height: 400rpx;
+  box-sizing: border-box;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 20rpx;
+  font-family: monospace;
+  font-size: 24rpx;
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.copy-button {
+  width: 100%;
+  margin-top: 30rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #fff;
+  background-color: #6c757d;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.copy-button:active {
+  background-color: #5a6268;
+}

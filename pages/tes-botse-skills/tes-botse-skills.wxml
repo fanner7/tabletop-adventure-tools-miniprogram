@@ -1,0 +1,35 @@
+<view class="page-wrapper">
+  <!-- 固定顶部搜索栏 -->
+  <view class="header">
+    <view class="search-box">
+      <input type="text" class="search-input" placeholder="输入拼音首字母 (如 as, tsp)..." value="{{searchValue}}" bindinput="onSearchInput" bindfocus="onSearchFocus" bindblur="onSearchBlur" />
+      <view class="search-results {{searchResultsActive ? 'active' : ''}}">
+        <view class="result-item" wx:for="{{searchResults}}" wx:key="index" data-index="{{item.originalIndex}}" bindtap="addSkill">
+          <text>{{item.n}}</text>
+          <text class="tag type-{{item.t}}">
+            <text wx:if="{{item.t === 'enemy'}}">敌人</text>
+            <text wx:elif="{{item.t === 'region'}}">地域</text>
+            <text wx:elif="{{item.t === 'status'}}">状态</text>
+          </text>
+        </view>
+      </view>
+    </view>
+    <button class="clear-btn" bindtap="clearAll">清空</button>
+  </view>
+
+  <!-- 技能面板 -->
+  <view class="dashboard">
+    <view class="skill-card type-{{skill.t}}" wx:for="{{activeSkills}}" wx:for-item="skill" wx:key="index" wx:for-index="idx">
+      <view class="card-header">
+        <text class="skill-name">{{skill.n}}</text>
+        <text class="close-btn" data-index="{{idx}}" bindtap="removeSkill">✕</text>
+      </view>
+      <text class="skill-desc">{{skill.d}}</text>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state {{activeSkills.length > 0 ? 'hidden' : ''}}">
+    <text>暂无常驻技能，请在上方搜索添加</text>
+  </view>
+</view>

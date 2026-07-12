@@ -1,0 +1,44 @@
+<!--
+=================================================================
+  pages/index/index.wxml — 工具箱主页（导航入口）
+  核心定位：桌游 & 跑团工具箱导航页
+  布局方式：Flexbox 卡片网格，完美适配移动端
+  扩展方式：在 JS 的 tools 数组中追加新工具即可
+=================================================================
+-->
+
+<!-- 页面根容器 -->
+<view class="page-wrapper">
+
+  <!-- ========== 顶部标题区 ========== -->
+  <view class="header">
+    <text class="header-title">🎒 冒险背包</text>
+    <text class="header-subtitle">Board Game & TTRPG Toolkit</text>
+  </view>
+
+  <!-- ========== 导航卡片网格 ========== -->
+  <!--
+    提示：如需增减工具，请编辑 index.js 中的 tools 数组，
+    无需修改此模板。
+  -->
+  <view class="grid">
+    <view
+      class="card"
+      wx:for="{{tools}}"
+      wx:key="id"
+      data-url="{{item.url}}"
+      bindtap="onTapCard"
+    >
+      <!-- 图标 -->
+      <view class="card-icon">{{item.icon}}</view>
+      <!-- 标题 -->
+      <text class="card-title">{{item.title}}</text>
+      <!-- 描述 -->
+      <text class="card-desc">{{item.desc}}</text>
+    </view>
+  </view>
+
+  <!-- ========== 底部占位（安全区适配） ========== -->
+  <view class="footer-safe"></view>
+
+</view>

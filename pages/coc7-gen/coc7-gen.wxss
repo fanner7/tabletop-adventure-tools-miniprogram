@@ -1,0 +1,315 @@
+/* pages/coc7-gen/coc7-gen.wxss — COC7 调查员创建工具 */
+
+page {
+  background-color: #f5f0e8;
+  color: #2c2c2c;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+}
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 16px 120px;
+  box-sizing: border-box;
+}
+
+/* ===== 顶部标题 ===== */
+.header { text-align: center; padding: 40rpx 0 20rpx; border-bottom: 2px solid #d4c5a9; margin-bottom: 20rpx; }
+.header-title { font-size: 40rpx; font-weight: bold; color: #3b2e1e; display: block; }
+.header-subtitle { font-size: 24rpx; color: #7a6b58; display: block; margin-top: 8rpx; }
+
+/* ===== 步骤进度条 ===== */
+.step-indicator { display: flex; justify-content: center; align-items: center; gap: 8rpx; padding: 20rpx 0; margin-bottom: 16rpx; }
+.step-dot { width: 20rpx; height: 20rpx; border-radius: 50%; background-color: #d4c5a9; transition: background-color 0.3s; flex-shrink: 0; }
+.step-dot.active { background-color: #6b4c2a; width: 28rpx; height: 28rpx; }
+.step-dot.done { background-color: #8b7355; }
+.step-label { font-size: 22rpx; color: #8b7355; margin: 0 4rpx; }
+.step-label.active { color: #3b2e1e; font-weight: bold; }
+.step-connector { width: 30rpx; height: 2px; background-color: #d4c5a9; }
+.step-connector.done { background-color: #8b7355; }
+
+/* ===== 步骤标题 ===== */
+.step-title { font-size: 34rpx; font-weight: bold; color: #3b2e1e; text-align: center; margin-bottom: 24rpx; display: block; }
+.step-desc { font-size: 26rpx; color: #7a6b58; text-align: center; margin-bottom: 30rpx; display: block; line-height: 1.6; }
+
+/* ===== 通用卡片 ===== */
+.card { background: #ffffff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 16rpx; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.card-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; margin-bottom: 16rpx; display: block; }
+
+/* ===== 属性掷骰 ===== */
+.attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; }
+.attr-block { background: #faf8f4; border-radius: 12rpx; padding: 16rpx; text-align: center; border: 2px solid transparent; transition: all 0.3s; }
+.attr-block.rolling { border-color: #8b4513; background: #fdf5e6; }
+.attr-block.done { border-color: #6b8e23; }
+.attr-label { font-size: 26rpx; color: #7a6b58; display: block; margin-bottom: 8rpx; }
+.attr-value { font-size: 44rpx; font-weight: bold; color: #3b2e1e; display: block; min-height: 52rpx; }
+.attr-roll-result { font-size: 22rpx; color: #8b7355; display: block; margin-top: 4rpx; }
+.attr-reroll-btn { font-size: 22rpx; color: #8b4513; margin-top: 8rpx; padding: 4rpx 16rpx; border: 1px solid #d4c5a9; border-radius: 8rpx; background: transparent; }
+.attr-reroll-btn:active { background: #fdf5e6; }
+
+/* ===== 按钮 ===== */
+.btn { width: 100%; padding: 28rpx 0; border-radius: 12rpx; font-size: 32rpx; font-weight: bold; text-align: center; border: none; margin-bottom: 16rpx; }
+.btn-primary { background: #6b4c2a; color: #fff; }
+.btn-primary:active { background: #5a3e22; }
+.btn-primary:disabled { background: #c4b8a8; color: #e8e0d6; }
+.btn-secondary { background: transparent; color: #6b4c2a; border: 2px solid #6b4c2a; }
+.btn-secondary:active { background: #f5f0e8; }
+.btn-small { padding: 16rpx 24rpx; font-size: 26rpx; width: auto; display: inline-block; }
+
+/* ===== 底部导航 ===== */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 16rpx 32rpx calc(16rpx + env(safe-area-inset-bottom, 20rpx)); display: flex; gap: 20rpx; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 100; }
+.bottom-nav .btn { margin-bottom: 0; flex: 1; }
+
+/* ===== 表单输入 ===== */
+.form-group { margin-bottom: 24rpx; }
+.form-label { font-size: 28rpx; color: #3b2e1e; display: block; margin-bottom: 8rpx; font-weight: bold; }
+.form-input { width: 100%; height: 88rpx; background: #faf8f4; border: 2px solid #d4c5a9; border-radius: 12rpx; padding: 0 24rpx; font-size: 28rpx; color: #3b2e1e; box-sizing: border-box; }
+.form-input:focus { border-color: #8b7355; }
+.form-picker { width: 100%; height: 88rpx; line-height: 88rpx; background: #faf8f4; border: 2px solid #d4c5a9; border-radius: 12rpx; padding: 0 24rpx; font-size: 28rpx; color: #3b2e1e; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; }
+.form-picker:active { border-color: #8b7355; }
+.form-picker-arrow { color: #8b7355; font-size: 24rpx; }
+
+/* ===== STEP 3: 职业选择 ===== */
+.occ-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f5f0e8;
+  padding-bottom: 12rpx;
+  margin-bottom: 8rpx;
+  border-bottom: 1px solid #e8e0d6;
+}
+.occupation-search { width: 100%; height: 80rpx; background: #faf8f4; border: 2px solid #d4c5a9; border-radius: 12rpx; padding: 0 24rpx; font-size: 28rpx; color: #3b2e1e; box-sizing: border-box; margin-bottom: 12rpx; flex-shrink: 0; }
+.occupation-list { background: #fff; border-radius: 12rpx; border: 1px solid #eee8dd; }
+.occ-item { padding: 20rpx 24rpx; border-bottom: 1px solid #f0ebe0; display: flex; justify-content: space-between; align-items: center; }
+.occ-item:active { background: #faf8f4; }
+.occ-item.selected { background: #fdf5e6; border-left: 6rpx solid #6b4c2a; padding-left: 18rpx; }
+.occ-item:last-child { border-bottom: none; }
+.occ-name { font-size: 28rpx; color: #3b2e1e; font-weight: bold; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.occ-points { font-size: 22rpx; color: #6b8e23; white-space: nowrap; margin-left: 12rpx; }
+
+/* 已选职业摘要卡片（紧凑） */
+.occ-selected-card { background: #fdf5e6; border-radius: 12rpx; padding: 16rpx 20rpx; border-left: 6rpx solid #6b4c2a; box-sizing: border-box; }
+.occ-selected-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
+.occ-selected-name { font-size: 30rpx; font-weight: bold; color: #3b2e1e; }
+.occ-selected-cr { font-size: 24rpx; color: #8b7355; background: #fff; padding: 4rpx 14rpx; border-radius: 8rpx; flex-shrink: 0; }
+.occ-selected-skills { background: #fff; border-radius: 8rpx; padding: 10rpx 14rpx; margin-bottom: 8rpx; }
+.occ-selected-skill-list { font-size: 24rpx; color: #555; line-height: 1.6; word-break: break-all; }
+
+/* 专攻必填提示 */
+.occ-spec-warning { background: #fff3e0; border-radius: 8rpx; padding: 10rpx 14rpx; margin-bottom: 8rpx; border-left: 4rpx solid #e67e22; }
+.occ-spec-warning-text { font-size: 22rpx; color: #c0392b; line-height: 1.5; }
+
+/* 可选技能 */
+.occ-opt-group { margin-bottom: 6rpx; display: flex; align-items: center; flex-wrap: wrap; gap: 8rpx; }
+.occ-opt-group-label { font-size: 22rpx; color: #a09080; flex-shrink: 0; }
+.occ-opt-skill { 
+  display: inline-block; padding: 4rpx 14rpx; border-radius: 16rpx; 
+  background: #f0ebe0; color: #6b5a4a; font-size: 22rpx; 
+  border: 1rpx solid #d4c5a9;
+}
+.occ-opt-skill.selected { background: #6b4c2a; color: #fff; border-color: #6b4c2a; }
+
+/* ===== STEP 4: 技能分类 + 网格 ===== */
+/* STEP 4 职业信息卡片（名称 + 数据 + 职业技能标签） */
+.occ-info-card { background: #fdf5e6; border-radius: 10rpx; padding: 12rpx 16rpx; margin-bottom: 14rpx; border-left: 4rpx solid #6b4c2a; }
+.occ-info-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
+.occ-info-card-skills { display: flex; flex-wrap: wrap; gap: 6rpx; }
+.occ-info-name { font-size: 26rpx; font-weight: bold; color: #3b2e1e; flex-shrink: 0; }
+.occ-info-stats { display: flex; gap: 16rpx; }
+.occ-info-stat { font-size: 22rpx; color: #6b4c2a; white-space: nowrap; }
+.occ-skills-tag { display: inline-block; padding: 2rpx 10rpx; border-radius: 10rpx; background: #6b4c2a; color: #fff; font-size: 20rpx; }
+
+/* 进度条全宽 */
+.skill-points-bar-full { background: #faf8f4; border-radius: 12rpx; padding: 14rpx 16rpx; margin-bottom: 20rpx; }
+.skill-points-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6rpx; }
+.skill-points-label { font-size: 24rpx; color: #3b2e1e; }
+.skill-points-value { font-size: 26rpx; font-weight: bold; color: #6b4c2a; }
+.skill-points-bar-bg { height: 10rpx; background: #eee8dd; border-radius: 5rpx; overflow: hidden; margin-bottom: 8rpx; }
+.skill-points-bar-bg:last-child { margin-bottom: 0; }
+.skill-points-bar-fill { height: 100%; background: #6b8e23; border-radius: 5rpx; transition: width 0.3s; }
+.skill-points-bar-fill.over { background: #cd5c5c; }
+
+/* 分类标题 */
+.skill-cat-title { font-size: 26rpx; font-weight: bold; color: #6b4c2a; display: block; padding: 14rpx 0 8rpx 8rpx; border-bottom: 1px solid #d4c5a9; margin-top: 16rpx; }
+.skill-cat-title:first-of-type { margin-top: 0; }
+
+/* 4列网格（每行2个技能项） */
+.skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10rpx; padding: 10rpx 0; }
+.skill-grid-item { background: #fff; border-radius: 10rpx; padding: 14rpx; border: 2px solid transparent; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+.skill-grid-item:active { border-color: #6b4c2a; background: #fdf5e6; }
+.skill-grid-item.occ { background: #fdf8ee; }
+.skill-grid-top { display: flex; justify-content: space-between; align-items: center; }
+.skill-grid-name { font-size: 26rpx; color: #3b2e1e; font-weight: bold; }
+.skill-grid-name .occ-mark { color: #8b4513; margin-right: 2rpx; }
+.skill-grid-val { font-size: 30rpx; font-weight: bold; color: #6b4c2a; }
+.skill-grid-base { font-size: 22rpx; color: #8b7355; display: block; margin-top: 4rpx; }
+
+/* 角色卡预览时紧凑一些 */
+.skill-grid.review .skill-grid-item { background: #faf8f4; padding: 10rpx 14rpx; }
+.skill-grid.review .skill-grid-item:active { border-color: transparent; background: #faf8f4; }
+
+/* ===== Dialog 底部弹出 ===== */
+.dialog-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.dialog-overlay.active { opacity: 1; pointer-events: auto; }
+.dialog-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-radius: 24rpx 24rpx 0 0; padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom, 20rpx)); z-index: 301; transform: translateY(100%); transition: transform 0.3s ease-out; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
+.dialog-sheet.active { transform: translateY(0); }
+.dialog-handle { width: 60rpx; height: 6rpx; background: #d4c5a9; border-radius: 3rpx; margin: 0 auto 20rpx; flex-shrink: 0; }
+.dialog-title { font-size: 34rpx; font-weight: bold; color: #3b2e1e; display: block; text-align: center; flex-shrink: 0; }
+.dialog-sub { font-size: 24rpx; color: #7a6b58; display: block; text-align: center; margin: 8rpx 0 16rpx; flex-shrink: 0; }
+/* Dialog 可滚动内容 */
+.dialog-body { flex: 1; overflow-y: auto; padding-bottom: 8rpx; min-height: 0; }
+/* Dialog 技能说明区 */
+.dialog-desc-section { background: #faf8f4; border-radius: 12rpx; padding: 16rpx; margin-bottom: 16rpx; }
+.dialog-desc-label { font-size: 24rpx; color: #6b4c2a; background: #fdf5e6; padding: 4rpx 12rpx; border-radius: 8rpx; display: inline-block; margin-right: 8rpx; }
+.dialog-desc-usage { font-size: 24rpx; color: #4a7c7c; background: #f0f8f4; padding: 4rpx 12rpx; border-radius: 8rpx; display: inline-block; margin-top: 6rpx; }
+.dialog-desc-text { font-size: 26rpx; color: #555; line-height: 1.7; display: block; margin-top: 12rpx; }
+.dialog-spec-section { margin-bottom: 16rpx; padding: 12rpx 0; border-top: 1px solid #eee8dd; }
+.dialog-spec-label { font-size: 26rpx; font-weight: bold; color: #3b2e1e; display: block; margin-bottom: 8rpx; }
+.dialog-readonly-val { font-size: 36rpx; font-weight: bold; color: #6b4c2a; text-align: center; display: block; margin: 16rpx 0; }
+.dialog-slider-row { display: flex; align-items: center; gap: 20rpx; padding: 10rpx 0; }
+.dialog-slider-label { font-size: 48rpx; font-weight: bold; color: #6b4c2a; min-width: 140rpx; text-align: center; }
+.dialog-slider-add { font-size: 28rpx; color: #8b7355; min-width: 60rpx; }
+.dialog-dual-sliders { display: flex; gap: 20rpx; padding: 0 0 10rpx; }
+.dialog-slider-item { flex: 1; }
+.dialog-slider-sub { font-size: 22rpx; color: #7a6b58; display: block; text-align: center; margin-bottom: 6rpx; }
+.dialog-slider { flex: 1; }
+.dialog-actions { display: flex; gap: 20rpx; margin-top: 16rpx; flex-shrink: 0; }
+.dialog-btn { flex: 1; padding: 24rpx 0; border-radius: 12rpx; font-size: 30rpx; font-weight: bold; text-align: center; border: none; }
+.dialog-btn.cancel { background: #f5f0e8; color: #7a6b58; }
+.dialog-btn.confirm { background: #6b4c2a; color: #fff; }
+.dialog-btn:active { opacity: 0.8; }
+
+/* 骰子投掷 dialog */
+.roll-bonus-row { display: flex; justify-content: center; gap: 16rpx; margin: 20rpx 0; }
+.roll-bonus-btn { width: 72rpx; height: 72rpx; line-height: 72rpx; text-align: center; border-radius: 50%; background: #f0ebe0; color: #6b5a4a; font-size: 28rpx; font-weight: bold; border: 2rpx solid #d4c5a9; }
+.roll-bonus-btn.active { background: #6b4c2a; color: #fff; border-color: #6b4c2a; }
+.roll-result-section { text-align: center; padding: 20rpx 0; }
+.roll-numbers { font-size: 26rpx; color: #7a6b58; }
+.roll-die { display: inline-block; margin: 0 4rpx; padding: 2rpx 6rpx; border-radius: 4rpx; }
+.roll-die.picked { background: #fdf5e6; color: #6b4c2a; font-weight: bold; }
+.roll-total { font-size: 72rpx; font-weight: bold; color: #3b2e1e; display: block; margin: 8rpx 0; }
+.roll-level { font-size: 40rpx; font-weight: bold; margin: 8rpx 0; }
+.roll-target { font-size: 24rpx; color: #8b7355; }
+
+/* 游玩模式 */
+.play-hp .char-deriv-value, .play-san .char-deriv-value { color: #3b2e1e; }
+.play-stat-input { width: 80rpx; height: 48rpx; background: #fff; border: 1px solid #d4c5a9; border-radius: 6rpx; text-align: center; font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.stat-edit-row { display: flex; align-items: center; justify-content: center; gap: 4rpx; margin-top: 4rpx; }
+.stat-input { width: 70rpx; }
+.stat-sep { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.stat-max { font-size: 28rpx; font-weight: bold; color: #7a6b58; }
+
+/* ===== STEP 5: 角色卡预览 ===== */
+.char-sheet { background: #fff; border-radius: 16rpx; padding: 24rpx; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+.char-header { text-align: center; border-bottom: 2px solid #3b2e1e; padding-bottom: 16rpx; margin-bottom: 16rpx; }
+.char-name { font-size: 36rpx; font-weight: bold; color: #3b2e1e; display: block; }
+.char-sub { font-size: 24rpx; color: #7a6b58; display: block; margin-top: 4rpx; }
+.char-section-title { font-size: 28rpx; font-weight: bold; color: #6b4c2a; border-bottom: 1px solid #d4c5a9; padding-bottom: 8rpx; margin: 20rpx 0 12rpx; display: block; }
+.char-attr-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8rpx; }
+.char-attr { display: flex; justify-content: space-between; padding: 8rpx 12rpx; background: #faf8f4; border-radius: 8rpx; font-size: 26rpx; }
+.char-attr-label { color: #7a6b58; }
+.char-attr-value { font-weight: bold; color: #3b2e1e; }
+.char-deriv-row { display: flex; gap: 12rpx; flex-wrap: wrap; }
+.char-deriv { flex: 1; min-width: 110rpx; text-align: center; padding: 12rpx; background: #fdf5e6; border-radius: 8rpx; }
+.char-deriv-label { font-size: 22rpx; color: #8b7355; display: block; }
+.char-deriv-value { font-size: 32rpx; font-weight: bold; color: #3b2e1e; display: block; margin-top: 4rpx; }
+
+/* 重伤勾选框 */
+.major-wound-box { flex: 0 0 auto; min-width: 0; padding: 12rpx 16rpx; cursor: pointer; }
+.major-wound-box.major-wound-on { background: #fce4e4; border: 2rpx solid #d44; }
+.mw-check { font-size: 36rpx; display: block; margin-top: 4rpx; color: #3b2e1e; }
+.major-wound-on .mw-check { color: #d44; }
+.char-save-btn { margin-top: 24rpx; }
+
+/* ===== 空状态 ===== */
+.empty-state { text-align: center; padding: 60rpx 0; color: #8b7355; font-size: 26rpx; }
+.hidden { display: none; }
+
+
+/* ===== 武器表 ===== */
+.weapon-table { background: #fff; border-radius: 8rpx; overflow: hidden; margin-bottom: 12rpx; }
+.weapon-row { display: flex; align-items: center; padding: 10rpx 12rpx; border-bottom: 1px solid #eee8dd; }
+.weapon-row:last-child { border-bottom: none; }
+.weapon-header { background: #fdf5e6; }
+.weapon-header .weapon-cell { font-weight: bold; color: #6b4c2a; font-size: 22rpx; }
+.weapon-cell { font-size: 22rpx; color: #3b2e1e; }
+.w-name { flex: 2.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w-skill { flex: 1; text-align: center; }
+.w-dmg { flex: 1.1; text-align: center; }
+.w-range { flex: 0.8; text-align: center; }
+.w-impale { flex: 0.5; text-align: center; }
+.w-attacks { flex: 0.6; text-align: center; }
+.w-ammo { flex: 0.6; text-align: center; }
+.w-malfunc { flex: 0.6; text-align: center; }
+.w-del { width: 36rpx; text-align: center; color: #cd5c5c; font-size: 28rpx; }
+.weapon-empty { text-align: center; padding: 20rpx 0; }
+.weapon-empty-text { font-size: 24rpx; color: #aaa; }
+.weapon-add-btn { width: auto; display: inline-block; padding: 16rpx 32rpx; font-size: 26rpx; }
+
+/* ===== 动画 ===== */
+@keyframes rollDice { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
+.dice-rolling { animation: rollDice 0.15s infinite; color: #8b4513; }
+.save-success { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: #fff; padding: 32rpx 48rpx; border-radius: 16rpx; font-size: 30rpx; z-index: 200; }
+
+
+/* ===== 角色卡文本域 ===== */
+.char-textarea {
+  width: 100%;
+  min-height: 100rpx;
+  background: #faf8f4;
+  border: 1px solid #e8e0d6;
+  border-radius: 8rpx;
+  padding: 14rpx 16rpx;
+  font-size: 26rpx;
+  color: #3b2e1e;
+  box-sizing: border-box;
+  margin-bottom: 8rpx;
+  line-height: 1.6;
+}
+
+/* ===== 已保存角色列表 ===== */
+.saved-list { margin-top: 20rpx; }
+.saved-item { display: flex; justify-content: space-between; align-items: center; padding: 20rpx; background: #fff; border-radius: 12rpx; margin-bottom: 12rpx; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.saved-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.saved-occ { font-size: 24rpx; color: #8b7355; display: block; margin-top: 4rpx; }
+.saved-delete { color: #cd5c5c; font-size: 28rpx; padding: 8rpx 16rpx; }
+
+
+
+.play-attr:active { background: #fdf5e6; }
+
+.age-mod-box { background: #fff; border: 1px solid #d4c5a9; border-radius: 10rpx; padding: 14rpx 16rpx; margin-top: 16rpx; }
+
+.age-mod-title { font-size: 24rpx; font-weight: bold; color: #6b4c2a; display: block; margin-bottom: 6rpx; }
+
+.age-mod-text { font-size: 22rpx; color: #555; line-height: 1.6; }
+/* 年龄修正 */
+.age-row { display: flex; align-items: center; gap: 12rpx; }
+.age-picker { flex: 1; }
+.age-mod-btn { font-size: 24rpx; padding: 0 20rpx; height: 72rpx; line-height: 72rpx; background: #fdf5e6; border: 1px solid #6b4c2a; border-radius: 10rpx; color: #6b4c2a; flex-shrink: 0; }
+.age-mod-prompt { font-size: 26rpx; color: #3b2e1e; display: block; margin-bottom: 16rpx; }
+.age-mod-options { display: flex; flex-direction: column; gap: 12rpx; }
+.age-mod-option { padding: 16rpx 20rpx; background: #faf8f4; border: 2rpx solid #d4c5a9; border-radius: 10rpx; font-size: 26rpx; color: #3b2e1e; }
+.age-mod-option.selected { border-color: #6b4c2a; background: #fdf5e6; font-weight: bold; }
+.age-mod-inputs { display: flex; flex-direction: column; gap: 12rpx; }
+.age-mod-input-row { display: flex; justify-content: space-between; align-items: center; font-size: 26rpx; color: #3b2e1e; }
+.age-mod-input { width: 100rpx; height: 56rpx; background: #faf8f4; border: 1px solid #d4c5a9; border-radius: 8rpx; text-align: center; font-size: 26rpx; }
+.age-mod-remaining { font-size: 24rpx; color: #cd5c5c; text-align: center; margin-top: 8rpx; }
+
+.play-banner { text-align: center; padding: 16rpx 0 8rpx; margin-bottom: 8rpx; }
+
+.play-banner-text { font-size: 28rpx; font-weight: bold; color: #6b4c2a; display: block; }
+
+.play-banner-sub { font-size: 22rpx; color: #8b7355; display: block; margin-top: 2rpx; }
+.play-sheet { border: 1px solid #d4c5a9; }
+.saved-info { text-align: center; font-size: 24rpx; color: #8b7355; margin-bottom: 8rpx; }
+
+.growth-hint { font-size: 26rpx; color: #7a6b58; text-align: center; display: block; margin: 16rpx 0; }
+.growth-tag-list { display: flex; flex-wrap: wrap; gap: 12rpx; padding: 8rpx 0; }
+.growth-tag { padding: 10rpx 18rpx; background: #fdf5e6; border: 1px solid #d4c5a9; border-radius: 20rpx; font-size: 24rpx; color: #3b2e1e; }
+.growth-tag.removed { background: #f0f0f0; color: #aaa; text-decoration: line-through; }
+.growth-result { padding: 12rpx 16rpx; margin-bottom: 8rpx; border-radius: 8rpx; font-size: 24rpx; }
+.growth-result.success { background: #f0fdf0; color: #336633; }
+.growth-result.fail { background: #fdf0f0; color: #996666; }

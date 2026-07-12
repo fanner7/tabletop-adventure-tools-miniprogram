@@ -1,0 +1,5476 @@
+[
+  {
+    "seq": 1,
+    "name": "自定义职业",
+    "cr": "",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "不多于8个本职技能。在右侧职业属性中输入第二职业属性的数值（留空则视为EDU）并自行设置起始信誉。使用自定义职业前",
+        "mark": "★"
+      },
+      {
+        "name": "请先咨询你的守秘人",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 2,
+    "name": "会计师",
+    "cr": "30-70",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 3,
+    "name": "杂技演员",
+    "cr": "9-20",
+    "formula": "教育×2＋敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "投掷",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "游泳",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 4,
+    "name": "演员-戏剧演员",
+    "cr": "9-40",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（表演",
+        "mark": "★"
+      },
+      {
+        "name": "乔装",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 5,
+    "name": "演员-电影演员",
+    "cr": "20-90",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（表演",
+        "mark": "★"
+      },
+      {
+        "name": "乔装",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 6,
+    "name": "事务所侦探、保安",
+    "cr": "20-45",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 7,
+    "name": "精神病医生（古典）",
+    "cr": "10-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "医学",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "精神分析",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物学",
+        "mark": "★"
+      },
+      {
+        "name": "化学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 8,
+    "name": "动物训练师",
+    "cr": "10-40",
+    "formula": "教育×2＋外貌或意志×2",
+    "fixed": [
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（动物学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 9,
+    "name": "文物学家（原作向）",
+    "cr": "30-70",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 10,
+    "name": "古董商",
+    "cr": "30-50",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 11,
+    "name": "考古学家（原作向）",
+    "cr": "10-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "考古",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "导航或科学（任一：如化学",
+        "mark": "★"
+      },
+      {
+        "name": "物理",
+        "mark": "★"
+      },
+      {
+        "name": "地理等",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 12,
+    "name": "建筑师",
+    "cr": "30-70",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（技术制图",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "计算机或图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（数学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 13,
+    "name": "艺术家",
+    "cr": "9-50",
+    "formula": "教育×2＋敏捷或意志×2",
+    "fixed": [
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "历史或自然",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 14,
+    "name": "精神病院看护",
+    "cr": "8-20",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 15,
+    "name": "运动员",
+    "cr": "9-70",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "骑乘",
+        "mark": "★"
+      },
+      {
+        "name": "游泳",
+        "mark": "★"
+      },
+      {
+        "name": "投掷",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 16,
+    "name": "作家（原作向）",
+    "cr": "9-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "技艺（文学",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "自然或神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 17,
+    "name": "酒保",
+    "cr": "8-25",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 18,
+    "name": "猎人",
+    "cr": "20-50",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "聆听或侦查",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "外语或生存（任一",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物学或植物学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 19,
+    "name": "书商",
+    "cr": "20-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 20,
+    "name": "赏金猎人",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "电子学或电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "格斗或射击",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 21,
+    "name": "拳击手、摔跤手",
+    "cr": "9-60",
+    "formula": "教育×2＋力量×2",
+    "fixed": [
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "恐吓",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 22,
+    "name": "管家、男仆、女仆",
+    "cr": "9-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计或估价",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（任一：如烹饪",
+        "mark": "★"
+      },
+      {
+        "name": "裁缝",
+        "mark": "★"
+      },
+      {
+        "name": "理发",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 23,
+    "name": "神职人员",
+    "cr": "9-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 24,
+    "name": "程序员、电子工程师（现代）",
+    "cr": "10-70",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "计算机",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "电子学",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "科学（数学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 25,
+    "name": "黑客/骇客（现代）",
+    "cr": "10-70",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "计算机",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "电子学",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 26,
+    "name": "牛仔",
+    "cr": "9-20",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "格斗或射击",
+        "mark": "★"
+      },
+      {
+        "name": "急救或自然",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "骑乘",
+        "mark": "★"
+      },
+      {
+        "name": "生存（任一",
+        "mark": "★"
+      },
+      {
+        "name": "投掷",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 27,
+    "name": "工匠",
+    "cr": "10-40",
+    "formula": "教育×2＋敏捷×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（任二",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 28,
+    "name": "罪犯-刺客",
+    "cr": "30-60",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "乔装",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "锁匠",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 29,
+    "name": "罪犯-银行劫匪",
+    "cr": "5-75",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修或机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "恐吓",
+        "mark": "★"
+      },
+      {
+        "name": "锁匠",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 30,
+    "name": "罪犯-打手、暴徒",
+    "cr": "5-30",
+    "formula": "教育×2＋力量×2",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 31,
+    "name": "罪犯-窃贼",
+    "cr": "5-40",
+    "formula": "教育×2＋敏捷×2",
+    "fixed": [
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修或机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "锁匠",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 32,
+    "name": "罪犯-欺诈师",
+    "cr": "10-65",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（表演",
+        "mark": "★"
+      },
+      {
+        "name": "法律或外语",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 33,
+    "name": "罪犯-独行罪犯",
+    "cr": "5-65",
+    "formula": "教育×2＋敏捷或外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（表演）或乔装",
+        "mark": "★"
+      },
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "格斗或射击",
+        "mark": "★"
+      },
+      {
+        "name": "锁匠或机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 34,
+    "name": "罪犯-女飞贼（古典）",
+    "cr": "10-80",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "格斗（斗殴）或射击（手枪",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 35,
+    "name": "罪犯-赃物贩子",
+    "cr": "20-40",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（伪造",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 36,
+    "name": "罪犯-赝造者",
+    "cr": "20-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（伪造",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 37,
+    "name": "罪犯-走私者",
+    "cr": "20-60",
+    "formula": "教育×2＋外貌或敏捷×2",
+    "fixed": [
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶或驾驶（飞行器或船",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 38,
+    "name": "罪犯-混混",
+    "cr": "3-10",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "投掷",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 39,
+    "name": "教团首领",
+    "cr": "30-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 40,
+    "name": "除魅师（现代）",
+    "cr": "20-50",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴）或射击",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行。※经KP允许 可用催眠替换其中一项",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 41,
+    "name": "设计师",
+    "cr": "20-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（摄影",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "计算机或图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 42,
+    "name": "业余艺术爱好者（原作向）",
+    "cr": "50-99",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "骑乘",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 43,
+    "name": "潜水员",
+    "cr": "9-30",
+    "formula": "教育×2＋敏捷×2",
+    "fixed": [
+      {
+        "name": "潜水",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "驾驶（船",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "游泳",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 44,
+    "name": "医生（原作向）",
+    "cr": "30-80",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "医学",
+        "mark": "★"
+      },
+      {
+        "name": "外语（拉丁文",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物学",
+        "mark": "★"
+      },
+      {
+        "name": "制药",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 45,
+    "name": "流浪者",
+    "cr": "0-5",
+    "formula": "教育×2＋外貌或敏捷或力量×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 46,
+    "name": "司机-私人司机",
+    "cr": "10-40",
+    "formula": "教育×2＋敏捷×2",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 47,
+    "name": "司机-司机",
+    "cr": "9-20",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 48,
+    "name": "司机-出租车司机",
+    "cr": "9-30",
+    "formula": "教育×2＋敏捷×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "话术",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 49,
+    "name": "编辑",
+    "cr": "10-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 50,
+    "name": "政府官员",
+    "cr": "50-90",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "取悦",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "恐吓",
+        "mark": "★"
+      },
+      {
+        "name": "话术",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 51,
+    "name": "工程师",
+    "cr": "30-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "技艺（技术制图",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      },
+      {
+        "name": "科学（工程学",
+        "mark": "★"
+      },
+      {
+        "name": "物理",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 52,
+    "name": "艺人",
+    "cr": "9-70",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（表演类",
+        "mark": "★"
+      },
+      {
+        "name": "如表演",
+        "mark": "★"
+      },
+      {
+        "name": "演唱",
+        "mark": "★"
+      },
+      {
+        "name": "喜剧等",
+        "mark": "★"
+      },
+      {
+        "name": "乔装",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 53,
+    "name": "探险家（古典）",
+    "cr": "55-80",
+    "formula": "教育×2＋外貌或敏捷或力量×2",
+    "fixed": [
+      {
+        "name": "攀爬或游泳",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "生存",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 54,
+    "name": "农民",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "技艺（耕作",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶（或运货马车",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 55,
+    "name": "联邦探员",
+    "cr": "20-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 56,
+    "name": "消防员",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      },
+      {
+        "name": "投掷",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 57,
+    "name": "驻外记者",
+    "cr": "10-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 58,
+    "name": "法医",
+    "cr": "40-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "外语（拉丁文",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "医学",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物学",
+        "mark": "★"
+      },
+      {
+        "name": "药学",
+        "mark": "★"
+      },
+      {
+        "name": "司法科学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 59,
+    "name": "赌徒",
+    "cr": "8-50",
+    "formula": "教育×2＋外貌或敏捷×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（表演",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 60,
+    "name": "黑帮-黑帮老大",
+    "cr": "60-95",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 61,
+    "name": "黑帮-马仔",
+    "cr": "9-20",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 62,
+    "name": "绅士、淑女",
+    "cr": "40-90",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "射击（步枪/霰弹枪",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "外语（任一",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "骑乘",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 63,
+    "name": "游民",
+    "cr": "0-5",
+    "formula": "教育×2＋外貌或敏捷×2",
+    "fixed": [
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "锁匠或妙手",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 64,
+    "name": "勤杂护工",
+    "cr": "6-15",
+    "formula": "教育×2＋力量×2",
+    "fixed": [
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 65,
+    "name": "记者(原作向)-调查记者",
+    "cr": "9-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "技艺（艺术或摄影",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 66,
+    "name": "记者(原作向)-通讯记者",
+    "cr": "9-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "技艺（表演",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 67,
+    "name": "法官",
+    "cr": "50-80",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "恐吓",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 68,
+    "name": "实验室助理",
+    "cr": "10-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "计算机或图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 69,
+    "name": "工人-非熟练工人",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      },
+      {
+        "name": "投掷",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 70,
+    "name": "工人-伐木工",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（链锯",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "自然或科学（生物学或植物学",
+        "mark": "★"
+      },
+      {
+        "name": "投掷",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 71,
+    "name": "工人-矿工",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "科学（地质",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 72,
+    "name": "律师",
+    "cr": "30-80",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "两项其他技能",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 73,
+    "name": "图书馆管理员（原作向）",
+    "cr": "9-35",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 74,
+    "name": "技师",
+    "cr": "9-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "技艺（木工",
+        "mark": "★"
+      },
+      {
+        "name": "焊接",
+        "mark": "★"
+      },
+      {
+        "name": "管道工等",
+        "mark": "★"
+      },
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 75,
+    "name": "军官",
+    "cr": "20-70",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 76,
+    "name": "传教士",
+    "cr": "0-30",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "医学",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 77,
+    "name": "登山家",
+    "cr": "30-60",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "生存（阿尔卑斯或类似",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 78,
+    "name": "博物馆管理员",
+    "cr": "10-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "估价",
+        "mark": "★"
+      },
+      {
+        "name": "考古",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 79,
+    "name": "音乐家",
+    "cr": "9-30",
+    "formula": "教育×2＋意志或敏捷×2",
+    "fixed": [
+      {
+        "name": "技艺（乐器",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "四项其他技能",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 80,
+    "name": "护士",
+    "cr": "9-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "医学",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物学",
+        "mark": "★"
+      },
+      {
+        "name": "化学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 81,
+    "name": "神秘学家",
+    "cr": "9-65",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "人类学",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "科学（天文",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 82,
+    "name": "旅行家",
+    "cr": "5-20",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "生存（任一",
+        "mark": "★"
+      },
+      {
+        "name": "追踪",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 83,
+    "name": "超心理学家",
+    "cr": "9-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "人类学",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（摄影",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 84,
+    "name": "药剂师",
+    "cr": "35-75",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "外语（拉丁文",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（制药",
+        "mark": "★"
+      },
+      {
+        "name": "化学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 85,
+    "name": "摄影师-摄影师",
+    "cr": "9-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "技艺（摄影",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（化学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 86,
+    "name": "摄影师-摄影记者",
+    "cr": "10-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "技艺（摄影",
+        "mark": "★"
+      },
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（化学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 87,
+    "name": "飞行员-飞行员",
+    "cr": "20-70",
+    "formula": "教育×2＋敏捷×2",
+    "fixed": [
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      },
+      {
+        "name": "驾驶（飞行器",
+        "mark": "★"
+      },
+      {
+        "name": "科学（天文",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 88,
+    "name": "飞行员-特技飞行员（古典）",
+    "cr": "30-60",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "驾驶（飞行器",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 89,
+    "name": "警方(原作向)-警探",
+    "cr": "20-50",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "技艺（表演）或乔装",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "一项其他技能",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 90,
+    "name": "警方(原作向)-巡警",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 91,
+    "name": "私家侦探",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "技艺（摄影",
+        "mark": "★"
+      },
+      {
+        "name": "乔装",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "锁匠",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 92,
+    "name": "教授（原作向）",
+    "cr": "20-70",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 93,
+    "name": "淘金客",
+    "cr": "0-10",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "科学（地质",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 94,
+    "name": "性工作者",
+    "cr": "5-50",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 95,
+    "name": "精神病学家",
+    "cr": "30-80",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "医学",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "精神分析",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物学",
+        "mark": "★"
+      },
+      {
+        "name": "化学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 96,
+    "name": "心理学家、精神分析学家",
+    "cr": "10-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "说服",
+        "mark": "★"
+      },
+      {
+        "name": "精神分析",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 97,
+    "name": "研究员",
+    "cr": "9-30",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 98,
+    "name": "海员-军舰海员",
+    "cr": "9-30",
+    "formula": "教育×2＋敏捷或力量×2",
+    "fixed": [
+      {
+        "name": "电工或机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "驾驶（船",
+        "mark": "★"
+      },
+      {
+        "name": "生存（海上",
+        "mark": "★"
+      },
+      {
+        "name": "游泳",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 99,
+    "name": "海员-民船海员",
+    "cr": "20-40",
+    "formula": "教育×2＋敏捷或力量×2",
+    "fixed": [
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "导航",
+        "mark": "★"
+      },
+      {
+        "name": "驾驶（船",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "游泳",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 100,
+    "name": "推销员",
+    "cr": "9-40",
+    "formula": "教育×2＋外貌×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "潜行或妙手",
+        "mark": "★"
+      },
+      {
+        "name": "一项其他技能",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 101,
+    "name": "科学家",
+    "cr": "9-50",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "计算机或图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 102,
+    "name": "秘书",
+    "cr": "9-30",
+    "formula": "教育×2＋敏捷或外貌×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（打字或速记",
+        "mark": "★"
+      },
+      {
+        "name": "母语",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆或计算机",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 103,
+    "name": "店老板",
+    "cr": "20-40",
+    "formula": "教育×2＋外貌或敏捷×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 104,
+    "name": "士兵、海军陆战队士兵",
+    "cr": "9-30",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬或游泳",
+        "mark": "★"
+      },
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      },
+      {
+        "name": "生存",
+        "mark": "★"
+      },
+      {
+        "name": "下面任选两项：急救",
+        "mark": "★"
+      },
+      {
+        "name": "机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 105,
+    "name": "间谍",
+    "cr": "20-60",
+    "formula": "教育×2＋外貌或敏捷×2",
+    "fixed": [
+      {
+        "name": "技艺（表演）或乔装",
+        "mark": "★"
+      },
+      {
+        "name": "射击",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "妙手",
+        "mark": "★"
+      },
+      {
+        "name": "潜行",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 106,
+    "name": "学生、实习生",
+    "cr": "5-10",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "语言（母语或外语",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "三个学习的专业",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 107,
+    "name": "替身演员",
+    "cr": "10-50",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "电气维修或机械维修",
+        "mark": "★"
+      },
+      {
+        "name": "格斗",
+        "mark": "★"
+      },
+      {
+        "name": "急救",
+        "mark": "★"
+      },
+      {
+        "name": "跳跃",
+        "mark": "★"
+      },
+      {
+        "name": "游泳",
+        "mark": "★"
+      },
+      {
+        "name": "下面任选一项：潜水",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "驾驶（任一",
+        "mark": "★"
+      },
+      {
+        "name": "骑乘",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 108,
+    "name": "部落成员",
+    "cr": "0-15",
+    "formula": "教育×2＋力量或敏捷×2",
+    "fixed": [
+      {
+        "name": "攀爬",
+        "mark": "★"
+      },
+      {
+        "name": "格斗或投掷",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "自然",
+        "mark": "★"
+      },
+      {
+        "name": "神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "侦查",
+        "mark": "★"
+      },
+      {
+        "name": "游泳",
+        "mark": "★"
+      },
+      {
+        "name": "生存（任一",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [],
+    "has_optional": false
+  },
+  {
+    "seq": 109,
+    "name": "殡葬师",
+    "cr": "20-40",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "汽车驾驶",
+        "mark": "★"
+      },
+      {
+        "name": "历史",
+        "mark": "★"
+      },
+      {
+        "name": "神秘学",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      },
+      {
+        "name": "科学（生物学",
+        "mark": "★"
+      },
+      {
+        "name": "化学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 110,
+    "name": "工会活动家",
+    "cr": "5-50",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "格斗（斗殴",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "操作重型机械",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 111,
+    "name": "服务生",
+    "cr": "9-20",
+    "formula": "教育×2＋外貌或敏捷×2",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "技艺（任一",
+        "mark": "★"
+      },
+      {
+        "name": "闪避",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 112,
+    "name": "白领工人-职员、主管",
+    "cr": "9-20",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "语言",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "图书馆或计算机",
+        "mark": "★"
+      },
+      {
+        "name": "聆听",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 1,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "一项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  },
+  {
+    "seq": 113,
+    "name": "白领工人-中高层管理人员",
+    "cr": "20-80",
+    "formula": "教育×4",
+    "fixed": [
+      {
+        "name": "会计",
+        "mark": "★"
+      },
+      {
+        "name": "外语",
+        "mark": "★"
+      },
+      {
+        "name": "法律",
+        "mark": "★"
+      },
+      {
+        "name": "心理学",
+        "mark": "★"
+      }
+    ],
+    "opt_groups": [
+      {
+        "id": "group_0",
+        "count": 2,
+        "choices": [
+          {
+            "name": "取悦",
+            "mark": "☆"
+          },
+          {
+            "name": "话术",
+            "mark": "☆"
+          },
+          {
+            "name": "恐吓",
+            "mark": "☆"
+          },
+          {
+            "name": "说服",
+            "mark": "☆"
+          }
+        ],
+        "label": "两项社交技能（取悦、话术、恐吓、说服）"
+      }
+    ],
+    "has_optional": true
+  }
+]

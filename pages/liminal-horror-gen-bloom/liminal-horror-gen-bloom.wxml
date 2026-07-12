@@ -1,0 +1,75 @@
+<view class="container">
+  <view class="header">
+    <text class="h1">阈限恐怖 调查员生成器 (繁孽版)</text>
+  </view>
+
+  <button class="generator-button" bindtap="generateCharacter">生成调查员</button>
+
+  <view class="character-sheet">
+    <view wx:if="{{generated}}" class="sheet-content">
+      <text class="section-title">核心属性</text>
+      <view class="section-grid">
+        <view class="stat-block">
+          <text class="stat-label">力量</text>
+          <text class="stat-value">{{strength}}</text>
+        </view>
+        <view class="stat-block">
+          <text class="stat-label">敏捷</text>
+          <text class="stat-value">{{agility}}</text>
+        </view>
+        <view class="stat-block">
+          <text class="stat-label">意志</text>
+          <text class="stat-value">{{will}}</text>
+        </view>
+      </view>
+      <view class="section-grid" style="margin-top: 30rpx;">
+        <view class="stat-block">
+          <text class="stat-label">耐久度 (HP)</text>
+          <text class="stat-value">{{hp}}</text>
+        </view>
+        <view class="stat-block">
+          <text class="stat-label">现金</text>
+          <text class="stat-value">¥{{cash}}</text>
+        </view>
+      </view>
+
+      <text class="section-title">初始信息</text>
+      <view class="section">
+        <view class="info-block">
+          <text class="info-label">范型:</text>
+          <text class="info-text">{{backgroundString}}</text>
+        </view>
+        <view class="info-block">
+          <text class="info-label">固定装备:</text>
+          <text class="info-text">智能手机</text>
+        </view>
+      </view>
+
+      <text class="section-title">调查员细节</text>
+      <view class="section">
+        <view class="info-block">
+          <text class="info-label">外观:</text>
+          <text class="info-text">{{appearance}}</text>
+        </view>
+        <view class="info-block">
+          <text class="info-label">特质:</text>
+          <text class="info-text">体格[{{traits.physique}}], 面容[{{traits.face}}], 言谈[{{traits.speech}}], 美德[{{traits.virtue}}], 缺陷[{{traits.vice}}], 厄运[{{traits.misfortune}}]</text>
+        </view>
+        <view class="info-block">
+          <text class="info-label">深渊回眸:</text>
+          <text class="info-text">{{firstEncounter}}</text>
+        </view>
+        <view class="info-block">
+          <text class="info-label">意识形态:</text>
+          <text class="info-text">{{ideology}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="json-export-area">
+    <text class="section-title">分享角色数据 (JSON)</text>
+    <textarea class="json-textarea" value="{{jsonOutput}}" placeholder="点击上方按钮生成角色数据..." disabled="true" auto-height></textarea>
+    <button class="copy-button" bindtap="copyJson">复制JSON</button>
+  </view>
+</view>

@@ -1,0 +1,563 @@
+<view class="container">
+
+  <!-- 顶部标题 -->
+  <view class="header" wx:if="{{!playMode}}">
+    <text class="header-title">🎲 COC7 调查员创建</text>
+    <text class="header-subtitle">Call of Cthulhu 7th Edition — Character Generator</text>
+  </view>
+
+  <!-- ===== 步骤进度条 ===== -->
+  <view class="step-indicator" wx:if="{{step > 0 && step < 6 && !playMode}}">
+    <view wx:for="{{['属性','信息','职业','技能','完成']}}" wx:for-item="s" wx:for-index="i" wx:key="i" style="display:flex;align-items:center;">
+      <view class="step-dot {{i+1 < step ? 'done' : ''}} {{i+1 == step ? 'active' : ''}}"></view>
+      <text class="step-label {{i+1 == step ? 'active' : ''}}">{{s}}</text>
+      <view class="step-connector {{i+1 < step ? 'done' : ''}}" wx:if="{{i < 4}}"></view>
+    </view>
+  </view>
+
+  <!-- ===== STEP 0: 选择模式 ===== -->
+  <block wx:if="{{step == 0}}">
+    <text class="step-title">📋 创建新调查员</text>
+    <text class="step-desc">创建一个全新的 COC7 调查员角色卡，或读取本地已保存的角色继续编辑。</text>
+    <button class="btn btn-primary" bindtap="startNewCharacter">➕ 创建新角色</button>
+    <view class="saved-list" wx:if="{{savedCharacters.length > 0}}">
+      <text class="card-title">📂 已保存的角色</text>
+      <view class="saved-item {{sc.completed ? 'completed' : ''}}" wx:for="{{savedCharacters}}" wx:for-item="sc" wx:key="index" bindtap="loadCharacter" data-index="{{index}}">
+        <view><text class="saved-name">{{sc.charInfo ? sc.charInfo.name : (sc.name || '未命名')}}</text><text class="saved-occ">{{sc.selectedOcc ? sc.selectedOcc.name : (sc.occupation || '未选择职业')}} {{sc.completed ? '✅' : '🖊'}}</text></view>
+        <text class="saved-delete" catchtap="deleteCharacter" data-index="{{index}}">删除</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== STEP 1: 属性掷骰 ===== -->
+  <block wx:if="{{step == 1}}">
+    <text class="step-title">🎲 掷骰决定属性</text>
+    <text class="step-desc">点击下方按钮掷骰决定你的调查员的核心属性。每个属性可单独重掷。</text>
+    <view class="attr-grid">
+      <view wx:for="{{['str','con','dex','app','pow','siz','int','edu','luck']}}" wx:for-item="a" wx:key="a">
+        <view class="attr-block {{attrDiceRolling == a ? 'rolling' : ''}} {{rolled[a] ? 'done' : ''}}">
+          <text class="attr-label">{{attrLabels[a]}}</text>
+          <text class="attr-value {{attrDiceRolling == a ? 'dice-rolling' : ''}}">{{attrValues[a] > 0 ? attrValues[a] : '-'}}</text>
+          <text class="attr-roll-result" wx:if="{{attrRolls[a]}}">({{attrRolls[a]}})</text>
+          <button class="attr-reroll-btn" wx:if="{{rolled[a]}}" bindtap="rerollAttr" data-attr="{{a}}">重掷</button>
+        </view>
+      </view>
+    </view>
+    <button class="btn btn-primary" bindtap="rollAllAttrs" wx:if="{{!allRolled}}">🎲 全部掷骰</button>
+    <button class="btn btn-secondary btn-small" bindtap="rollAllAttrs" wx:if="{{allRolled}}">🔄 全部重掷</button>
+  </block>
+
+  <!-- ===== STEP 2: 基础信息 ===== -->
+  <block wx:if="{{step == 2}}">
+    <text class="step-title">✏️ 调查员信息</text>
+    <text class="step-desc">填写你的调查员基本资料。</text>
+    <view class="form-group"><text class="form-label">调查员姓名</text><input class="form-input" placeholder="输入姓名" value="{{charInfo.name}}" bindinput="onCharInfoChange" data-field="name" /></view>
+    <view class="form-group"><text class="form-label">玩家姓名</text><input class="form-input" placeholder="输入你的名字" value="{{charInfo.player}}" bindinput="onCharInfoChange" data-field="player" /></view>
+    <view class="form-group">
+      <text class="form-label">年龄</text>
+      <view class="age-row">
+        <picker mode="selector" range="{{ageRange}}" value="{{ageIndex}}" bindchange="onAgeChange">
+          <view class="form-picker age-picker"><text>{{charInfo.age || '请选择年龄'}}</text><text class="form-picker-arrow">▼</text></view>
+        </picker>
+        <button class="age-mod-btn" wx:if="{{needAgeMod}}" bindtap="openAgeModDialog">{{ageModDone ? '✅ 已修正' : '🔧 年龄修正'}}</button>
+      </view>
+    </view>
+    <view class="form-group">
+      <text class="form-label">性别</text>
+      <picker mode="selector" range="{{['男','女','其他']}}" value="{{genderIndex}}" bindchange="onGenderChange">
+        <view class="form-picker"><text>{{charInfo.gender || '请选择性别'}}</text><text class="form-picker-arrow">▼</text></view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <text class="form-label">时代背景</text>
+      <view class="form-picker"><text>1920s</text></view>
+    </view>
+    <view class="age-mod-box" wx:if="{{ageModSummary}}">
+      <text class="age-mod-title">📋 年龄修正结果</text>
+      <text class="age-mod-text">{{ageModSummary}}</text>
+    </view>
+  </block>
+
+  <!-- ===== STEP 3: 职业选择 ===== -->
+  <block wx:if="{{step == 3}}">
+    <text class="step-title">💼 选择职业</text>
+    <text class="step-desc">选择一个职业来决定你的职业技能与资源。点击可选技能切换是否纳入本职。</text>
+
+    <!-- 悬浮头部：搜索 + 已选职业详情（始终可见） -->
+    <view class="occ-sticky-header">
+      <input class="occupation-search" placeholder="🔍 搜索职业..." value="{{occSearch}}" bindinput="onOccSearch" />
+
+      <!-- 已选职业摘要卡片（紧凑） -->
+      <view class="occ-selected-card" wx:if="{{selectedOcc}}">
+        <view class="occ-selected-header">
+          <text class="occ-selected-name">#{{selectedOcc.seq}} {{selectedOcc.name}}</text>
+          <text class="occ-selected-cr">CR {{selectedOcc.cr_range}}</text>
+        </view>
+        <view class="occ-selected-skills">
+          <text class="occ-selected-skill-list">{{occSkillsText}}</text>
+        </view>
+        <!-- 专攻必填提示 -->
+        <view class="occ-spec-warning" wx:if="{{occSpecMissing.length > 0}}">
+          <text class="occ-spec-warning-text">⚠ 以下专攻需选方向（点击进入技能页设置）：{{occSpecMissing}}</text>
+        </view>
+        <view class="occ-opt-section" wx:if="{{occOptGroups.length > 0}}">
+          <view wx:for="{{occOptGroups}}" wx:for-item="group" wx:key="group" class="occ-opt-group">
+            <text class="occ-opt-group-label">选{{group.count}}项：</text>
+            <text class="occ-opt-skill {{item.selected ? 'selected' : ''}}" 
+                  wx:for="{{group.skills}}" wx:for-item="item" wx:key="name"
+                  bindtap="toggleOptSkill" data-name="{{item.name}}">
+              {{item.selected ? '★' : '☆'}}{{item.name}}
+            </text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 职业列表（随页面自然滚动） -->
+    <view class="occupation-list">
+      <view class="occ-item {{selectedOcc && occ.name == selectedOcc.name ? 'selected' : ''}}" wx:for="{{filteredOccs}}" wx:for-item="occ" wx:key="index" bindtap="selectOccupation" data-index="{{index}}">
+        <text class="occ-name">{{occ.seq}}. {{occ.name}}</text>
+        <text class="occ-points">🎯{{occ.occPointValue}}  💡{{occ.intPointValue}}  CR{{occ.cr_range}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== STEP 4: 技能分配（分类网格 + dialog slider） ===== -->
+  <block wx:if="{{step == 4}}">
+    <text class="step-title">📊 分配技能点</text>
+
+    <!-- 职业信息 + 职业技能（合并卡片） -->
+    <view class="occ-info-card" wx:if="{{selectedOcc}}">
+      <view class="occ-info-card-top">
+        <text class="occ-info-name">{{selectedOcc.name}}</text>
+        <view class="occ-info-stats">
+          <text class="occ-info-stat">🎯职业 {{totalOccPoints}}</text>
+          <text class="occ-info-stat">💡兴趣 {{totalIntPoints}}</text>
+          <text class="occ-info-stat">⭐CR {{selectedOcc.cr_range}}</text>
+        </view>
+      </view>
+      <view class="occ-info-card-skills" wx:if="{{occFixedSkills.length > 0}}">
+        <text class="occ-skills-tag" wx:for="{{occFixedSkills}}" wx:for-item="sk" wx:key="name">{{sk.spec ? sk.name + '(' + sk.spec + ')' : sk.name}}</text>
+      </view>
+    </view>
+
+    <!-- 技能点进度条 -->
+    <view class="skill-points-bar-full">
+      <view class="skill-points-row"><text class="skill-points-label">职业技能点</text><text class="skill-points-value">{{usedOccPoints}} / {{totalOccPoints}}</text></view>
+      <view class="skill-points-bar-bg"><view class="skill-points-bar-fill {{usedOccPoints > totalOccPoints ? 'over' : ''}}" style="width:{{totalOccPoints > 0 ? (usedOccPoints/totalOccPoints*100) : 0}}%"></view></view>
+      <view class="skill-points-row"><text class="skill-points-label">兴趣技能点</text><text class="skill-points-value">{{usedIntPoints}} / {{totalIntPoints}}</text></view>
+      <view class="skill-points-bar-bg"><view class="skill-points-bar-fill {{usedIntPoints > totalIntPoints ? 'over' : ''}}" style="width:{{totalIntPoints > 0 ? (usedIntPoints/totalIntPoints*100) : 0}}%"></view></view>
+    </view>
+
+    <!-- 按分类分组的 4 列（每行 2 项）技能网格 -->
+    <view wx:for="{{skillGroups}}" wx:for-item="group" wx:key="cat">
+      <text class="skill-cat-title">{{group.catName}}</text>
+      <view class="skill-grid">
+        <view class="skill-grid-item {{skill.isOcc ? 'occ' : ''}}" wx:for="{{group.skills}}" wx:for-item="skill" wx:key="name" bindtap="openSkillDialog" data-name="{{skill.name}}">
+          <view class="skill-grid-top">
+            <text class="skill-grid-name"><text class="occ-mark" wx:if="{{skill.isOcc}}">★</text>{{skill.displayName || skill.name}}</text>
+            <text class="skill-grid-val">{{skill.total}}%</text>
+          </view>
+          <text class="skill-grid-base">基础 {{skill.base}}% <text wx:if="{{skill.total > skill.base}}">+{{skill.total - skill.base}}</text></text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== STEP 5: 角色卡预览 ===== -->
+  <block wx:if="{{step == 5}}">
+    <text class="step-title" wx:if="{{!playMode}}">📜 调查员角色卡</text>
+    <text class="step-desc" wx:if="{{!playMode}}">你的调查员已创建完成！可保存到本地或重新编辑。</text>
+
+    <view class="play-banner" wx:if="{{playMode}}">
+      <text class="play-banner-text">🎮 游玩模式</text>
+      <text class="play-banner-sub">点击属性或技能进行检定</text>
+    </view>
+
+    <view class="char-sheet {{playMode ? 'play-sheet' : ''}}">
+      <view class="char-header"><text class="char-name">{{charInfo.name || '未命名'}}</text><text class="char-sub">{{selectedOcc ? selectedOcc.name + ' | ' + charInfo.era : charInfo.era}}</text></view>
+
+      <text class="char-section-title">📊 属性 {{playMode ? '(点击检定)' : ''}}</text>
+      <view class="char-attr-row">
+        <view class="char-attr play-attr" wx:for="{{attrDisplay}}" wx:for-item="a" wx:key="index" bindtap="{{playMode ? 'openAttrRoll' : ''}}" data-name="{{a.label}}" data-value="{{a.value}}">
+          <text class="char-attr-label">{{a.label}}</text><text class="char-attr-value">{{a.value}}</text>
+        </view>
+      </view>
+
+      <text class="char-section-title">❤️ 状态</text>
+      <view class="char-deriv-row">
+        <view class="char-deriv">
+          <text class="char-deriv-label">生命 HP</text>
+          <view wx:if="{{playMode}}" class="stat-edit-row">
+            <input class="play-stat-input stat-input" type="number" value="{{playHP}}" bindinput="onHPChange" />
+            <text class="stat-sep">/</text>
+            <text class="stat-max">{{derived.hp}}</text>
+          </view>
+          <text class="char-deriv-value" wx:if="{{!playMode}}">{{playHP}}/{{derived.hp}}</text>
+        </view>
+        <view class="char-deriv">
+          <text class="char-deriv-label">理智 SAN</text>
+          <view wx:if="{{playMode}}" class="stat-edit-row">
+            <input class="play-stat-input stat-input" type="number" value="{{playSAN}}" bindinput="onSANChange" />
+            <text class="stat-sep">/</text>
+            <text class="stat-max">{{maxSAN}}</text>
+          </view>
+          <text class="char-deriv-value" wx:if="{{!playMode}}">{{playSAN}}/{{maxSAN}}</text>
+        </view>
+        <view class="char-deriv">
+          <text class="char-deriv-label">幸运 LUCK</text>
+          <input class="play-stat-input" wx:if="{{playMode}}" type="number" value="{{playLuck}}" bindinput="onLuckChange" />
+          <text class="char-deriv-value" wx:if="{{!playMode}}">{{playLuck}}</text>
+        </view>
+        <view class="char-deriv">
+          <text class="char-deriv-label">魔法 MP</text>
+          <view wx:if="{{playMode}}" class="stat-edit-row">
+            <input class="play-stat-input stat-input" type="number" value="{{playMP}}" bindinput="onMPChange" />
+            <text class="stat-sep">/</text>
+            <text class="stat-max">{{maxMP}}</text>
+          </view>
+          <text class="char-deriv-value" wx:if="{{!playMode}}">{{playMP}}/{{maxMP}}</text>
+        </view>
+        <view class="char-deriv major-wound-box {{majorWound ? 'major-wound-on' : ''}}" bindtap="toggleMajorWound">
+          <text class="char-deriv-label">重伤</text>
+          <text class="mw-check">{{majorWound ? '☑' : '☐'}}</text>
+        </view>
+        <view wx:for="{{derivedItems}}" wx:for-item="d" wx:key="index" wx:if="{{d.l !== '生命 HP' && d.l !== '理智 SAN' && d.l !== '魔法 MP'}}">
+          <view class="char-deriv"><text class="char-deriv-label">{{d.l}}</text><text class="char-deriv-value">{{d.v}}</text></view>
+        </view>
+      </view>
+
+      <text class="char-section-title">🎯 技能 {{playMode ? '(左键详情 右键投骰)' : ''}}</text>
+      <view wx:for="{{sortedSkillsByCat}}" wx:for-item="group" wx:key="cat">
+        <text class="skill-cat-title">{{group.catName}}</text>
+        <view class="skill-grid review">
+          <view class="skill-grid-item play-split" wx:for="{{group.skills}}" wx:for-item="sk" wx:key="name">
+            <view class="skill-grid-top">
+              <text class="skill-grid-name" bindtap="openSkillInfo" data-name="{{sk.name}}">{{sk.displayName || sk.name}}</text>
+              <text class="skill-grid-val" wx:if="{{playMode}}" bindtap="openRollDialog" data-name="{{sk.name}}">{{sk.total}}%</text>
+              <text class="skill-grid-val" wx:if="{{!playMode}}">{{sk.total}}%</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 武器表 -->
+      <text class="char-section-title">⚔️ 武器</text>
+      <view class="weapon-table" wx:if="{{charWeapons.length > 0}}">
+        <view class="weapon-row weapon-header">
+          <text class="weapon-cell w-name">武器</text>
+          <text class="weapon-cell w-skill">技能</text>
+          <text class="weapon-cell w-dmg">伤害</text>
+          <text class="weapon-cell w-range">射程</text>
+          <text class="weapon-cell w-impale">贯穿</text>
+          <text class="weapon-cell w-attacks">次数</text>
+          <text class="weapon-cell w-ammo">弹药</text>
+          <text class="weapon-cell w-malfunc">故障</text>
+          <text class="weapon-cell w-del"> </text>
+        </view>
+        <view class="weapon-row" wx:for="{{charWeapons}}" wx:for-item="w" wx:key="_id">
+          <text class="weapon-cell w-name">{{w.name}}</text>
+          <text class="weapon-cell w-skill">{{w.skill}}</text>
+          <text class="weapon-cell w-dmg">{{w.damage}}</text>
+          <text class="weapon-cell w-range">{{w.range}}</text>
+          <text class="weapon-cell w-impale">{{w.impale || '——'}}</text>
+          <text class="weapon-cell w-attacks">{{w.attacks || '——'}}</text>
+          <text class="weapon-cell w-ammo">{{w.ammo || '——'}}</text>
+          <text class="weapon-cell w-malfunc">{{w.malfunction || '——'}}</text>
+          <text class="weapon-cell w-del" bindtap="removeWeapon" data-id="{{w._id}}">✕</text>
+        </view>
+      </view>
+      <view class="weapon-empty" wx:if="{{charWeapons.length === 0}}">
+        <text class="weapon-empty-text">暂无武器</text>
+      </view>
+      <button class="btn btn-secondary btn-small weapon-add-btn" bindtap="openWeaponPicker">＋ 添加武器</button>
+
+      <!-- 背景故事 -->
+      <text class="char-section-title">📖 背景故事</text>
+      <textarea class="char-textarea" placeholder="写下你的调查员背景故事…" value="{{charBackstory}}" bindinput="onCharFieldChange" data-field="backstory" auto-height maxlength="-1" />
+
+      <!-- 随身物品 -->
+      <text class="char-section-title">🎒 随身物品</text>
+      <textarea class="char-textarea" placeholder="记录随身携带的物品…" value="{{charGear}}" bindinput="onCharFieldChange" data-field="gear" auto-height maxlength="-1" />
+
+      <!-- 神话相关 -->
+      <text class="char-section-title">📓 神话相关</text>
+      <textarea class="char-textarea" placeholder="记录遭遇的神话事件、阅读的典籍…" value="{{charMythos}}" bindinput="onCharFieldChange" data-field="mythos" auto-height maxlength="-1" />
+
+      <!-- 法术 -->
+      <text class="char-section-title">🔮 法术</text>
+      <textarea class="char-textarea" placeholder="记录习得的法术名称与效果…" value="{{charSpells}}" bindinput="onCharFieldChange" data-field="spells" auto-height maxlength="-1" />
+
+      <!-- 调查员伙伴 -->
+      <text class="char-section-title">👥 调查员伙伴</text>
+      <textarea class="char-textarea" placeholder="记录值得信赖的同伴信息…" value="{{charCompanions}}" bindinput="onCharFieldChange" data-field="companions" auto-height maxlength="-1" />
+    </view>
+
+    <view class="saved-info" wx:if="{{savedAt > 0 && !playMode}}">💾 已保存</view>
+
+    <button class="btn btn-primary char-save-btn" bindtap="saveCharacter">💾 保存角色</button>
+    <button class="btn btn-secondary" bindtap="copyDiceImport" wx:if="{{!playMode}}">🎲 骰娘导入</button>
+    <button class="btn btn-secondary" bindtap="goToStep" data-step="4" wx:if="{{!isCompleted && !playMode}}">← 上一步</button>
+    <button class="btn btn-secondary" bindtap="togglePlayMode">{{playMode ? '🚪 退出游玩模式' : '🎮 游玩模式'}}</button>
+    <button class="btn btn-secondary" bindtap="openGrowth" wx:if="{{playMode}}">🌙 幕间成长</button>
+    <button class="btn btn-secondary" bindtap="goHome" wx:if="{{!playMode}}">🏠 返回创建页面</button>
+  </block>
+
+<!-- ===== 骰子投掷 dialog ===== -->
+  <view class="dialog-overlay {{showRollDialog ? 'active' : ''}}" bindtap="closeRollDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet roll-dialog {{showRollDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title" wx:if="{{rollSkill}}">{{rollSkill.name}} {{rollSkill.value}}%</text>
+    
+    <!-- 奖励/惩罚骰选择 -->
+    <view class="roll-bonus-row">
+      <text class="roll-bonus-btn {{rollBonus === -3 ? 'active' : ''}}" bindtap="setBonus" data-bonus="-3">−3</text>
+      <text class="roll-bonus-btn {{rollBonus === -2 ? 'active' : ''}}" bindtap="setBonus" data-bonus="-2">−2</text>
+      <text class="roll-bonus-btn {{rollBonus === -1 ? 'active' : ''}}" bindtap="setBonus" data-bonus="-1">−1</text>
+      <text class="roll-bonus-btn {{rollBonus === 0 ? 'active' : ''}}" bindtap="setBonus" data-bonus="0">±0</text>
+      <text class="roll-bonus-btn {{rollBonus === 1 ? 'active' : ''}}" bindtap="setBonus" data-bonus="1">+1</text>
+      <text class="roll-bonus-btn {{rollBonus === 2 ? 'active' : ''}}" bindtap="setBonus" data-bonus="2">+2</text>
+      <text class="roll-bonus-btn {{rollBonus === 3 ? 'active' : ''}}" bindtap="setBonus" data-bonus="3">+3</text>
+    </view>
+
+    <!-- 投骰结果 -->
+    <view class="roll-result-section" wx:if="{{rollResult}}">
+      <view class="roll-numbers" wx:if="{{rollResult.bonus !== 0}}">
+        <text>十位骰：</text>
+        <text wx:for="{{rollResult.tensDice}}" wx:for-item="d" wx:key="*this" class="roll-die {{d === ((rollResult.roll === 100 ? 0 : Math.floor(rollResult.roll / 10))) ? 'picked' : ''}}">{{d}}0 </text>
+        <text> 个位骰：{{rollResult.ones}}</text>
+      </view>
+      <view class="roll-numbers">
+        <text wx:if="{{rollResult.bonus !== 0}}">→ 取值：</text>
+        <text class="roll-total">{{rollResult.roll}}</text>
+      </view>
+      <view class="roll-level" style="color:{{rollResult.level.color}}">{{rollResult.level.label}}</view>
+      <view class="roll-target">目标 {{rollSkill.value}}%</view>
+    </view>
+
+    <view class="dialog-actions">
+      <button class="dialog-btn confirm" bindtap="doRoll">🎲 投骰</button>
+      <button class="dialog-btn cancel" bindtap="closeRollDialog">关闭</button>
+    </view>
+  </view>
+
+  <!-- ===== 底部导航栏 ===== -->
+  <view class="bottom-nav" wx:if="{{step > 0 && step < 5}}">
+    <button class="btn btn-secondary" wx:if="{{step > 1}}" bindtap="prevStep">← 上一步</button>
+    <view wx:if="{{step == 1}}" style="flex:1;"></view>
+    <button class="btn btn-primary" wx:if="{{step < 5}}" bindtap="nextStep" disabled="{{!canNext}}">下一步 →</button>
+  </view>
+
+  <!-- ===== 技能 dialog（底部弹出，含说明 + slider） ===== -->
+  <view class="dialog-overlay {{showDialog ? 'active' : ''}}" bindtap="closeSkillDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title" wx:if="{{dialogSkill}}">{{dialogSkill.name}}</text>
+    <text class="dialog-sub" wx:if="{{dialogSkill}}">
+      {{dialogSkill.catName}} | 基础 {{dialogSkill.base}}%
+      <text wx:if="{{!dialogReadonly}}"> | {{dialogSkill.isOcc ? '职业技能' : '兴趣技能'}}</text>
+    </text>
+    <!-- 可滚动内容区 -->
+    <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}">
+    <!-- 技能说明 -->
+    <view class="dialog-desc-section" wx:if="{{dialogSkill && dialogSkill.desc}}">
+      <text class="dialog-desc-text">{{dialogSkill.desc}}</text>
+    </view>
+    <!-- 专攻选择器 -->
+    <view class="dialog-spec-section" wx:if="{{dialogSkill && dialogSkill.spec && !dialogReadonly}}">
+      <view wx:if="{{dialogSkill.spec.options}}">
+        <text class="dialog-spec-label">选择专攻方向：</text>
+        <picker mode="selector" range="{{dialogSkill.spec.options}}" range-key="name" value="{{dialogSpecIndex}}" bindchange="onSpecChange">
+          <view class="form-picker"><text>{{dialogSkill.currentSpec || '请选择'}}</text><text class="form-picker-arrow">▼</text></view>
+        </picker>
+      </view>
+      <view wx:if="{{dialogSkill.spec.type == 'text' && !dialogSkill.spec.options}}">
+        <text class="dialog-spec-label">填写具体名称：</text>
+        <input class="form-input" placeholder="请输入专攻名称" value="{{dialogSkill.currentSpec}}" bindinput="onSpecTextInput" />
+      </view>
+    </view>
+    <!-- slider 分配（仅非只读模式） -->
+    <view wx:if="{{dialogSkill && !dialogReadonly}}">
+      <!-- 本职技能：两个 slider -->
+      <view wx:if="{{dialogSkill.isOcc}}">
+        <view class="dialog-slider-row">
+          <text class="dialog-slider-label">{{dialogSkill.base + dialogOccVal + dialogIntVal}}%</text>
+        </view>
+        <view class="dialog-dual-sliders">
+          <view class="dialog-slider-item">
+            <text class="dialog-slider-sub">职业技能: +{{dialogOccVal}}%</text>
+            <slider value="{{dialogOccVal}}" min="0" max="{{dialogOccMax}}" step="1" bindchanging="onOccSliderChange" bindchange="onOccSliderChange" block-size="28" activeColor="#6b4c2a" backgroundColor="#d4c5a9" />
+          </view>
+          <view class="dialog-slider-item">
+            <text class="dialog-slider-sub">兴趣技能: +{{dialogIntVal}}%</text>
+            <slider value="{{dialogIntVal}}" min="0" max="{{dialogIntMax}}" step="1" bindchanging="onIntSliderChange" bindchange="onIntSliderChange" block-size="28" activeColor="#8b7355" backgroundColor="#d4c5a9" />
+          </view>
+        </view>
+      </view>
+      <!-- 非本职技能：单个 slider（兴趣技能点） -->
+      <view wx:if="{{!dialogSkill.isOcc}}">
+        <view class="dialog-slider-row">
+          <text class="dialog-slider-label">{{dialogSkill.base + dialogIntVal}}%</text>
+          <text class="dialog-slider-add">+{{dialogIntVal}}</text>
+          <slider class="dialog-slider" value="{{dialogIntVal}}" min="0" max="{{dialogIntMax}}" step="1" bindchanging="onIntSliderChange" bindchange="onIntSliderChange" block-size="28" activeColor="#8b7355" backgroundColor="#d4c5a9" />
+        </view>
+      </view>
+    </view>
+    <text class="dialog-readonly-val" wx:if="{{dialogSkill && dialogReadonly}}">当前值：{{dialogSkill.currentVal}}%</text>
+    </scroll-view>
+    <!-- 按钮 -->
+    <view class="dialog-actions" wx:if="{{!dialogReadonly}}">
+      <button class="dialog-btn cancel" bindtap="closeSkillDialog">取消</button>
+      <button class="dialog-btn confirm" bindtap="confirmSkillDialog">确定</button>
+    </view>
+    <view class="dialog-actions" wx:if="{{dialogReadonly}}">
+      <button class="dialog-btn confirm" bindtap="closeSkillDialog">关闭</button>
+    </view>
+  </view>
+
+
+  <!-- ===== 年龄修正 dialog ===== -->
+  <view class="dialog-overlay {{showAgeModDialog ? 'active' : ''}}" bindtap="closeAgeModDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showAgeModDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">🔧 年龄修正</text>
+    
+    <view wx:if="{{ageModType === 'teen'}}">
+      <text class="age-mod-prompt">请选择一项扣除 5 点：</text>
+      <view class="age-mod-options">
+        <view class="age-mod-option {{ageModChoice === 'str' ? 'selected' : ''}}" bindtap="setAgeModChoice" data-choice="str">力量 STR（当前 {{ageModBase.str}}）→ {{ageModBase.str - 5}}</view>
+        <view class="age-mod-option {{ageModChoice === 'siz' ? 'selected' : ''}}" bindtap="setAgeModChoice" data-choice="siz">体型 SIZ（当前 {{ageModBase.siz}}）→ {{ageModBase.siz - 5}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{ageModType === 'decay'}}">
+      <text class="age-mod-prompt">需从力量/体质/敏捷中总共扣除 {{ageModDecay}} 点（外貌自动扣除）：</text>
+      <view class="age-mod-inputs">
+        <view class="age-mod-input-row"><text>力量 STR（{{ageModBase.str}}）</text><input class="age-mod-input" type="number" value="{{ageModAlloc.str}}" bindinput="onAgeAllocInput" data-field="str" /></view>
+        <view class="age-mod-input-row"><text>体质 CON（{{ageModBase.con}}）</text><input class="age-mod-input" type="number" value="{{ageModAlloc.con}}" bindinput="onAgeAllocInput" data-field="con" /></view>
+        <view class="age-mod-input-row"><text>敏捷 DEX（{{ageModBase.dex}}）</text><input class="age-mod-input" type="number" value="{{ageModAlloc.dex}}" bindinput="onAgeAllocInput" data-field="dex" /></view>
+      </view>
+      <text class="age-mod-remaining" wx:if="{{ageModRemaining !== 0}}">剩余待分配：{{ageModRemaining}}（必须为0）</text>
+    </view>
+
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeAgeModDialog">取消</button>
+      <button class="dialog-btn confirm" bindtap="confirmAgeMod">确认修正</button>
+    </view>
+  </view>
+
+
+  <!-- ===== 幕间成长 dialog ===== -->
+  <view class="dialog-overlay {{showGrowth ? 'active' : ''}}" bindtap="closeGrowth" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet growth-dialog {{showGrowth ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">🌙 幕间成长</text>
+
+    <!-- 阶段 0：选择要成长的技能 -->
+    <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{growthPhase === 0}}">
+      <text class="growth-hint" wx:if="{{growthSkills.length === 0}}">暂无打勾技能。在游玩模式中成功使用技能后会自动标记。</text>
+      <view class="growth-tag-list" wx:if="{{growthSkills.length > 0}}">
+        <view class="growth-tag {{sk.removed ? 'removed' : ''}}" wx:for="{{growthSkills}}" wx:for-item="sk" wx:key="name" bindtap="removeGrowthSkill" data-name="{{sk.name}}">
+          {{sk.name}} {{sk.value}}% {{sk.removed ? '(已移除)' : '✕'}}
+        </view>
+      </view>
+      <view class="dialog-actions" wx:if="{{growthSkills.length > 0}}">
+        <button class="dialog-btn cancel" bindtap="closeGrowth">取消</button>
+        <button class="dialog-btn confirm" bindtap="startGrowth">开始成长检定</button>
+      </view>
+    </scroll-view>
+
+    <!-- 阶段 1：成长结果 -->
+    <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{growthPhase === 1}}">
+      <view wx:for="{{growthResults}}" wx:for-item="r" wx:key="name" class="growth-result {{r.success ? 'success' : 'fail'}}">
+        <text>{{r.name}} {{r.value}}% → {{r.newVal}}% (投{{r.roll}}{{r.success ? ' 成功 +'+r.gain : ' 失败'}})</text>
+      </view>
+      <view class="dialog-actions">
+        <button class="dialog-btn confirm" bindtap="nextGrowthPhase">下一步：理智恢复</button>
+      </view>
+    </scroll-view>
+
+    <!-- 阶段 2：理智恢复输入 -->
+    <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{growthPhase === 2}}">
+      <text class="growth-hint">SAN 上限：{{growthSANMax}}</text>
+      <view class="dialog-spec-section"><text class="dialog-spec-label">通关奖励（可选）</text><input class="form-input" type="number" value="{{growthSANInput}}" bindinput="onGrowthSANInput" placeholder="输入额外恢复量" /></view>
+      <view class="dialog-actions">
+        <button class="dialog-btn confirm" bindtap="applySAN">确认恢复理智</button>
+      </view>
+    </scroll-view>
+
+    <!-- 阶段 3：理智恢复结果 -->
+    <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{growthPhase === 3}}">
+      <text class="growth-hint">SAN {{growthSANOld}} → {{playSAN}} {{growthSANBonus > 0 ? '(+' + growthSANBonus + ')' : ''}} | 上限 {{growthSANMax}}</text>
+      <view class="dialog-actions">
+        <button class="dialog-btn confirm" bindtap="doLuckGrowth">下一步：幸运成长</button>
+      </view>
+    </scroll-view>
+
+    <!-- 阶段 4：幸运成长 -->
+    <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{growthPhase === 4}}">
+      <text class="growth-hint">幸运 {{growthLuckOld}} → {{growthLuckNew}} (投{{growthLuckRoll}}{{growthLuckSuccess ? ' 成功 +' + growthLuckGain : ' 失败'}})</text>
+      <view class="dialog-actions">
+        <button class="dialog-btn confirm" bindtap="applyCredit">下一步：信用评级</button>
+      </view>
+    </scroll-view>
+
+    <!-- 阶段 5：信用评级 -->
+    <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}" wx:if="{{growthPhase === 5}}">
+      <text class="growth-hint">当前信用评级：{{growthCredInput}}%</text>
+      <view class="dialog-spec-section"><text class="dialog-spec-label">调整为</text><input class="form-input" type="number" value="{{growthCredInput}}" bindinput="onGrowthCredInput" /></view>
+      <view class="dialog-actions">
+        <button class="dialog-btn confirm" bindtap="finishGrowth">完成</button>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- ===== 保存成功提示 ===== -->
+  <view class="save-success" wx:if="{{showSaveSuccess}}">✅ 已保存到本地</view>
+  <!-- ===== 武器选择 dialog ===== -->
+  <view class="dialog-overlay {{showWeaponPicker ? 'active' : ''}}" bindtap="closeWeaponPicker" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showWeaponPicker ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">⚔️ {{showCustomWeapon ? '自定义武器' : '选择武器（1920s）'}}</text>
+
+    <!-- 武器列表模式 -->
+    <block wx:if="{{!showCustomWeapon}}">
+      <input class="occupation-search" placeholder="🔍 搜索武器..." value="{{weaponSearch}}" bindinput="onWeaponSearch" />
+      <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}">
+        <block wx:for="{{weaponGroups}}" wx:for-item="group" wx:key="cat">
+          <text class="skill-cat-title" style="margin-top:0;padding-top:0;">{{group.cat}} ({{group.weapons.length}})</text>
+          <view class="occ-item" wx:for="{{group.weapons}}" wx:for-item="w" wx:key="name" bindtap="addWeapon" data-name="{{w.name}}">
+            <view style="flex:1;">
+              <text class="occ-name" style="font-size:26rpx;">{{w.name}}</text>
+              <text style="font-size:20rpx;color:#8b7355;">{{w.skill}} | {{w.damage}} | 射程 {{w.range}} | {{w.impale === '√' ? '贯穿' : '无贯穿'}}</text>
+            </view>
+            <text style="font-size:28rpx;color:#6b4c2a;">＋</text>
+          </view>
+        </block>
+      </scroll-view>
+      <view class="dialog-actions">
+        <button class="dialog-btn cancel" bindtap="closeWeaponPicker">关闭</button>
+        <button class="dialog-btn confirm" bindtap="openCustomWeapon">✎ 自定义武器</button>
+      </view>
+    </block>
+
+    <!-- 自定义武器表单模式 -->
+    <block wx:if="{{showCustomWeapon}}">
+      <scroll-view class="dialog-body" scroll-y enhanced show-scrollbar="{{false}}">
+        <view class="form-group"><text class="form-label">武器名称</text><input class="form-input" placeholder="输入武器名称" value="{{customWName}}" bindinput="onCustomWField" data-field="name" /></view>
+        <view class="form-group"><text class="form-label">使用技能</text><input class="form-input" placeholder="如：斗殴、手枪、投掷" value="{{customWSkill}}" bindinput="onCustomWField" data-field="skill" /></view>
+        <view class="form-group"><text class="form-label">伤害</text><input class="form-input" placeholder="如：1D6+DB、2D6" value="{{customWDamage}}" bindinput="onCustomWField" data-field="damage" /></view>
+        <view class="form-group"><text class="form-label">射程</text><input class="form-input" placeholder="如：接触、15码" value="{{customWRange}}" bindinput="onCustomWField" data-field="range" /></view>
+        <view class="form-group"><text class="form-label">每轮攻击次数</text><input class="form-input" placeholder="如：1" value="{{customWAttacks}}" bindinput="onCustomWField" data-field="attacks" /></view>
+        <view class="form-group"><text class="form-label">装弹量</text><input class="form-input" placeholder="如：6、——" value="{{customWAmmo}}" bindinput="onCustomWField" data-field="ammo" /></view>
+        <view class="form-group"><text class="form-label">故障值</text><input class="form-input" placeholder="如：100" value="{{customWMalfunction}}" bindinput="onCustomWField" data-field="malfunction" /></view>
+        <view class="form-group"><text class="form-label">贯穿</text><input class="form-input" placeholder="√ 或 ×" value="{{customWImpale}}" bindinput="onCustomWField" data-field="impale" /></view>
+      </scroll-view>
+      <view class="dialog-actions">
+        <button class="dialog-btn cancel" bindtap="cancelCustomWeapon">返回列表</button>
+        <button class="dialog-btn confirm" bindtap="confirmCustomWeapon">添加</button>
+      </view>
+    </block>
+  </view>
+
+</view>

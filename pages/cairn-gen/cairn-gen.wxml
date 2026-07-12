@@ -1,0 +1,109 @@
+<view class="container">
+  <view class="header">
+    <text class="h1">⛰️ 石冢角色生成器</text>
+    <text class="subtitle">Cairn TTRPG — Character Generator</text>
+  </view>
+
+  <button class="generator-button" bindtap="generateCharacter">重新生成</button>
+
+  <view class="character-sheet" wx:if="{{generated}}">
+
+    <!-- 角色描述 -->
+    <text class="section-title">角色</text>
+    <view class="section">
+      <text class="description-text">{{description}}</text>
+    </view>
+
+    <view class="info-row">
+      <text class="info-label">年龄：</text>
+      <text class="info-value">{{age}} 岁</text>
+    </view>
+
+    <!-- 属性 -->
+    <text class="section-title">属性</text>
+    <view class="section-grid">
+      <view class="stat-block">
+        <text class="stat-label">HP</text>
+        <text class="stat-value">{{hp}}</text>
+      </view>
+      <view class="stat-block">
+        <text class="stat-label">护甲</text>
+        <text class="stat-value">{{armorTotal}}</text>
+      </view>
+      <view class="stat-block">
+        <text class="stat-label">力量</text>
+        <text class="stat-value">{{str}}</text>
+      </view>
+      <view class="stat-block">
+        <text class="stat-label">敏捷</text>
+        <text class="stat-value">{{dex}}</text>
+      </view>
+      <view class="stat-block">
+        <text class="stat-label">意志</text>
+        <text class="stat-value">{{wil}}</text>
+      </view>
+    </view>
+
+    <!-- 装备 -->
+    <text class="section-title">装备</text>
+    <view class="section">
+      <view class="info-row">
+        <text class="info-label">护甲：</text>
+        <text class="info-value">{{armor}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">头盔/盾牌：</text>
+        <text class="info-value" wx:if="{{helmet}}">{{helmet}}</text>
+        <text class="info-value" wx:else>无</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">武器：</text>
+        <text class="info-value">{{weapons}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">工具：</text>
+        <text class="info-value">{{tool}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">杂物：</text>
+        <text class="info-value">{{gear}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">零碎：</text>
+        <text class="info-value">{{trinket}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">额外物品：</text>
+        <text class="info-value">{{bonus}}</text>
+      </view>
+    </view>
+
+    <!-- 补给与负重 -->
+    <text class="section-title">补给与负重</text>
+    <view class="section">
+      <view class="info-row">
+        <text class="info-label">起始补给：</text>
+        <text class="info-value">{{gold}} gp，一根火炬，三日份口粮</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">行装：</text>
+        <text class="info-value">已用 {{loadTotal}}/{{loadMax}} 可用栏位</text>
+      </view>
+    </view>
+
+    <!-- 附注 -->
+    <text class="section-title">附注</text>
+    <view class="section">
+      <text class="note-text">• 若物品注明「叠放」，则与另一物品共用同一栏位！</text>
+      <text class="note-text">• 若你行装满了，HP 就会降至 0。</text>
+    </view>
+
+  </view>
+
+  <!-- ====== JSON 数据导出区域 ====== -->
+  <view class="json-export-area">
+    <text class="section-title">分享角色数据 (JSON)</text>
+    <textarea class="json-textarea" value="{{jsonOutput}}" placeholder="点击上方按钮生成角色数据..." disabled="true" auto-height></textarea>
+    <button class="copy-button" bindtap="copyJson">复制 JSON</button>
+  </view>
+</view>
