@@ -1,24 +1,22 @@
 /* pages/tes-botse-skills/tes-botse-skills.wxss */
 
 page {
-  padding-top: 90rpx;
+  padding: 90rpx 10px 10px;
   box-sizing: border-box;
   background-color: #1a1a1a;
   color: #e0e0e0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  padding: 10px;
-  box-sizing: border-box;
 }
 
 .page-wrapper {
   position: relative;
-  padding-top: 120px;
+  padding-top: 210rpx;
 }
 
 /* 顶部搜索栏 */
 .header {
   position: fixed;
-  top: 0;
+  top: 90rpx;
   left: 0;
   right: 0;
   background-color: #1a1a1a;
