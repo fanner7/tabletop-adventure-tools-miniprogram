@@ -11,7 +11,7 @@ Page({
       },
       {
         id: 'liminal-horror-gen',
-        icon: '👻',
+        icon: '🚪',
         title: '阈限恐怖 调查员生成',
         desc: '快速生成 Liminal Horror 角色，包含属性与初始装备。',
         url: '/pages/liminal-horror-gen/liminal-horror-gen'
