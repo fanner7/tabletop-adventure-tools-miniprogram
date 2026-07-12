@@ -1213,9 +1213,9 @@ Page({
       let list = wx.getStorageSync('coc7_characters') || [];
       const loadIdx = this.data._loadIndex;
       if (loadIdx !== undefined && loadIdx >= 0 && loadIdx < list.length) list[loadIdx] = charData;
-      else list.push(charData);
+      else { list.push(charData); this.setData({ _loadIndex: list.length - 1 }); }
       wx.setStorageSync('coc7_characters', list);
-      this.setData({ isCompleted: true, savedAt: Date.now(), showSaveSuccess: true, _loadIndex: undefined });
+      this.setData({ isCompleted: true, savedAt: Date.now(), showSaveSuccess: true });
       setTimeout(() => { this.setData({ showSaveSuccess: false }); }, 2000);
     } catch (e) { wx.showToast({ title: '保存失败，存储空间不足', icon: 'none' }); }
   },
