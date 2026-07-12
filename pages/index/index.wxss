@@ -18,7 +18,7 @@ page {
 /* 顶部标题区 */
 .header {
   text-align: center;
-  padding: 50rpx 20px 28rpx;
+  padding: 110rpx 20px 28rpx;
   max-width: 800px;
   width: 100%;
 }
