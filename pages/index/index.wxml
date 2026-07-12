@@ -38,6 +38,11 @@
     </view>
   </view>
 
+  <!-- ========== 底部标语 ========== -->
+  <view class="slogan">
+    <text class="slogan-text">桌游兴趣小组</text>
+  </view>
+
   <!-- ========== 底部占位（安全区适配） ========== -->
   <view class="footer-safe"></view>
 

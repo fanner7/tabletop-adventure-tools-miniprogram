@@ -100,6 +100,21 @@ page {
   display: block;
 }
 
+/* 底部标语 — 水印质感 */
+.slogan {
+  margin-top: 10rpx;
+  padding: 20rpx;
+  text-align: center;
+}
+.slogan-text {
+  font-size: 28rpx;
+  letter-spacing: 8rpx;
+  color: #c8b89a;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.5),
+    0 -1px 0 rgba(180,160,140,0.3);
+}
+
 /* 底部安全区 */
 .footer-safe {
   height: 40px;
