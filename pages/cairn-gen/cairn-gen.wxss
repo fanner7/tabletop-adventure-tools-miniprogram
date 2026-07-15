@@ -1,188 +1,154 @@
-/* pages/cairn-gen/cairn-gen.wxss — 石冢角色生成器 */
+/* pages/cairn-gen/cairn-gen.wxss — 石冢 Cairn · 荒野质感 */
 
-page {
-  padding-top: 90rpx;
-  box-sizing: border-box;
-  background-color: #f4f5f7;
-  color: #212529;
-  line-height: 1.6;
-}
+page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a1a; font-family:-apple-system,sans-serif; min-height:100vh; }
+.cairn-container { width:100%; max-width:600px; margin:0 auto; padding:0 12px 120px; box-sizing:border-box; }
 
-.container {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
+/* ===== 页面头部 ===== */
+.header { text-align:center; padding:32rpx 0 16rpx; border-bottom:2px solid #d5d0c8; margin-bottom:16rpx; }
+.header-title { font-size:38rpx; font-weight:bold; color:#1a1a1a; display:block; }
+.header-subtitle { font-size:22rpx; color:#777; display:block; margin-top:6rpx; }
+.section-title { font-size:28rpx; font-weight:bold; color:#1a1a1a; margin-bottom:12rpx; display:block; }
+.empty-hint { text-align:center; padding:40rpx 0; color:#aaa; font-size:26rpx; }
 
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #dee2e6;
-  padding: 40rpx 0 20rpx;
-}
+/* ===== 按钮 ===== */
+.btn { width:100%; padding:24rpx 0; border-radius:12rpx; font-size:30rpx; font-weight:bold; text-align:center; border:none; margin-bottom:14rpx; }
+.btn-primary { background:#2d6a3b; color:#fff; }
+.btn-primary:active { background:#23552e; }
 
-.h1 {
-  font-size: 42rpx;
-  font-weight: bold;
-  display: block;
-}
+/* ===== 角色列表 ===== */
+.char-list { margin-top:12rpx; }
+.char-item { background:#fff; border-radius:10rpx; padding:16rpx 20rpx; margin-bottom:10rpx; display:flex; align-items:center; justify-content:space-between; border-left:6rpx solid #2d6a3b; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+.char-item-info { flex:1; }
+.char-item-name { font-size:28rpx; font-weight:bold; color:#1a1a1a; display:block; }
+.char-item-meta { font-size:22rpx; color:#666; margin-top:2rpx; display:block; }
+.char-item-del { font-size:32rpx; color:#ccc; padding:4rpx 6rpx; }
 
-.subtitle {
-  font-size: 26rpx;
-  color: #6c757d;
-  margin-top: 10rpx;
-  display: block;
-}
+/* ===== 角色卡导航栏 ===== */
+.play-header { display:flex; align-items:center; padding:12rpx 0; border-bottom:2px solid #d5d0c8; margin-bottom:14rpx; }
+.back-btn { font-size:26rpx; color:#2d6a3b; padding:4rpx 6rpx; font-weight:bold; }
+.play-name { font-size:30rpx; font-weight:bold; color:#1a1a1a; flex:1; text-align:center; }
+.play-save { font-size:32rpx; padding:4rpx 6rpx; color:#2d6a3b; }
 
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #087f5b;
-  border-bottom: 2px solid #087f5b;
-  padding-bottom: 10rpx;
-  margin-top: 50rpx;
-  margin-bottom: 20rpx;
-  display: block;
-}
+/* ===== 通用卡片 ===== */
+.card { background:#fff; border-radius:12rpx; padding:18rpx; margin-bottom:12rpx; box-shadow:0 1px 6px rgba(0,0,0,0.05); }
+.card-title { font-size:26rpx; font-weight:bold; color:#1a1a1a; display:block; margin-bottom:10rpx; }
 
-.generator-button {
-  width: 100%;
-  padding: 30rpx;
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #fff;
-  background-color: #087f5b;
-  border: none;
-  border-radius: 8px;
-  margin-bottom: 50rpx;
-  text-align: center;
-  box-sizing: border-box;
-}
+/* ===== 属性卡片 ===== */
+.attr-card { display:flex; gap:10rpx; padding:14rpx; }
+.attr-mini { flex:1; border-radius:10rpx; padding:16rpx 6rpx 12rpx; text-align:center; }
+.attr-mini.str { background:#fdf3ea; border:1px solid #f0d5bb; }
+.attr-mini.dex { background:#edf6ed; border:1px solid #c2dfc5; }
+.attr-mini.wil { background:#eef3f9; border:1px solid #c5d4e8; }
+.attr-mini:active { opacity:.75; }
+.am-val { font-size:44rpx; font-weight:bold; display:block; }
+.am-max { font-size:24rpx; font-weight:normal; color:#888; }
+.attr-mini.str .am-val { color:#d4782f; }
+.attr-mini.dex .am-val { color:#2d8a4e; }
+.attr-mini.wil .am-val { color:#3d7ab8; }
+.am-label { font-size:20rpx; color:#666; display:block; margin:4rpx 0; }
+.am-btns { display:flex; gap:6rpx; justify-content:center; }
+.am-pm { display:inline-block; width:40rpx; height:40rpx; line-height:40rpx; border-radius:8rpx; background:rgba(0,0,0,0.06); color:#444; font-size:22rpx; font-weight:bold; text-align:center; }
+.am-pm:active { background:rgba(0,0,0,0.14); }
 
-.generator-button:active {
-  background-color: #076c4e;
-}
+/* ===== HP / 护甲 / 金币 ===== */
+.hp-card-row { display:flex; gap:12rpx; align-items:stretch; }
+.hp-block { flex:1; background:#fdf5f5; border-radius:10rpx; padding:14rpx; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6rpx; }
+.hpl { font-size:22rpx; color:#666; }
+.hpv { font-size:36rpx; font-weight:bold; color:#c0392b; }
+.ag-block { flex:1; display:flex; flex-direction:column; gap:8rpx; }
+.ag-item { display:flex; align-items:center; justify-content:center; gap:8rpx; background:#f8f7f5; border-radius:8rpx; padding:10rpx 8rpx; }
+.agl { font-size:20rpx; color:#666; }
+.ag-inp { width:72rpx; height:44rpx; background:#fff; border:1px solid #d5d0c8; border-radius:6rpx; text-align:center; font-size:26rpx; font-weight:bold; color:#1a1a1a; }
+.coins-row { flex-wrap:wrap; gap:4rpx; }
+.coin-inp { width:56rpx; height:38rpx; background:#fff; border:1px solid #d5d0c8; border-radius:4rpx; text-align:center; font-size:20rpx; font-weight:bold; color:#1a1a1a; }
+.coin-label { font-size:18rpx; color:#666; font-weight:bold; }
 
-.character-sheet {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 60rpx;
-  box-sizing: border-box;
-  width: 100%;
-}
+/* ===== 背包 ===== */
+.inv-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8rpx; }
+.inv-head .card-title { margin-bottom:0; }
+.inv-actions { display:flex; gap:10rpx; margin-top:14rpx; }
+.btn-fatigue-lg { flex:1; padding:18rpx 0; background:#f6f4f0; color:#2d6a3b; border:1px solid #d5d0c8; border-radius:10rpx; font-size:22rpx; font-weight:bold; text-align:center; }
+.btn-fatigue-lg:active { background:#ebe7e0; }
+.inv-slot { display:flex; align-items:center; gap:6rpx; padding:5rpx 0; }
+.inv-idx { font-size:20rpx; color:#bbb; width:36rpx; text-align:center; flex-shrink:0; }
+.inv-input { flex:1; height:46rpx; background:#f8f7f5; border:1px solid #e5e1d9; border-radius:4rpx; padding:0 10rpx; font-size:22rpx; color:#1a1a1a; }
+.inv-del { font-size:28rpx; color:#ccc; padding:4rpx 6rpx; }
+.inv-del:active { color:#c0392b; }
 
-.section {
-  margin-bottom: 30rpx;
-}
+/* ===== 掷骰 ===== */
+.dice-row { display:flex; flex-wrap:wrap; gap:8rpx; }
+.dice-btn-wrap { position:relative; width:calc(25% - 6rpx); }
+.dice-btn { display:block; width:100%; padding:14rpx 0; background:#f6f4f0; border:1px solid #d5d0c8; border-radius:8rpx; font-size:24rpx; font-weight:bold; color:#1a1a1a; text-align:center; }
+.dice-btn.sel { background:#2d6a3b; color:#fff; border-color:#2d6a3b; }
+.dice-badge { position:absolute; top:-8rpx; right:-8rpx; min-width:32rpx; height:32rpx; line-height:32rpx; background:#555; color:#fff; border-radius:16rpx; font-size:18rpx; font-weight:bold; text-align:center; padding:0 6rpx; }
+.dice-actions { display:flex; gap:10rpx; margin-top:12rpx; }
+.btn-roll { flex:2; padding:18rpx 0; background:#2d6a3b; color:#fff; border:none; border-radius:10rpx; font-size:26rpx; font-weight:bold; text-align:center; }
+.btn-roll:active { background:#23552e; }
+.btn-roll.rolling { background:#a0a090; }
+.btn-clear { flex:1; padding:18rpx 0; background:transparent; color:#666; border:1px solid #d5d0c8; border-radius:10rpx; font-size:24rpx; text-align:center; }
+.btn-clear:active { background:#f0ece5; }
 
-.description-text {
-  font-size: 28rpx;
-  line-height: 1.8;
-  color: #212529;
-  display: block;
-}
+/* 投掷结果高亮区 */
+.dice-result-highlight { margin-top:8rpx; padding:20rpx; background:#1e2d1a; border-radius:12rpx; text-align:center; }
+.drh-total { font-size:72rpx; font-weight:bold; color:#e8e4db; display:block; line-height:1.1; }
+.drh-dice { display:flex; flex-wrap:wrap; gap:8rpx; justify-content:center; margin-top:12rpx; }
+.drh-chip { display:inline-block; padding:6rpx 14rpx; background:rgba(255,255,255,0.10); color:#b8bfae; border-radius:20rpx; font-size:20rpx; }
 
-.section-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20rpx;
-}
+.dice-rolling-hint { text-align:center; padding:20rpx 0; font-size:28rpx; color:#666; }
 
-.stat-block {
-  background-color: #f4f5f7;
-  padding: 20rpx;
-  border-radius: 6px;
-  text-align: center;
-  flex: 1;
-  min-width: 100rpx;
-}
+/* 掷骰历史 */
+.dice-log { margin-top:10rpx; border-top:1px solid #e5e1d9; padding-top:8rpx; }
+.dl-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:6rpx; }
+.dl-title { font-size:22rpx; color:#888; font-weight:bold; }
+.dl-clear { font-size:22rpx; color:#bbb; padding:2rpx 6rpx; }
+.dl-clear:active { color:#c0392b; }
+.dl-item { display:block; font-size:22rpx; color:#1a1a1a; padding:4rpx 0; border-bottom:1px solid #f0ece5; }
+.dl-detail { font-size:18rpx; color:#888; }
+.dl-time { font-size:18rpx; color:#bbb; margin-left:8rpx; }
 
-.stat-label {
-  display: block;
-  font-size: 24rpx;
-  color: #6c757d;
-}
+/* ===== 笔记 ===== */
+.notes-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10rpx; }
+.notes-toggle { font-size:22rpx; color:#2d6a3b; padding:2rpx 6rpx; }
+.notes-area { width:100%; min-height:60rpx; max-height:200rpx; background:#f8f7f5; border:1px solid #e5e1d9; border-radius:8rpx; padding:14rpx; font-size:24rpx; color:#1a1a1a; box-sizing:border-box; }
+.notes-area.expanded { max-height:none; min-height:200rpx; }
 
-.stat-value {
-  font-size: 52rpx;
-  font-weight: bold;
-  display: block;
-}
+/* ===== 底部弹窗通用 ===== */
+.dialog-sheet { position:fixed; bottom:0; left:0; right:0; background:#fff; border-radius:24rpx 24rpx 0 0; z-index:201; transform:translateY(100%); transition:transform .3s; display:flex; flex-direction:column; max-height:80vh; }
+.dialog-sheet.active { transform:translateY(0); }
+.dialog-handle { width:60rpx; height:6rpx; background:#d5d0c8; border-radius:3rpx; margin:16rpx auto; }
+.dialog-title { font-size:32rpx; font-weight:bold; color:#1a1a1a; text-align:center; padding:0 32rpx 16rpx; display:block; }
+.dialog-actions { display:flex; gap:16rpx; padding:16rpx 32rpx calc(16rpx + env(safe-area-inset-bottom,20rpx)); }
+.dialog-btn { flex:1; padding:24rpx 0; border-radius:12rpx; font-size:28rpx; font-weight:bold; text-align:center; border:none; }
+.dialog-btn.confirm { background:#2d6a3b; color:#fff; }
+.dialog-btn.confirm:active { background:#23552e; }
 
-.info-row {
-  padding: 12rpx 0;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  align-items: flex-start;
-}
+.dialog-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.45); z-index:200; opacity:0; visibility:hidden; transition:opacity .3s; }
+.dialog-overlay.active { opacity:1; visibility:visible; }
 
-.info-row:last-child {
-  border-bottom: none;
-}
+/* 检定弹窗 */
+.check-popup { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(.8); background:#fff; border-radius:20rpx; padding:40rpx 36rpx; z-index:201; text-align:center; opacity:0; visibility:hidden; transition:all .3s; width:460rpx; box-shadow:0 8px 32px rgba(0,0,0,0.18); }
+.check-popup.active { opacity:1; visibility:visible; transform:translate(-50%,-50%) scale(1); }
+.check-title { font-size:30rpx; font-weight:bold; color:#1a1a1a; display:block; margin-bottom:8rpx; }
+.check-target { font-size:22rpx; color:#666; display:block; margin-bottom:14rpx; }
+.check-roll { font-size:60rpx; font-weight:bold; color:#1a1a1a; display:block; margin-bottom:10rpx; }
+.check-result { font-size:34rpx; font-weight:bold; display:block; margin-bottom:20rpx; }
+.check-result.success { color:#2d8a4e; }
+.check-result.fail { color:#c0392b; }
 
-.info-label {
-  color: #495057;
-  font-weight: bold;
-  flex-shrink: 0;
-  margin-right: 10rpx;
-}
+/* ===== 底部双按钮 ===== */
+.bottom-btns { display:flex; gap:12rpx; margin-top:8rpx; }
+.btn-subtle { padding:24rpx 0; background:#f6f4f0; color:#555; border:1px solid #d5d0c8; border-radius:12rpx; font-size:30rpx; font-weight:bold; text-align:center; }
+.btn-subtle:active { background:#ebe7e0; }
 
-.info-value {
-  color: #212529;
-  flex: 1;
-}
-
-.note-text {
-  display: block;
-  font-size: 26rpx;
-  color: #868e96;
-  margin-bottom: 10rpx;
-}
-
-/* JSON 数据导出区域 */
-.json-export-area {
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 60rpx;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.json-textarea {
-  width: 100%;
-  min-height: 400rpx;
-  box-sizing: border-box;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  padding: 20rpx;
-  font-family: monospace;
-  font-size: 24rpx;
-  background-color: #e9ecef;
-  color: #495057;
-}
-
-.copy-button {
-  width: 100%;
-  margin-top: 30rpx;
-  padding: 24rpx;
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #fff;
-  background-color: #6c757d;
-  border: none;
-  border-radius: 6px;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.copy-button:active {
-  background-color: #5a6268;
-}
+/* ===== 法术弹窗 ===== */
+.spell-search-bar { padding:0 16rpx 12rpx; }
+.spell-search-input { width:100%; height:64rpx; background:#f8f7f5; border:1px solid #d5d0c8; border-radius:8rpx; padding:0 16rpx; font-size:24rpx; color:#1a1a1a; box-sizing:border-box; }
+.spell-list { max-height:50vh; }
+.spell-list-inner { padding:0 16rpx; }
+.spell-item { display:flex; align-items:center; gap:10rpx; padding:12rpx 0; border-bottom:1px solid #efebe3; }
+.spell-num { width:40rpx; text-align:center; font-size:22rpx; color:#aaa; flex-shrink:0; }
+.spell-info { flex:1; overflow:hidden; min-width:0; }
+.spell-name { font-size:26rpx; font-weight:bold; color:#1a1a1a; display:block; margin-bottom:4rpx; }
+.spell-desc { font-size:22rpx; color:#555; line-height:1.5; display:block; }
+.spell-add { width:44rpx; height:44rpx; line-height:44rpx; text-align:center; background:#2d6a3b; color:#fff; border-radius:50%; font-size:26rpx; font-weight:bold; flex-shrink:0; }
+.spell-add:active { background:#23552e; }
