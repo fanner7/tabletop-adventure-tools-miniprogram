@@ -9,7 +9,7 @@
     </view>
     <button class="btn btn-primary" bindtap="startNew">➕ 创建新角色</button>
     <view class="char-list" wx:if="{{characters.length > 0}}">
-      <text class="section-title">已保存的角色</text>
+      <text class="section-title">📂 已保存的角色</text>
       <view class="char-item" wx:for="{{characters}}" wx:for-item="ch" wx:key="id" bindtap="openChar" data-index="{{index}}">
         <view class="char-item-info">
           <text class="char-item-name">{{ch.name}}</text>

@@ -303,7 +303,7 @@ Page({
   clearHistory() { this.setData({ diceHistory: [] }); },
   rollSelected() {
     const sel = this.data.diceSelected, keys = Object.keys(sel);
-    if (keys.length === 0) { wx.showToast({ title: '请先选择骰子', icon: 'none', duration: 1500 }); return; }
+    if (keys.length === 0) { wx.showToast({ title: '⚠ 请先选择骰子', icon: 'none', duration: 1500 }); return; }
     this.setData({ diceRolling: true, diceResult: null }); wx.vibrateShort({ type: 'medium' });
     const dice = []; let total = 0;
     keys.forEach(k => { const sides = parseInt(k), count = sel[k]; for (let i = 0; i < count; i++) { const r = this.roll(sides); dice.push({ sides, result: r }); total += r; } });
