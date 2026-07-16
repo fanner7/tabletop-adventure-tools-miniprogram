@@ -42,7 +42,7 @@
 │   ├── cairn-gen/                # 石冢角色生成
 │   ├── liminal-horror-gen/       # 阈限恐怖生成器
 │   ├── liminal-horror-gen-bloom/ # 阈限恐怖·繁孽版
-│   ├── tes-botse-skills/         # TES 技能速查
+│   ├── tes-botse-skills/         # TES:BotSE 技能速查
 │   └── logs/                     # 日志页
 └── utils/
     └── util.js                   # 通用工具函数
@@ -54,7 +54,7 @@
 - ✅ 石冢角色生成 — 已发布
 - ✅ 阈限恐怖角色生成 — 已发布
 - ✅ 阈限恐怖·繁孽版 — 已发布
-- ✅ TES 技能速查 — 已发布
+- ✅ TES:BotSE 技能速查 — 已发布
 - 🚧 CoC 守密人助手 — 开发中
 
 ## 📄 许可
