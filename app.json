@@ -6,7 +6,8 @@
     "pages/liminal-horror-gen/liminal-horror-gen",
     "pages/liminal-horror-gen-bloom/liminal-horror-gen-bloom",
     "pages/tes-botse-skills/tes-botse-skills",
-    "pages/coc7-gen/coc7-gen"
+    "pages/coc7-gen/coc7-gen",
+    "pages/coc-keeper/coc-keeper"
   ],
   "window": {
     "navigationStyle": "custom",

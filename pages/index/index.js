@@ -36,6 +36,13 @@ Page({
         title: 'COC7 调查员创建',
         desc: '克苏鲁的呼唤 7版 调查员角色创建工具。',
         url: '/pages/coc7-gen/coc7-gen'
+      },
+      {
+        id: 'coc-keeper',
+        icon: '🔮',
+        title: 'COC 守密人助手',
+        desc: '任务管理、玩家卡与NPC卡导入监看。',
+        url: '/pages/coc-keeper/coc-keeper'
       }
     ]
   },

@@ -756,6 +756,33 @@ Page({
     });
   },
 
+  // ==================== 导入调查员 ====================
+  importCharacter() {
+    wx.getClipboardData({
+      success: (res) => {
+        try {
+          const charData = JSON.parse(res.data);
+          if (!charData.attrValues || !charData.charInfo) {
+            wx.showToast({ title: '剪贴板内容不是有效的调查员数据', icon: 'none' });
+            return;
+          }
+          charData.completed = true;
+          charData.timestamp = Date.now();
+          const list = wx.getStorageSync('coc7_characters') || [];
+          list.push(charData);
+          wx.setStorageSync('coc7_characters', list);
+          this.setData({ savedCharacters: list });
+          wx.showToast({ title: '✅ 导入成功', icon: 'success' });
+        } catch (e) {
+          wx.showToast({ title: '数据解析失败，请检查剪贴板内容', icon: 'none' });
+        }
+      },
+      fail: () => {
+        wx.showToast({ title: '读取剪贴板失败，请先复制调查员数据', icon: 'none' });
+      }
+    });
+  },
+
   // ==================== STEP 1：属性掷骰 ====================
   rollAllAttrs() {
     const attrs = ['str','con','dex','app','pow','siz','int','edu','luck'];
@@ -1304,6 +1331,33 @@ Page({
     } catch (e) { wx.showToast({ title: '保存失败，存储空间不足', icon: 'none' }); }
   },
 
+  // ==================== 导出角色 ====================
+  exportCharacter() {
+    const charData = {
+      attrValues: this.data.attrValues, attrRolls: this.data.attrRolls,
+      attrDesc: this.data.attrDesc, attrDisplay: this.data.attrDisplay,
+      charInfo: this.data.charInfo, selectedOcc: this.data.selectedOcc,
+      occPts: this.data.occPts, intPts: this.data.intPts, skillSpecs: this.data.skillSpecs,
+      usedOccPoints: this.data.usedOccPoints, totalOccPoints: this.data.totalOccPoints,
+      usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
+      derived: this.data.derived, derivedItems: this.data.derivedItems,
+      sortedSkillsByCat: this.data.sortedSkillsByCat,
+      timestamp: Date.now(),
+      tickedSkills: this.data.tickedSkills,
+      playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
+      majorWound: this.data.majorWound,
+      charWeapons: this.data.charWeapons,
+      charBackstory: this.data.charBackstory, charGear: this.data.charGear,
+      charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
+      completed: true,
+    };
+    wx.setClipboardData({
+      data: JSON.stringify(charData, null, 2),
+      success: () => { wx.showToast({ title: '已复制到剪贴板', icon: 'success' }); },
+      fail: () => { wx.showToast({ title: '复制失败', icon: 'none' }); }
+    });
+  },
+
   // ==================== 骰娘导入 ====================
   generateDiceImport() {
     const v = this.data.attrValues;
@@ -1523,6 +1577,7 @@ Page({
     const dex = this.data.attrValues.dex || 50;
     
     // Build list of ticked skills with current values
+    const specs = this.data.skillSpecs || {};
     const list = Object.keys(ticked).filter(k => ticked[k]).map(name => {
       const sk = ALL_SKILLS.find(s => s.name === name);
       const base = sk ? getSkillBase(sk.name, edu, dex, specs) : 0;

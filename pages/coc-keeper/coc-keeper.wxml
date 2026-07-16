@@ -1,0 +1,281 @@
+<!-- pages/coc-keeper/coc-keeper.wxml — COC 守密人助手 -->
+<view class="keeper-container">
+
+  <!-- ===== 顶部标题 ===== -->
+  <view class="keeper-header" wx:if="{{!viewingType}}">
+    <text class="keeper-title">🔮 COC 守密人助手</text>
+    <text class="keeper-subtitle">Keeper Assistant — 任务管理与角色监看</text>
+  </view>
+
+  <!-- ================================================================== -->
+  <!-- 任务列表视图 -->
+  <!-- ================================================================== -->
+  <block wx:if="{{!currentTaskId && !viewingType}}">
+    <text class="section-title">📋 我的任务</text>
+    <text class="section-desc">创建任务来管理一场游戏中的所有调查员和NPC数据</text>
+    <button class="btn btn-primary" bindtap="createTask">➕ 创建新任务</button>
+
+    <view class="task-list" wx:if="{{tasks.length > 0}}">
+      <view class="task-item" wx:for="{{tasks}}" wx:for-item="t" wx:key="id"
+            bindtap="selectTask" data-id="{{t.id}}">
+        <view class="task-info">
+          <text class="task-name">{{t.name}}</text>
+          <text class="task-meta">{{t.players.length}} 调查员 · {{t.npcs.length}} NPC</text>
+        </view>
+        <text class="task-delete" catchtap="deleteTask" data-id="{{t.id}}">删除</text>
+      </view>
+    </view>
+    <view class="empty-hint" wx:if="{{tasks.length === 0}}">
+      <text>暂无任务，点击上方按钮创建</text>
+    </view>
+  </block>
+
+  <!-- ================================================================== -->
+  <!-- 任务详情视图 -->
+  <!-- ================================================================== -->
+  <block wx:if="{{currentTask && !viewingType}}">
+    <view class="task-header-bar">
+      <text class="back-btn" bindtap="backToList">← 返回</text>
+      <text class="task-header-name">📋 {{currentTask.name}}</text>
+      <text class="task-header-count">{{currentTask.players.length}} 调查员 · {{currentTask.npcs.length}} NPC</text>
+    </view>
+
+    <!-- 导入按钮 -->
+    <view class="import-buttons">
+      <button class="btn-subtle btn-half" bindtap="importPlayer">📥 导入调查员</button>
+      <button class="btn-subtle btn-half" bindtap="importNPC">📥 导入 NPC</button>
+    </view>
+
+    <view class="combat-bar" wx:if="{{currentTask.players.length > 0 || currentTask.npcs.length > 0}}">
+      <button class="btn-subtle" style="width:100%;box-sizing:border-box;" bindtap="openCombatOrder">⚔️ 战斗轮</button>
+      <view class="combat-inline" wx:if="{{showCombatOrder}}">
+        <view class="combat-tie-warn" wx:if="{{combatHasTies}}">
+          <text>⚠ DEX 相同：{{combatTieNames}}</text>
+        </view>
+        <view class="combat-tags">
+          <view class="combat-tag {{item.type}} {{item.tie ? 'tie' : ''}}" wx:for="{{combatOrder}}" wx:for-item="item" wx:key="key">
+            <text class="combat-tag-idx">{{index + 1}}</text>
+            <text class="combat-tag-name">{{item.name}}</text>
+            <text class="combat-tag-dex">DEX{{item.dex}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 调查员卡片 -->
+    <text class="section-title">👤 调查员 ({{currentTask.players.length}})</text>
+    <view class="card-grid" wx:if="{{currentTask.players.length > 0}}">
+      <view class="char-card" wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi"
+            bindtap="viewPlayer" data-index="{{pi}}">
+        <view class="char-card-header">
+          <text class="char-card-name">{{p.charInfo.name || '未命名'}}</text>
+          <text class="char-card-delete" catchtap="deletePlayer" data-index="{{pi}}">✕</text>
+        </view>
+        <text class="char-card-occ">{{p.selectedOcc ? p.selectedOcc.name : '未知职业'}}</text>
+        <view class="char-card-stats">
+          <text class="char-card-stat">HP {{p.playHP || p.derived.hp}}/{{p.derived.hp}}</text>
+          <text class="char-card-stat">SAN {{p.playSAN !== undefined ? p.playSAN : p.derived.san}}</text>
+          <text class="char-card-stat">LUCK {{p.playLuck !== undefined ? p.playLuck : (p.attrValues.luck || 50)}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty-hint" wx:if="{{currentTask.players.length === 0}}">
+      <text>暂无调查员，点击上方按钮导入</text>
+    </view>
+
+    <!-- NPC 卡片 -->
+    <text class="section-title" style="margin-top:32rpx;">👺 NPC ({{currentTask.npcs.length}})</text>
+    <view class="card-grid" wx:if="{{currentTask.npcs.length > 0}}">
+      <view class="char-card npc-card" wx:for="{{currentTask.npcs}}" wx:for-item="n" wx:for-index="ni" wx:key="id"
+            bindtap="viewNPC" data-index="{{ni}}">
+        <view class="char-card-header">
+          <text class="char-card-name">{{n.name}}</text>
+          <text class="char-card-delete" catchtap="deleteNPC" data-index="{{ni}}">✕</text>
+        </view>
+        <text class="char-card-occ">NPC<text wx:if="{{n.dex !== null}}"> · DEX {{n.dex}}</text></text>
+        <text class="npc-card-preview">{{n.data.length > 80 ? n.data.substring(0, 80) + '…' : n.data}}</text>
+      </view>
+    </view>
+    <view class="empty-hint" wx:if="{{currentTask.npcs.length === 0}}">
+      <text>暂无 NPC，点击上方按钮导入</text>
+    </view>
+  </block>
+
+  <!-- ================================================================== -->
+  <!-- 调查员详情视图（swiper 左右滑动切换） -->
+  <!-- ================================================================== -->
+  <block wx:if="{{viewingType === 'player' && viewingData}}">
+    <view class="task-header-bar">
+      <text class="back-btn" bindtap="closeDetail">← 返回任务</text>
+      <text class="task-header-name">{{viewingData.charInfo.name || '未命名'}}</text>
+      <text class="task-header-count">{{viewingData.selectedOcc ? viewingData.selectedOcc.name : ''}} · {{viewingIndex + 1}}/{{currentTask.players.length}}</text>
+    </view>
+
+    <swiper class="detail-swiper" current="{{viewingIndex}}" bindchange="onPlayerSwiperChange" duration="300" circular indicator-dots="{{false}}">
+      <swiper-item wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi">
+        <scroll-view class="detail-scroll" scroll-y enhanced show-scrollbar="{{false}}" bindscroll="onDetailScroll" scroll-top="{{detailScrollTop}}" scroll-with-animation="{{false}}">
+          <view class="char-sheet">
+            <!-- 角色头部 -->
+            <view class="char-header">
+              <text class="char-name">{{p.charInfo.name || '未命名'}}</text>
+              <text class="char-sub">{{p.selectedOcc ? p.selectedOcc.name + ' | ' + p.charInfo.era : p.charInfo.era}}</text>
+            </view>
+
+            <!-- 属性 -->
+            <text class="char-section-title">📊 属性</text>
+            <view class="char-attr-row">
+              <view class="char-attr" wx:for="{{p.attrDisplay}}" wx:for-item="a" wx:key="index">
+                <text class="char-attr-label">{{a.label}}</text>
+                <text class="char-attr-value">{{a.value}}</text>
+              </view>
+            </view>
+
+            <!-- 状态 -->
+            <text class="char-section-title">❤️ 状态</text>
+            <view class="char-deriv-row">
+              <view class="char-deriv">
+                <text class="char-deriv-label">生命 HP</text>
+                <text class="char-deriv-value">{{p.playHP !== undefined ? p.playHP : p.derived.hp}}/{{p.derived.hp}}</text>
+              </view>
+              <view class="char-deriv">
+                <text class="char-deriv-label">理智 SAN</text>
+                <text class="char-deriv-value">{{p.playSAN !== undefined ? p.playSAN : p.derived.san}}</text>
+              </view>
+              <view class="char-deriv">
+                <text class="char-deriv-label">幸运 LUCK</text>
+                <text class="char-deriv-value">{{p.playLuck !== undefined ? p.playLuck : (p.attrValues.luck || 50)}}</text>
+              </view>
+              <view class="char-deriv">
+                <text class="char-deriv-label">魔法 MP</text>
+                <text class="char-deriv-value">{{p.playMP !== undefined ? p.playMP : p.derived.mp}}</text>
+              </view>
+              <view class="char-deriv">
+                <text class="char-deriv-label">重伤</text>
+                <text class="char-deriv-value">{{p.majorWound ? '☑ 是' : '☐ 否'}}</text>
+              </view>
+              <view wx:for="{{p.derivedItems}}" wx:for-item="d" wx:key="index"
+                    wx:if="{{d.l !== '生命 HP' && d.l !== '理智 SAN' && d.l !== '魔法 MP'}}">
+                <view class="char-deriv">
+                  <text class="char-deriv-label">{{d.l}}</text>
+                  <text class="char-deriv-value">{{d.v}}</text>
+                </view>
+              </view>
+            </view>
+
+            <!-- 技能 -->
+            <text class="char-section-title">🎯 技能</text>
+            <view wx:if="{{p.sortedSkillsByCat}}">
+              <view wx:for="{{p.sortedSkillsByCat}}" wx:for-item="group" wx:key="cat">
+                <text class="skill-cat-title">{{group.catName}}</text>
+                <view class="skill-grid review">
+                  <view class="skill-grid-item" wx:for="{{group.skills}}" wx:for-item="sk" wx:key="name">
+                    <view class="skill-grid-top">
+                      <text class="skill-grid-name">{{sk.displayName || sk.name}}</text>
+                      <text class="skill-grid-val">{{sk.total}}%</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view wx:if="{{!p.sortedSkillsByCat && p.occPts}}" class="empty-hint">
+              <text>此角色数据不含预计算技能分组，请重新导出</text>
+            </view>
+
+            <!-- 武器表 -->
+            <text class="char-section-title">⚔️ 武器</text>
+            <view class="weapon-table" wx:if="{{p.charWeapons && p.charWeapons.length > 0}}">
+              <view class="weapon-row weapon-header">
+                <text class="weapon-cell w-name">武器</text>
+                <text class="weapon-cell w-skill">技能</text>
+                <text class="weapon-cell w-dmg">伤害</text>
+                <text class="weapon-cell w-range">射程</text>
+                <text class="weapon-cell w-impale">贯穿</text>
+                <text class="weapon-cell w-attacks">次数</text>
+                <text class="weapon-cell w-ammo">弹药</text>
+                <text class="weapon-cell w-malfunc">故障</text>
+              </view>
+              <view class="weapon-row" wx:for="{{p.charWeapons}}" wx:for-item="w" wx:key="_id">
+                <text class="weapon-cell w-name">{{w.name}}</text>
+                <text class="weapon-cell w-skill">{{w.skill}}</text>
+                <text class="weapon-cell w-dmg">{{w.damage}}</text>
+                <text class="weapon-cell w-range">{{w.range}}</text>
+                <text class="weapon-cell w-impale">{{w.impale || '——'}}</text>
+                <text class="weapon-cell w-attacks">{{w.attacks || '——'}}</text>
+                <text class="weapon-cell w-ammo">{{w.ammo || '——'}}</text>
+                <text class="weapon-cell w-malfunc">{{w.malfunction || '——'}}</text>
+              </view>
+            </view>
+            <view class="weapon-empty" wx:if="{{!p.charWeapons || p.charWeapons.length === 0}}">
+              <text class="weapon-empty-text">暂无武器</text>
+            </view>
+
+            <!-- 背景故事等文本信息 -->
+            <block wx:if="{{p.charBackstory}}">
+              <text class="char-section-title">📖 背景故事</text>
+              <view class="char-text-block"><text>{{p.charBackstory}}</text></view>
+            </block>
+            <block wx:if="{{p.charGear}}">
+              <text class="char-section-title">🎒 随身物品</text>
+              <view class="char-text-block"><text>{{p.charGear}}</text></view>
+            </block>
+            <block wx:if="{{p.charMythos}}">
+              <text class="char-section-title">📓 神话相关</text>
+              <view class="char-text-block"><text>{{p.charMythos}}</text></view>
+            </block>
+            <block wx:if="{{p.charSpells}}">
+              <text class="char-section-title">🔮 法术</text>
+              <view class="char-text-block"><text>{{p.charSpells}}</text></view>
+            </block>
+            <block wx:if="{{p.charCompanions}}">
+              <text class="char-section-title">👥 调查员伙伴</text>
+              <view class="char-text-block"><text>{{p.charCompanions}}</text></view>
+            </block>
+          </view>
+        </scroll-view>
+      </swiper-item>
+    </swiper>
+  </block>
+
+  <!-- ================================================================== -->
+  <!-- NPC 详情视图（swiper 左右滑动切换） -->
+  <!-- ================================================================== -->
+  <block wx:if="{{viewingType === 'npc' && viewingData}}">
+    <view class="task-header-bar">
+      <text class="back-btn" bindtap="closeDetail">← 返回任务</text>
+      <text class="task-header-name">{{viewingData.name}}</text>
+      <text class="task-header-count">NPC<text wx:if="{{viewingData.dex !== null}}"> · DEX {{viewingData.dex}}</text> · {{viewingIndex + 1}}/{{currentTask.npcs.length}}</text>
+    </view>
+
+    <swiper class="detail-swiper" current="{{viewingIndex}}" bindchange="onNPCSwiperChange" duration="300" circular indicator-dots="{{false}}">
+      <swiper-item wx:for="{{currentTask.npcs}}" wx:for-item="n" wx:for-index="ni" wx:key="id">
+        <scroll-view class="detail-scroll" scroll-y enhanced show-scrollbar="{{false}}" bindscroll="onDetailScroll" scroll-top="{{detailScrollTop}}" scroll-with-animation="{{false}}">
+          <view class="char-sheet">
+            <view class="char-text-block npc-text">
+              <text style="white-space:pre-wrap;word-break:break-all;">{{n.data}}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </swiper-item>
+    </swiper>
+  </block>
+
+  <!-- ================================================================== -->
+  <!-- 创建任务 Dialog -->
+  <!-- ================================================================== -->
+  <view class="dialog-overlay {{showCreateTask ? 'active' : ''}}" bindtap="closeCreateTask" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showCreateTask ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">➕ 创建新任务</text>
+    <view class="dialog-body-padded">
+      <view class="form-group">
+        <text class="form-label">任务名称</text>
+        <input class="form-input" placeholder="输入任务名称（如：周六团）" value="{{createTaskName}}" bindinput="onTaskNameInput" focus="{{showCreateTask}}" />
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeCreateTask">取消</button>
+      <button class="dialog-btn confirm" bindtap="confirmCreateTask">创建</button>
+    </view>
+  </view>
+
+</view>

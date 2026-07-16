@@ -2,7 +2,7 @@
 
   <!-- 顶部标题 -->
   <view class="header" wx:if="{{!playMode}}">
-    <text class="header-title">🎲 COC7 调查员创建</text>
+    <text class="header-title">🐙 COC7 调查员创建</text>
     <text class="header-subtitle">Call of Cthulhu 7th Edition — Character Generator</text>
   </view>
 
@@ -20,6 +20,7 @@
     <text class="step-title">📋 创建新调查员</text>
     <text class="step-desc">创建一个全新的 COC7 调查员角色卡，或读取本地已保存的角色继续编辑。</text>
     <button class="btn btn-primary" bindtap="startNewCharacter">➕ 创建新角色</button>
+    <button class="btn btn-secondary" bindtap="importCharacter">📥 导入调查员</button>
     <view class="saved-list" wx:if="{{savedCharacters.length > 0}}">
       <text class="card-title">📂 已保存的角色</text>
       <view class="saved-item {{sc.completed ? 'completed' : ''}}" wx:for="{{savedCharacters}}" wx:for-item="sc" wx:key="index" bindtap="loadCharacter" data-index="{{index}}">
@@ -299,6 +300,7 @@
     <view class="saved-info" wx:if="{{savedAt > 0 && !playMode}}">💾 已保存</view>
 
     <button class="btn btn-primary char-save-btn" bindtap="saveCharacter">💾 保存角色</button>
+    <button class="btn btn-secondary" bindtap="exportCharacter" wx:if="{{!playMode}}">📋 导出到剪贴板</button>
     <button class="btn btn-secondary" bindtap="copyDiceImport" wx:if="{{!playMode}}">🎲 骰娘导入</button>
     <button class="btn btn-secondary" bindtap="goToStep" data-step="4" wx:if="{{!isCompleted && !playMode}}">← 上一步</button>
     <button class="btn btn-secondary" bindtap="togglePlayMode">{{playMode ? '🚪 退出游玩模式' : '🎮 游玩模式'}}</button>

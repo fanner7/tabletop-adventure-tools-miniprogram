@@ -1,2 +1,2 @@
 [permissions]
-allow = ["explore", "Edit"]
+allow = ["explore", "Edit", "Bash(cd \"C:\\Users\\R\\WeChatProjects\\miniprogram-1\" && git remote -v)", "Bash(cd \"C:\\Users\\R\\WeChatProjects\\miniprogram-1\" && git config --list --show-origin)", "Bash(cd \"C:\\Users\\R\\WeChatProjects\\miniprogram-1\" && git check-ignore tools/)"]
