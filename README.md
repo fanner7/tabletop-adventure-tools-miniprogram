@@ -59,4 +59,8 @@
 
 ## 📄 许可
 
-[MIT](LICENSE) © 2026 fanner7
+本项目的代码部分基于 [MIT](LICENSE) © 2026 fanner7。
+
+石冢 (Cairn) 角色生成器使用了 Cairn RPG 的游戏数据，原始文本由 Yochai Gal 创作，基于 [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 许可。
+中文本地化翻译由 [ZzNoah](https://github.com/ZzNoah/cairn-cn/) 提供。
+数据来源：[cn.cairnrpg.com](https://cn.cairnrpg.com/tools/character-generator/)，已适配微信小程序。
