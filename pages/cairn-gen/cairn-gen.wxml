@@ -21,6 +21,9 @@
     <view class="empty-hint" wx:if="{{characters.length === 0}}">
       <text>暂无角色，点击上方按钮创建</text>
     </view>
+    <view class="cairn-attribution">
+      <text>Cairn RPG © Yochai Gal · 中文翻译 ZzNoah · CC-BY-SA 4.0</text>
+    </view>
   </block>
 
   <!-- ===== STEP 1: 角色卡 ===== -->

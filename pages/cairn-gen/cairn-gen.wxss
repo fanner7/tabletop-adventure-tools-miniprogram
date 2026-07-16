@@ -152,3 +152,6 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .spell-desc { font-size:22rpx; color:#555; line-height:1.5; display:block; }
 .spell-add { width:44rpx; height:44rpx; line-height:44rpx; text-align:center; background:#2d6a3b; color:#fff; border-radius:50%; font-size:26rpx; font-weight:bold; flex-shrink:0; }
 .spell-add:active { background:#23552e; }
+
+.cairn-attribution { text-align: center; padding: 20rpx 0; margin-top: 16rpx; }
+.cairn-attribution text { font-size: 22rpx; color: #a09080; }
