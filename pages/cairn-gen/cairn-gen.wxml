@@ -1,5 +1,6 @@
 <!-- pages/cairn-gen/cairn-gen.wxml — 石冢 Cairn 角色生成器 & 游玩工具 -->
 <view class="cairn-container">
+  <view class="back-home-bar" bindtap="goToAppHome"><text class="back-home-text">← 返回</text></view>
 
   <!-- ===== STEP 0: 角色列表 ===== -->
   <block wx:if="{{step === 0}}">

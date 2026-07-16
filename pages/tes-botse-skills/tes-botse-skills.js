@@ -7,6 +7,7 @@ Page({
     searchResultsActive: false,
     activeSkills: []
   },
+  goToAppHome() { wx.navigateBack(); },
 
   rawData: [
     // --- 敌人技能 ---

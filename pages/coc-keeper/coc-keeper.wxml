@@ -1,5 +1,6 @@
 <!-- pages/coc-keeper/coc-keeper.wxml — COC 守密人助手 -->
 <view class="keeper-container">
+  <view class="back-home-bar" bindtap="goToAppHome"><text class="back-home-text">← 返回</text></view>
 
   <!-- ===== 顶部标题 ===== -->
   <view class="keeper-header" wx:if="{{!viewingType}}">

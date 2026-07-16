@@ -150,6 +150,7 @@ Page({
     showCheck: false, checkLabel: '', checkTarget: 0, checkRoll: 0, checkSuccess: false,
     showSpells: false, notesExpanded: false, notesExpandable: false, spellList: [], spellSearch: '',
   },
+  goToAppHome() { wx.navigateBack(); },
   onLoad() { this.initGenData(); this.loadList(); },
   onShow() { this.loadList(); },
 

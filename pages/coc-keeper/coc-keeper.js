@@ -20,6 +20,7 @@ Page({
     combatHasTies: false,
     combatTieNames: '',
   },
+  goToAppHome() { wx.navigateBack(); },
 
   onLoad() { this.loadTasks(); },
   onShow() { this.loadTasks(); },

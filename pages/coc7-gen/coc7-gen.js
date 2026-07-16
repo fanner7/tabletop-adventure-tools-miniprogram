@@ -663,6 +663,7 @@ Page({
     catLabels: CAT_LABELS,
     catOrder: CAT_ORDER,
   },
+  goToAppHome() { wx.navigateBack(); },
 
   // ==================== 生命周期 ====================
   onLoad() {
