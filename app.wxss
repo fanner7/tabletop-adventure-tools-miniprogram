@@ -4,28 +4,6 @@ page {
   padding-top: 90rpx;
   box-sizing: border-box;
 }
-
-/* 所有工具页面的返回主页按钮 */
-.back-home-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  padding: 0 20rpx;
-  height: 88rpx;
-  padding-top: constant(safe-area-inset-top);
-  padding-top: env(safe-area-inset-top);
-  box-sizing: content-box;
-}
-.back-home-text {
-  font-size: 28rpx;
-  color: #6b4c2a;
-  padding: 8rpx 16rpx;
-  border-radius: 8rpx;
-}
 .container {
   height: 100%;
   display: flex;

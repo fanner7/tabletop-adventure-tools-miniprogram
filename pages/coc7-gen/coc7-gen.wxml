@@ -1,5 +1,4 @@
 <view class="container">
-  <view class="back-home-bar" bindtap="goToAppHome"><text class="back-home-text">← 返回</text></view>
 
   <!-- 顶部标题 -->
   <view class="header" wx:if="{{!playMode}}">

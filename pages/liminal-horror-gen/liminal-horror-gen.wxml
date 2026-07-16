@@ -1,5 +1,4 @@
 <view class="container">
-  <view class="back-home-bar" bindtap="goToAppHome"><text class="back-home-text">← 返回</text></view>
   <view class="header">
     <text class="h1">阈限恐怖 调查员生成器</text>
   </view>

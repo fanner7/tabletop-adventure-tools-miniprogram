@@ -1,5 +1,4 @@
 <view class="page-wrapper">
-  <view class="back-home-bar" bindtap="goToAppHome"><text class="back-home-text">← 返回</text></view>
   <!-- 固定顶部搜索栏 -->
   <view class="header">
     <view class="search-box">
