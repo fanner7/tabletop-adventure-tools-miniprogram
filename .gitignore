@@ -20,3 +20,9 @@ Thumbs.db
 # Build artifacts
 dist/
 tools/
+
+# ReasonAI agent workspace artifacts
+.reasonix/
+
+# ReasonAI agent config (contains local absolute paths)
+reasonix.toml
