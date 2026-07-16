@@ -33,6 +33,10 @@ page {
 
 /* ===== 步骤标题 ===== */
 .step-title { font-size: 34rpx; font-weight: bold; color: #3b2e1e; text-align: center; margin-bottom: 24rpx; display: block; }
+.edit-mode-hint { font-size: 24rpx; color: #8b4513; display: block; margin-bottom: 12rpx; padding: 8rpx 12rpx; background: #fef6e8; border-radius: 8rpx; border: 1px solid #e8c8a0; text-align: center; }
+.override-toggle { display: inline-block; padding: 6rpx 16rpx; background: #fdf5e6; border: 1px solid #d4c5a9; border-radius: 20rpx; margin-bottom: 12rpx; }
+.override-toggle:active { background: #f5ead5; }
+.override-toggle-text { font-size: 24rpx; color: #6b4c2a; }
 .step-desc { font-size: 26rpx; color: #7a6b58; text-align: center; margin-bottom: 30rpx; display: block; line-height: 1.6; }
 
 /* ===== 通用卡片 ===== */
@@ -58,6 +62,12 @@ page {
 .btn-secondary { background: transparent; color: #6b4c2a; border: 2px solid #6b4c2a; }
 .btn-secondary:active { background: #f5f0e8; }
 .btn-small { padding: 16rpx 24rpx; font-size: 26rpx; width: auto; display: inline-block; }
+
+/* ===== 按钮布局 ===== */
+.action-buttons { margin-top: 24rpx; display: flex; flex-direction: column; gap: 16rpx; }
+.btn-row { display: flex; gap: 16rpx; }
+.btn-row .btn { flex: 1; margin-bottom: 0; }
+.btn-wide { width: 100%; }
 
 /* ===== 底部导航 ===== */
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 16rpx 32rpx calc(16rpx + env(safe-area-inset-bottom, 20rpx)); display: flex; gap: 20rpx; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 100; }
@@ -136,6 +146,10 @@ page {
 /* 分类标题 */
 .skill-cat-title { font-size: 26rpx; font-weight: bold; color: #6b4c2a; display: block; padding: 14rpx 0 8rpx 8rpx; border-bottom: 1px solid #d4c5a9; margin-top: 16rpx; }
 .skill-cat-title:first-of-type { margin-top: 0; }
+
+.tick-mark { font-size: 28rpx; width: 32rpx; text-align: center; display: inline-block; margin-right: 6rpx; color: #c4b8a8; }
+.tick-mark.ticked { color: #4a7c3f; }
+.skill-grid-left { display: flex; align-items: center; min-width: 0; }
 
 /* 4列网格（每行2个技能项） */
 .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10rpx; padding: 10rpx 0; }
@@ -305,6 +319,11 @@ page {
 .play-banner-text { font-size: 28rpx; font-weight: bold; color: #6b4c2a; display: block; }
 
 .play-banner-sub { font-size: 22rpx; color: #8b7355; display: block; margin-top: 2rpx; }
+.threshold-toggle { display: inline-flex; align-items: center; gap: 6rpx; margin-top: 10rpx; padding: 6rpx 16rpx; background: #fdf5e6; border-radius: 20rpx; border: 1px solid #d4c5a9; }
+.threshold-toggle:active { background: #f5ead5; }
+.threshold-toggle-icon { font-size: 22rpx; }
+.threshold-toggle-text { font-size: 22rpx; color: #6b4c2a; }
+.threshold-text { font-size: 22rpx; color: #8b7355; font-weight: normal; }
 .play-sheet { border: 1px solid #d4c5a9; }
 .saved-info { text-align: center; font-size: 24rpx; color: #8b7355; margin-bottom: 8rpx; }
 
@@ -315,6 +334,15 @@ page {
 .growth-result { padding: 12rpx 16rpx; margin-bottom: 8rpx; border-radius: 8rpx; font-size: 24rpx; }
 .growth-result.success { background: #f0fdf0; color: #336633; }
 .growth-result.fail { background: #fdf0f0; color: #996666; }
+
+.export-dialog { padding: 20rpx 24rpx 16rpx; }
+.export-options { display: flex; flex-direction: column; gap: 12rpx; margin: 16rpx 0; }
+.export-option { display: flex; align-items: center; gap: 16rpx; padding: 16rpx; background: #faf8f4; border-radius: 12rpx; border: 1px solid #e8ddd0; }
+.export-option:active { background: #f5ead5; }
+.export-option-icon { font-size: 36rpx; }
+.export-option-text { flex: 1; display: flex; flex-direction: column; gap: 4rpx; }
+.export-option-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.export-option-desc { font-size: 22rpx; color: #8b7355; line-height: 1.4; }
 
 .attr-desc-box {
   background: #fdf8f0;

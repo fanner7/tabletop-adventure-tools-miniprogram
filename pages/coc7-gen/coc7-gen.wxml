@@ -129,6 +129,10 @@
   <!-- ===== STEP 4: 技能分配（分类网格 + dialog slider） ===== -->
   <block wx:if="{{step == 4}}">
     <text class="step-title">📊 分配技能点</text>
+    <view class="override-toggle" bindtap="toggleOverride" wx:if="{{overrideLimits || true}}">
+      <text class="override-toggle-text">{{overrideLimits ? '🔒 恢复限制' : '🔓 解除限制'}}</text>
+    </view>
+    <text class="edit-mode-hint" wx:if="{{overrideLimits}}">🔓 已解除限制 — 技能点可超出职业和兴趣点数上限</text>
 
     <!-- 职业信息 + 职业技能（合并卡片） -->
     <view class="occ-info-card" wx:if="{{selectedOcc}}">
@@ -176,6 +180,10 @@
     <view class="play-banner" wx:if="{{playMode}}">
       <text class="play-banner-text">🎮 游玩模式</text>
       <text class="play-banner-sub">点击属性或技能进行检定</text>
+      <view class="threshold-toggle" bindtap="toggleThresholds">
+        <text class="threshold-toggle-icon">{{showThresholds ? '📊' : '📋'}}</text>
+        <text class="threshold-toggle-text">{{showThresholds ? '隐藏阈值' : '显示阈值'}}</text>
+      </view>
     </view>
 
     <view class="char-sheet {{playMode ? 'play-sheet' : ''}}">
@@ -184,7 +192,7 @@
       <text class="char-section-title">📊 属性 {{playMode ? '(点击检定)' : ''}}</text>
       <view class="char-attr-row">
         <view class="char-attr play-attr" wx:for="{{attrDisplay}}" wx:for-item="a" wx:key="index" bindtap="{{playMode ? 'openAttrRoll' : ''}}" data-name="{{a.label}}" data-value="{{a.value}}">
-          <text class="char-attr-label">{{a.label}}</text><text class="char-attr-value">{{a.value}}</text>
+          <text class="char-attr-label">{{a.label}}</text><text class="char-attr-value">{{a.value}}<text wx:if="{{showThresholds}}" class="threshold-text"> | {{a.hard}} | {{a.extreme}}</text></text>
         </view>
       </view>
 
@@ -237,9 +245,15 @@
         <view class="skill-grid review">
           <view class="skill-grid-item play-split" wx:for="{{group.skills}}" wx:for-item="sk" wx:key="name">
             <view class="skill-grid-top">
-              <text class="skill-grid-name" bindtap="openSkillInfo" data-name="{{sk.name}}">{{sk.displayName || sk.name}}</text>
-              <text class="skill-grid-val" wx:if="{{playMode}}" bindtap="openRollDialog" data-name="{{sk.name}}">{{sk.total}}%</text>
-              <text class="skill-grid-val" wx:if="{{!playMode}}">{{sk.total}}%</text>
+              <view class="skill-grid-left" wx:if="{{playMode}}">
+                <text class="tick-mark {{tickedSkills[sk.name] ? 'ticked' : ''}}" bindtap="toggleSkillTick" data-name="{{sk.name}}">{{tickedSkills[sk.name] ? '✓' : '○'}}</text>
+                <text class="skill-grid-name" bindtap="openSkillInfo" data-name="{{sk.name}}">{{sk.displayName || sk.name}}</text>
+              </view>
+              <block wx:if="{{!playMode}}">
+                <text class="skill-grid-name" bindtap="openSkillInfo" data-name="{{sk.name}}">{{sk.displayName || sk.name}}</text>
+              </block>
+              <text class="skill-grid-val" wx:if="{{playMode}}" bindtap="openRollDialog" data-name="{{sk.name}}">{{sk.total}}%<text wx:if="{{showThresholds}}" class="threshold-text"> | {{sk.hard}}% | {{sk.extreme}}%</text></text>
+              <text class="skill-grid-val" wx:if="{{!playMode}}">{{sk.total}}%<text wx:if="{{showThresholds}}" class="threshold-text"> | {{sk.hard}}% | {{sk.extreme}}%</text></text>
             </view>
           </view>
         </view>
@@ -299,14 +313,50 @@
 
     <view class="saved-info" wx:if="{{savedAt > 0 && !playMode}}">💾 已保存</view>
 
-    <button class="btn btn-primary char-save-btn" bindtap="saveCharacter">💾 保存角色</button>
-    <button class="btn btn-secondary" bindtap="exportCharacter" wx:if="{{!playMode}}">📋 导出到剪贴板</button>
-    <button class="btn btn-secondary" bindtap="copyDiceImport" wx:if="{{!playMode}}">🎲 骰娘导入</button>
-    <button class="btn btn-secondary" bindtap="goToStep" data-step="4" wx:if="{{!isCompleted && !playMode}}">← 上一步</button>
-    <button class="btn btn-secondary" bindtap="togglePlayMode">{{playMode ? '🚪 退出游玩模式' : '🎮 游玩模式'}}</button>
-    <button class="btn btn-secondary" bindtap="openGrowth" wx:if="{{playMode}}">🌙 幕间成长</button>
-    <button class="btn btn-secondary" bindtap="goHome" wx:if="{{!playMode}}">🏠 返回创建页面</button>
+    <view class="action-buttons" wx:if="{{!playMode}}">
+      <button class="btn btn-primary btn-wide" bindtap="saveCharacter">💾 保存角色</button>
+      <view class="btn-row">
+        <button class="btn btn-secondary" bindtap="toggleExportDialog">📤 导出</button>
+        <button class="btn btn-secondary" bindtap="togglePlayMode">🎮 游玩模式</button>
+      </view>
+      <view class="btn-row">
+        <button class="btn btn-secondary" bindtap="goToStep" data-step="4">✏️ 编辑</button>
+        <button class="btn btn-secondary" bindtap="goHome">🏠 返回创建页面</button>
+      </view>
+    </view>
+    <view class="action-buttons" wx:if="{{playMode}}">
+      <view class="btn-row">
+        <button class="btn btn-secondary" bindtap="togglePlayMode">🚪 退出游玩模式</button>
+        <button class="btn btn-secondary" bindtap="openGrowth">🌙 幕间成长</button>
+      </view>
+    </view>
   </block>
+
+<!-- ===== 导出选择 dialog ===== -->
+  <view class="dialog-overlay {{showExportDialog ? 'active' : ''}}" bindtap="toggleExportDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet export-dialog {{showExportDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">📤 导出角色</text>
+    <view class="export-options">
+      <view class="export-option" bindtap="doExportClipboard">
+        <text class="export-option-icon">📋</text>
+        <view class="export-option-text">
+          <text class="export-option-title">导出到剪贴板</text>
+          <text class="export-option-desc">复制完整角色数据 JSON，可用于备份或导入其他工具</text>
+        </view>
+      </view>
+      <view class="export-option" bindtap="doExportDice">
+        <text class="export-option-icon">🎲</text>
+        <view class="export-option-text">
+          <text class="export-option-title">导出到骰娘</text>
+          <text class="export-option-desc">生成骰娘导入格式文本，可直接在骰娘聊天中使用</text>
+        </view>
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="toggleExportDialog">取消</button>
+    </view>
+  </view>
 
 <!-- ===== 骰子投掷 dialog ===== -->
   <view class="dialog-overlay {{showRollDialog ? 'active' : ''}}" bindtap="closeRollDialog" catchtouchmove="preventTouchMove"></view>
@@ -348,8 +398,7 @@
 
   <!-- ===== 底部导航栏 ===== -->
   <view class="bottom-nav" wx:if="{{step > 0 && step < 5}}">
-    <button class="btn btn-secondary" wx:if="{{step > 1}}" bindtap="prevStep">← 上一步</button>
-    <view wx:if="{{step == 1}}" style="flex:1;"></view>
+    <button class="btn btn-secondary" wx:if="{{step > 0}}" bindtap="prevStep">← 上一步</button>
     <button class="btn btn-primary" wx:if="{{step < 5}}" bindtap="nextStep" disabled="{{!canNext}}">下一步 →</button>
   </view>
 

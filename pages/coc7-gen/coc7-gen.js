@@ -346,7 +346,10 @@ function roll2D6plus6x5() {
 
 function makeAttrDisplay(values) {
   const labels = { str:'力量 STR', con:'体质 CON', dex:'敏捷 DEX', app:'外貌 APP', pow:'意志 POW', siz:'体型 SIZ', int:'智力 INT', edu:'教育 EDU', luck:'幸运 LUCK' };
-  return Object.keys(labels).map(k => ({ label: labels[k], value: values[k] || 0 }));
+  return Object.keys(labels).map(k => {
+    const v = values[k] || 0;
+    return { label: labels[k], value: v, hard: Math.floor(v / 2), extreme: Math.floor(v / 5) };
+  });
 }
 
 // 属性描述文案字典
@@ -580,6 +583,12 @@ Page({
     growthLuckNew: 0,
     growthCredInput: 0,
     growthLocked: false,
+    // 困难和极难数值显示开关
+    showThresholds: false,
+    // 导出弹窗开关
+    showExportDialog: false,
+    // 编辑模式（从完成页返回修改时启用，移除点数限制）
+    overrideLimits: false,
     // 属性掷骰
     attrLabels: { str:'力量 STR', con:'体质 CON', dex:'敏捷 DEX', app:'外貌 APP', pow:'意志 POW', siz:'体型 SIZ', int:'智力 INT', edu:'教育 EDU', luck:'幸运 LUCK' },
     attrValues: { str: 0, con: 0, dex: 0, app: 0, pow: 0, siz: 0, int: 0, edu: 0, luck: 0 },
@@ -699,7 +708,7 @@ Page({
       selectedOcc: null, occSearch: '', occSkillsText: '',
       occFixedSkills: [], occSpecRequired: [], occSpecMissing: [],
       occPts: {}, intPts: {}, skillSpecs: {}, usedOccPoints: 0, totalOccPoints: 0, usedIntPoints: 0, totalIntPoints: 0,
-      skillGroups: [], dialogSkill: null, showDialog: false, canNext: false,
+      skillGroups: [], dialogSkill: null, showDialog: false, canNext: false, overrideLimits: false,
     });
   },
 
@@ -1060,7 +1069,7 @@ Page({
     const base = getSkillBase(name, edu, dex);
     const curOcc = this.data.occPts[name] || 0;
     const curInt = this.data.intPts[name] || 0;
-    const { usedOccPoints, totalOccPoints, usedIntPoints, totalIntPoints } = this.data;
+    const { usedOccPoints, totalOccPoints, usedIntPoints, totalIntPoints, overrideLimits } = this.data;
 
     // 计算各 slider 最大可加值
     const safeOccPad = totalOccPoints - usedOccPoints + curOcc;  // 最多还能从职业池加的
@@ -1081,8 +1090,8 @@ Page({
       dialogSpecIndex: Math.max(0, dialogSpecIndex),
       dialogOccVal: curOcc,
       dialogIntVal: curInt,
-      dialogOccMax: Math.max(curOcc, maxOcc),
-      dialogIntMax: Math.max(curInt, maxInt),
+      dialogOccMax: overrideLimits ? 99 : Math.max(curOcc, maxOcc),
+      dialogIntMax: overrideLimits ? 99 : Math.max(curInt, maxInt),
       dialogBase: base,
       showDialog: true,
       dialogReadonly: false,
@@ -1126,7 +1135,7 @@ Page({
     const newBase = getSkillBase(name, edu, dex, newSkillSpecs);
     const curOcc = this.data.occPts[name] || 0;
     const curInt = this.data.intPts[name] || 0;
-    const { usedOccPoints, totalOccPoints, usedIntPoints, totalIntPoints } = this.data;
+    const { usedOccPoints, totalOccPoints, usedIntPoints, totalIntPoints, overrideLimits } = this.data;
     const safeOccPad = totalOccPoints - usedOccPoints + curOcc;
     const safeIntPad = totalIntPoints - usedIntPoints + curInt;
     const isOcc = this.isOccSkill(name);
@@ -1139,8 +1148,8 @@ Page({
       'dialogSkill.base': newBase,
       dialogSpecIndex: idx,
       dialogBase: newBase,
-      dialogOccMax: Math.max(curOcc, maxOcc),
-      dialogIntMax: Math.max(curInt, maxInt),
+      dialogOccMax: overrideLimits ? 99 : Math.max(curOcc, maxOcc),
+      dialogIntMax: overrideLimits ? 99 : Math.max(curInt, maxInt),
       skillSpecs: newSkillSpecs,
     });
     this.updateOccSpecMissing();
@@ -1170,12 +1179,12 @@ Page({
     const diffInt = newInt - prevInt;
     if (diffOcc === 0 && diffInt === 0) { this.closeSkillDialog(); return; }
 
-    const { usedOccPoints, totalOccPoints, usedIntPoints, totalIntPoints } = this.data;
-    // 检查点数
-    if (diffOcc > 0 && usedOccPoints + diffOcc > totalOccPoints) {
+    const { usedOccPoints, totalOccPoints, usedIntPoints, totalIntPoints, overrideLimits } = this.data;
+    // 检查点数（编辑模式不限制）
+    if (!overrideLimits && diffOcc > 0 && usedOccPoints + diffOcc > totalOccPoints) {
       wx.showToast({ title: '职业技能点不足', icon: 'none' }); return;
     }
-    if (diffInt > 0 && usedIntPoints + diffInt > totalIntPoints) {
+    if (!overrideLimits && diffInt > 0 && usedIntPoints + diffInt > totalIntPoints) {
       wx.showToast({ title: '兴趣技能点不足', icon: 'none' }); return;
     }
 
@@ -1236,7 +1245,8 @@ Page({
       if (base + pt > 0) {
         const spec = specs[sk.name];
         const displayName = spec ? sk.name + '（' + spec + '）' : sk.name;
-        groups[sk.cat].push({ name: sk.name, displayName, base, total: base + pt });
+        const total = base + pt;
+        groups[sk.cat].push({ name: sk.name, displayName, base, total, hard: Math.floor(total / 2), extreme: Math.floor(total / 5) });
       }
     });
     return CAT_ORDER.filter(c => groups[c].length > 0).map(c => ({
@@ -1299,8 +1309,8 @@ Page({
       if (next === 3) this.filterOccs(this.data.occSearch || '');
     }
   },
-  prevStep() { if (this.data.isCompleted) return; const prev = this.data.step - 1; if (prev >= 1) { this.setData({ step: prev, canNext: true }); if (prev === 3) this.filterOccs(this.data.occSearch || ''); } },
-  goToStep(e) { if (this.data.isCompleted) return; const s = parseInt(e.currentTarget.dataset.step); if (s >= 1 && s <= 5) { this.setData({ step: s, canNext: true }); if (s === 3) this.filterOccs(this.data.occSearch || ''); } },
+  prevStep() { const prev = this.data.step - 1; if (prev >= 0) { const opts = { step: prev, canNext: prev === 0 ? false : true }; if (prev === 0) { opts.playMode = false; opts.isCompleted = false; } this.setData(opts); if (prev === 3) this.filterOccs(this.data.occSearch || ''); } },
+  goToStep(e) { const s = parseInt(e.currentTarget.dataset.step); if (s >= 1 && s <= 5) { if (this.data.step === 5 && s === 4 && this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc); this.setData({ step: s, canNext: true }); if (s === 3) this.filterOccs(this.data.occSearch || ''); } },
 
   // ==================== 保存角色 ====================
   saveCharacter() {
@@ -1332,7 +1342,11 @@ Page({
   },
 
   // ==================== 导出角色 ====================
-  exportCharacter() {
+  toggleExportDialog() {
+    this.setData({ showExportDialog: !this.data.showExportDialog });
+  },
+
+  doExportClipboard() {
     const charData = {
       attrValues: this.data.attrValues, attrRolls: this.data.attrRolls,
       attrDesc: this.data.attrDesc, attrDisplay: this.data.attrDisplay,
@@ -1353,8 +1367,16 @@ Page({
     };
     wx.setClipboardData({
       data: JSON.stringify(charData, null, 2),
-      success: () => { wx.showToast({ title: '已复制到剪贴板', icon: 'success' }); },
+      success: () => { wx.showToast({ title: '已复制到剪贴板', icon: 'success' }); this.setData({ showExportDialog: false }); },
       fail: () => { wx.showToast({ title: '复制失败', icon: 'none' }); }
+    });
+  },
+
+  doExportDice() {
+    const text = this.generateDiceImport();
+    wx.setClipboardData({
+      data: text,
+      success: () => { wx.showToast({ title: '已复制，可粘贴到骰娘', icon: 'success' }); this.setData({ showExportDialog: false }); }
     });
   },
 
@@ -1421,14 +1443,6 @@ Page({
     return result;
   },
 
-  copyDiceImport() {
-    const text = this.generateDiceImport();
-    wx.setClipboardData({
-      data: text,
-      success: () => { wx.showToast({ title: '已复制，可粘贴到骰娘', icon: 'success' }); }
-    });
-  },
-
   // ==================== 游玩模式 ====================
   togglePlayMode() {
     if (this.data.playMode) {
@@ -1459,6 +1473,26 @@ Page({
       } catch (e) {}
     }
     this.setData({ playMode: !this.data.playMode });
+  },
+
+  toggleThresholds() {
+    this.setData({ showThresholds: !this.data.showThresholds });
+  },
+
+  toggleOverride() {
+    this.setData({ overrideLimits: !this.data.overrideLimits });
+  },
+
+  toggleSkillTick(e) {
+    const name = e.currentTarget.dataset.name;
+    if (!name) return;
+    const ticked = { ...this.data.tickedSkills };
+    if (ticked[name]) {
+      delete ticked[name];
+    } else {
+      ticked[name] = true;
+    }
+    this.setData({ tickedSkills: ticked });
   },
 
   onHPChange(e) { this.setData({ playHP: parseInt(e.detail.value) || 0 }); },
@@ -1735,7 +1769,7 @@ Page({
 
   goHome() {
     this.setData({
-      step: 0, playMode: false, isCompleted: false,
+      step: 0, playMode: false, isCompleted: false, overrideLimits: false,
       selectedOcc: null, occPts: {}, intPts: {}, skillSpecs: {},
       selectedOptSkills: {}, occOptGroups: [], occFixedSkills: [], occSpecRequired: [], occSpecMissing: [],
     });
