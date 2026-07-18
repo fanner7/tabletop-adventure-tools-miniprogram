@@ -8,6 +8,7 @@
       <text class="header-subtitle">Cairn TTRPG — Character Generator & Play Kit</text>
     </view>
     <button class="btn btn-primary" bindtap="startNew">➕ 创建新角色</button>
+    <button class="btn-import" bindtap="importCharacter">📥 从剪贴板导入角色</button>
     <view class="char-list" wx:if="{{characters.length > 0}}">
       <text class="section-title">📂 已保存的角色</text>
       <view class="char-item" wx:for="{{characters}}" wx:for-item="ch" wx:key="id" bindtap="openChar" data-index="{{index}}">
@@ -31,7 +32,6 @@
     <view class="play-header">
       <text class="back-btn" bindtap="backToList">← 返回</text>
       <text class="play-name">{{char.name}}</text>
-      <text class="play-save" bindtap="saveChar">保存</text>
     </view>
 
     <!-- 属性卡片 -->
@@ -108,6 +108,13 @@
     <!-- 掷骰卡片 -->
     <view class="card">
       <text class="card-title">掷骰</text>
+      <view class="dice-rolling-hint" wx:if="{{diceRolling}}"><text>投掷中…</text></view>
+      <view class="dice-result-highlight" wx:if="{{diceResult}}">
+        <text class="drh-total">{{diceResult.total}}</text>
+        <view class="drh-dice">
+          <text class="drh-chip" wx:for="{{diceResult.dice}}" wx:for-item="r" wx:key="index">d{{r.sides}} → {{r.result}}</text>
+        </view>
+      </view>
       <view class="dice-row">
         <view class="dice-btn-wrap" wx:for="{{[4,6,8,10,12,20,100]}}" wx:for-item="d" wx:key="d">
           <text class="dice-btn {{diceSelected[d] ? 'sel' : ''}}" bindtap="selectDice" bindlongpress="deselectDice" data-d="{{d}}">d{{d}}</text>
@@ -117,13 +124,6 @@
       <view class="dice-actions">
         <button class="btn-roll {{diceRolling ? 'rolling' : ''}}" bindtap="rollSelected" disabled="{{diceRolling}}">{{diceRolling ? '...' : '投掷'}}</button>
         <button class="btn-clear" bindtap="clearDice">清除</button>
-      </view>
-      <view class="dice-rolling-hint" wx:if="{{diceRolling}}"><text>投掷中…</text></view>
-      <view class="dice-result-highlight" wx:if="{{diceResult}}">
-        <text class="drh-total">{{diceResult.total}}</text>
-        <view class="drh-dice">
-          <text class="drh-chip" wx:for="{{diceResult.dice}}" wx:for-item="r" wx:key="index">d{{r.sides}} → {{r.result}}</text>
-        </view>
       </view>
       <view class="dice-log" wx:if="{{diceHistory.length > 0}}">
         <view class="dl-head">
@@ -146,6 +146,7 @@
     <!-- 底部按钮 -->
     <view class="bottom-btns">
       <button class="btn btn-primary" style="flex:1;margin:0;" bindtap="saveChar">保存角色</button>
+      <button class="btn-subtle" style="flex:1;margin:0;" bindtap="toggleExportDialog">导出</button>
       <button class="btn-subtle" style="flex:1;margin:0;" bindtap="openSpells">法术</button>
     </view>
   </block>
@@ -158,6 +159,24 @@
     <text class="check-roll">🎲 {{checkRoll}}</text>
     <text class="check-result {{checkSuccess ? 'success' : 'fail'}}">{{checkSuccess ? '✅ 成功' : '❌ 失败'}}</text>
     <button class="btn btn-primary" bindtap="closeCheck">确定</button>
+  </view>
+
+  <!-- ===== 导出弹窗 ===== -->
+  <view class="dialog-overlay {{showExportDialog ? 'active' : ''}}" bindtap="toggleExportDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showExportDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">导出角色</text>
+    <view class="export-options">
+      <view class="export-option" bindtap="doExportClipboard">
+        <view class="export-option-text">
+          <text class="export-option-title">导出到剪贴板</text>
+          <text class="export-option-desc">复制完整角色数据（JSON），可通过「导入」按钮恢复</text>
+        </view>
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="toggleExportDialog">取消</button>
+    </view>
   </view>
 
   <!-- ===== 法术列表弹窗 ===== -->

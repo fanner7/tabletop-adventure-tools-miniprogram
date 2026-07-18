@@ -1,0 +1,30 @@
+<view class="page">
+  <view class="card hero">
+    <text class="hero-icon">🎲</text>
+    <text class="hero-title">桌面冒险工具集</text>
+    <text class="hero-sub">Board Game & TTRPG Toolkit</text>
+    <text class="hero-ver">v{{version}}</text>
+  </view>
+
+  <view class="card">
+    <text class="section-title">📖 简介</text>
+    <text class="section-text">桌面冒险工具集是一组面向桌面角色扮演游戏（TTRPG）玩家的小程序工具，涵盖掷骰、角色生成、守密人辅助等功能，支持 Cairn、COC7、Liminal Horror 等多个规则系统。</text>
+  </view>
+
+  <view class="card">
+    <text class="section-title">🔧 技术栈</text>
+    <view class="tag-row">
+      <text class="tag">微信小程序原生</text>
+      <text class="tag">Glass-Easel</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="section-title">📄 开源许可</text>
+    <text class="section-text">本项目基于 MIT 协议开源。</text>
+    <view class="link-row" bindtap="onCopyRepo">
+      <text class="link-text">📋 复制仓库地址</text>
+    </view>
+    <text class="section-text footnote">© {{year}} 桌游兴趣小组</text>
+  </view>
+</view>

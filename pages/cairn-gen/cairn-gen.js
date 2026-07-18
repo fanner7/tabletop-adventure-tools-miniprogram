@@ -149,6 +149,7 @@ Page({
     diceSelected: {}, diceRolling: false, diceResult: null, diceHistory: [],
     showCheck: false, checkLabel: '', checkTarget: 0, checkRoll: 0, checkSuccess: false,
     showSpells: false, notesExpanded: false, notesExpandable: false, spellList: [], spellSearch: '',
+    showExportDialog: false,
   },
   onLoad() { this.initGenData(); this.loadList(); },
   onShow() { this.loadList(); },
@@ -183,6 +184,41 @@ Page({
     if (idx >= 0 && idx < list.length) { list[idx] = JSON.parse(JSON.stringify(this.data.char)); this.saveList(list); wx.showToast({ title: '已保存', icon: 'success', duration: 1200 }); }
   },
   backToList() { this._deletePending = null; this.saveChar(); this.setData({ step: 0, char: null, _loadIndex: -1, diceSelected: {}, diceResult: null, diceHistory: [] }); },
+
+  // ===== 导入导出 =====
+  toggleExportDialog() { this.setData({ showExportDialog: !this.data.showExportDialog }); },
+  doExportClipboard() {
+    const char = this.data.char;
+    if (!char) return;
+    const data = JSON.parse(JSON.stringify(char));
+    wx.setClipboardData({
+      data: JSON.stringify(data, null, 2),
+      success: () => { wx.showToast({ title: '角色数据已复制', icon: 'success', duration: 1500 }); this.toggleExportDialog(); },
+      fail: () => { wx.showToast({ title: '复制失败', icon: 'none' }); }
+    });
+  },
+  importCharacter() {
+    const that = this;
+    wx.getClipboardData({
+      success(res) {
+        let data;
+        try { data = JSON.parse(res.data); } catch (e) { wx.showToast({ title: '剪贴板中没有有效的角色数据', icon: 'none', duration: 2000 }); return; }
+        if (!data.name || data.str === undefined || !data.inventory) {
+          wx.showToast({ title: '数据格式不符，非石冢角色', icon: 'none', duration: 2000 });
+          return;
+        }
+        data.id = Date.now();
+        // 兼容旧数据
+        if (!data.strMax) { data.strMax = data.str; data.dexMax = data.dex; data.wilMax = data.wil; data.hpMax = data.hp; }
+        if (data.gp === undefined) { data.gp = 0; data.sp = 0; data.cp = 0; }
+        const list = that.data.characters;
+        list.unshift(data);
+        that.saveList(list);
+        wx.showToast({ title: '已导入「' + data.name + '」', icon: 'success', duration: 1500 });
+      },
+      fail() { wx.showToast({ title: '读取剪贴板失败', icon: 'none', duration: 2000 }); }
+    });
+  },
 
   roll(d) { return Math.floor(Math.random() * d) + 1; },
   rollD(n, d) { let t = 0; for (let i = 0; i < n; i++) t += this.roll(d); return t; },

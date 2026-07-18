@@ -14,6 +14,8 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .btn { width:100%; padding:24rpx 0; border-radius:12rpx; font-size:30rpx; font-weight:bold; text-align:center; border:none; margin-bottom:14rpx; }
 .btn-primary { background:#2d6a3b; color:#fff; }
 .btn-primary:active { background:#23552e; }
+.btn-import { width:100%; padding:24rpx 0; border-radius:12rpx; font-size:28rpx; font-weight:bold; text-align:center; border:1px dashed #2d6a3b; background:transparent; color:#2d6a3b; margin-bottom:14rpx; }
+.btn-import:active { background:rgba(45,106,59,0.08); }
 
 /* ===== 角色列表 ===== */
 .char-list { margin-top:12rpx; }
@@ -89,7 +91,7 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .btn-clear:active { background:#f0ece5; }
 
 /* 投掷结果高亮区 */
-.dice-result-highlight { margin-top:8rpx; padding:20rpx; background:#1e2d1a; border-radius:12rpx; text-align:center; }
+.dice-result-highlight { margin-top:8rpx; margin-bottom:12rpx; padding:20rpx; background:#1e2d1a; border-radius:12rpx; text-align:center; }
 .drh-total { font-size:72rpx; font-weight:bold; color:#e8e4db; display:block; line-height:1.1; }
 .drh-dice { display:flex; flex-wrap:wrap; gap:8rpx; justify-content:center; margin-top:12rpx; }
 .drh-chip { display:inline-block; padding:6rpx 14rpx; background:rgba(255,255,255,0.10); color:#b8bfae; border-radius:20rpx; font-size:20rpx; }
@@ -121,6 +123,16 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .dialog-btn { flex:1; padding:24rpx 0; border-radius:12rpx; font-size:28rpx; font-weight:bold; text-align:center; border:none; }
 .dialog-btn.confirm { background:#2d6a3b; color:#fff; }
 .dialog-btn.confirm:active { background:#23552e; }
+.dialog-btn.cancel { background:#f6f4f0; color:#555; }
+.dialog-btn.cancel:active { background:#ebe7e0; }
+
+/* 导出选项 */
+.export-options { padding:0 32rpx 8rpx; }
+.export-option { background:#f8f7f5; border:1px solid #e5e1d9; border-radius:12rpx; padding:22rpx 20rpx; }
+.export-option:active { background:#ebe7e0; }
+.export-option-text { }
+.export-option-title { font-size:28rpx; font-weight:bold; color:#1a1a1a; display:block; margin-bottom:6rpx; }
+.export-option-desc { font-size:22rpx; color:#888; display:block; line-height:1.4; }
 
 .dialog-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.45); z-index:200; opacity:0; visibility:hidden; transition:opacity .3s; }
 .dialog-overlay.active { opacity:1; visibility:visible; }

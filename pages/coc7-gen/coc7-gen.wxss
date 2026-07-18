@@ -356,3 +356,32 @@ page {
   font-size: 26rpx;
   color: #5a4a3a;
 }
+
+/* ===== 掷骰模块 ===== */
+.dice-rolling-hint { text-align:center; padding:12rpx 0; font-size:26rpx; color:#8b7355; }
+.dice-result-highlight { margin-top:4rpx; margin-bottom:12rpx; padding:20rpx; background:#3b2e1e; border-radius:12rpx; text-align:center; }
+.drh-total { font-size:72rpx; font-weight:bold; color:#f5f0e8; display:block; line-height:1.1; }
+.drh-dice { display:flex; flex-wrap:wrap; gap:8rpx; justify-content:center; margin-top:12rpx; }
+.drh-chip { display:inline-block; padding:6rpx 14rpx; background:rgba(255,255,255,0.12); color:#d4c5a9; border-radius:20rpx; font-size:20rpx; }
+
+.dice-row { display:flex; flex-wrap:wrap; gap:8rpx; }
+.dice-btn-wrap { position:relative; width:calc(25% - 6rpx); }
+.dice-btn { display:block; width:100%; padding:14rpx 0; background:#faf8f4; border:1px solid #d4c5a9; border-radius:8rpx; font-size:24rpx; font-weight:bold; color:#3b2e1e; text-align:center; }
+.dice-btn:active { background:#f0ece5; }
+.dice-btn.sel { background:#6b4c2a; color:#fff; border-color:#6b4c2a; }
+.dice-badge { position:absolute; top:-8rpx; right:-8rpx; min-width:32rpx; height:32rpx; line-height:32rpx; background:#8b7355; color:#fff; border-radius:16rpx; font-size:18rpx; font-weight:bold; text-align:center; padding:0 6rpx; }
+.dice-actions { display:flex; gap:10rpx; margin-top:12rpx; }
+.dice-btn-roll { flex:2; padding:18rpx 0; background:#6b4c2a; color:#fff; border:none; border-radius:10rpx; font-size:26rpx; font-weight:bold; text-align:center; }
+.dice-btn-roll:active { background:#5a3e22; }
+.dice-btn-roll.rolling { background:#b0a590; }
+.dice-btn-clear { flex:1; padding:18rpx 0; background:transparent; color:#8b7355; border:1px solid #d4c5a9; border-radius:10rpx; font-size:24rpx; text-align:center; }
+.dice-btn-clear:active { background:#f0ece5; }
+
+.dice-log { margin-top:10rpx; border-top:1px solid #d4c5a9; padding-top:8rpx; }
+.dl-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:6rpx; }
+.dl-title { font-size:22rpx; color:#8b7355; font-weight:bold; }
+.dl-clear { font-size:22rpx; color:#b0a590; padding:2rpx 6rpx; }
+.dl-clear:active { color:#8b4513; }
+.dl-item { display:block; font-size:22rpx; color:#3b2e1e; padding:4rpx 0; border-bottom:1px solid #f0ece5; }
+.dl-detail { font-size:18rpx; color:#8b7355; }
+.dl-time { font-size:18rpx; color:#b0a590; margin-left:8rpx; }

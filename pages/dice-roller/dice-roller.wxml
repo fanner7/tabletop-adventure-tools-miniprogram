@@ -1,0 +1,85 @@
+<view class="page">
+  <!-- 结果展示区 -->
+  <view class="result-stage {{result ? 'has-result' : ''}} {{rolling ? 'rolling' : ''}}">
+    <block wx:if="{{result}}">
+      <text class="result-total">{{result.total}}</text>
+      <view class="result-chips">
+        <view class="result-chip"
+          wx:for="{{result.dice}}" wx:for-item="r" wx:key="index"
+          style="background:{{r.color}}18; border-color:{{r.color}}40; color:{{r.color}};">
+          <text class="chip-label">d{{r.sides}}</text>
+          <text class="chip-val">{{r.result}}</text>
+        </view>
+      </view>
+    </block>
+    <block wx:elif="{{rolling}}">
+      <view class="rolling-indicator">
+        <text class="rolling-dice">🎲</text>
+        <text class="rolling-text">投掷中…</text>
+      </view>
+    </block>
+    <block wx:else>
+      <text class="stage-hint">选择骰子，开始投掷</text>
+      <text class="shake-hint" wx:if="{{shakeEnabled}}">📳 也可摇动手机投掷</text>
+    </block>
+  </view>
+
+  <!-- 快捷投掷 -->
+  <view class="quick-section">
+    <text class="section-label">快捷</text>
+    <scroll-view class="quick-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="quick-chip {{rolling ? 'disabled' : ''}}"
+        wx:for="{{QUICK_ROLLS}}" wx:for-item="q" wx:key="label"
+        bindtap="onQuickRoll" data-index="{{index}}">
+        {{q.label}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 骰子选择 -->
+  <view class="dice-grid">
+    <view class="dice-card {{diceSelected[item.sides] ? 'active' : ''}} {{rolling ? 'disabled' : ''}}"
+      wx:for="{{DICE}}" wx:for-item="item" wx:key="sides"
+      style="--dice-color:{{item.color}};"
+      bindtap="onTapDice"
+      bindlongpress="onLongPressDice"
+      data-sides="{{item.sides}}">
+      <text class="dice-card-icon">{{item.icon}}</text>
+      <text class="dice-card-name">d{{item.sides}}</text>
+      <view class="dice-card-count" wx:if="{{diceSelected[item.sides]}}">
+        <text>×{{diceSelected[item.sides]}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-bar">
+    <button class="btn-clear" bindtap="onClear">清除</button>
+    <button class="btn-roll {{rolling ? 'disabled' : ''}}" bindtap="onRoll" disabled="{{rolling}}">
+      {{rolling ? '...' : '🎲 投掷'}}
+    </button>
+    <button class="btn-clear" bindtap="onToggleHistory">
+      {{showHistory ? '收起' : '历史'}}
+    </button>
+  </view>
+
+  <!-- 历史记录 -->
+  <scroll-view class="history-panel {{showHistory ? 'open' : ''}}" scroll-y>
+    <view class="history-head">
+      <text class="history-title">历史记录</text>
+      <text class="history-clear" bindtap="onClearHistory">清空</text>
+    </view>
+    <view class="history-item" wx:for="{{history}}" wx:for-item="h" wx:key="index">
+      <text class="hi-total">{{h.total}}</text>
+      <view class="hi-dice">
+        <text class="hi-chip"
+          wx:for="{{h.dice}}" wx:for-item="r" wx:key="idx"
+          style="color:{{r.color}};">
+          d{{r.sides}}({{r.result}})
+        </text>
+      </view>
+      <text class="hi-time">{{h.time}}</text>
+    </view>
+    <view class="history-empty" wx:if="{{history.length === 0}}">暂无记录</view>
+  </scroll-view>
+</view>

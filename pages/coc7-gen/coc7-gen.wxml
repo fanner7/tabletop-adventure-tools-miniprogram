@@ -290,6 +290,35 @@
       </view>
       <button class="btn btn-secondary btn-small weapon-add-btn" bindtap="openWeaponPicker">＋ 添加武器</button>
 
+      <!-- 掷骰模块（仅游玩模式） -->
+      <block wx:if="{{playMode}}">
+        <text class="char-section-title">🎲 掷骰</text>
+        <view class="dice-rolling-hint" wx:if="{{diceRolling}}"><text>投掷中…</text></view>
+        <view class="dice-result-highlight" wx:if="{{diceResult}}">
+          <text class="drh-total">{{diceResult.total}}</text>
+          <view class="drh-dice">
+            <text class="drh-chip" wx:for="{{diceResult.dice}}" wx:for-item="r" wx:key="index">d{{r.sides}} → {{r.result}}</text>
+          </view>
+        </view>
+        <view class="dice-row">
+          <view class="dice-btn-wrap" wx:for="{{[4,6,8,10,12,20,100]}}" wx:for-item="d" wx:key="d">
+            <text class="dice-btn {{diceSelected[d] ? 'sel' : ''}}" bindtap="selectDice" bindlongpress="deselectDice" data-d="{{d}}">d{{d}}</text>
+            <text class="dice-badge" wx:if="{{diceSelected[d]}}">{{diceSelected[d]}}</text>
+          </view>
+        </view>
+        <view class="dice-actions">
+          <button class="dice-btn-roll {{diceRolling ? 'rolling' : ''}}" bindtap="rollDiceSelected" disabled="{{diceRolling}}">{{diceRolling ? '...' : '投掷'}}</button>
+          <button class="dice-btn-clear" bindtap="clearDice">清除</button>
+        </view>
+        <view class="dice-log" wx:if="{{diceHistory.length > 0}}">
+          <view class="dl-head">
+            <text class="dl-title">历史</text>
+            <text class="dl-clear" bindtap="clearDiceHistory">清空</text>
+          </view>
+          <text class="dl-item" wx:for="{{diceHistory}}" wx:for-item="h" wx:key="index">{{h.total}} <text class="dl-detail" wx:for="{{h.dice}}" wx:for-item="r" wx:key="idx">d{{r.sides}}({{r.result}}) </text><text class="dl-time">{{h.time}}</text></text>
+        </view>
+      </block>
+
       <!-- 背景故事 -->
       <text class="char-section-title">📖 背景故事</text>
       <textarea class="char-textarea" placeholder="写下你的调查员背景故事…" value="{{charBackstory}}" bindinput="onCharFieldChange" data-field="backstory" auto-height maxlength="-1" />

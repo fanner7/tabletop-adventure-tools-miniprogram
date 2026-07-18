@@ -12,7 +12,7 @@
 
   <!-- ========== 顶部标题区 ========== -->
   <view class="header">
-    <text class="header-title">🎲 桌面冒险工具集</text>
+    <text class="header-title">桌面冒险工具集</text>
     <text class="header-subtitle">Board Game & TTRPG Toolkit</text>
   </view>
 

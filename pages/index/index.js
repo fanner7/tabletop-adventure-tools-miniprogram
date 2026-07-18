@@ -3,6 +3,13 @@ Page({
   data: {
     tools: [
       {
+        id: 'dice-roller',
+        icon: '🎲',
+        title: '掷骰',
+        desc: 'd4~d100 多面骰投掷，摇一摇即掷。',
+        url: '/pages/dice-roller/dice-roller'
+      },
+      {
         id: 'cairn-gen',
         icon: '⛰️',
         title: '石冢 角色生成器',
@@ -43,6 +50,13 @@ Page({
         title: 'COC 守密人助手',
         desc: '任务管理、玩家卡与NPC卡导入监看。',
         url: '/pages/coc-keeper/coc-keeper'
+      },
+      {
+        id: 'about',
+        icon: 'ℹ️',
+        title: '关于',
+        desc: '应用介绍与开源信息。',
+        url: '/pages/about/about'
       }
     ]
   },

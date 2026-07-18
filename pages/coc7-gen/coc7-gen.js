@@ -662,6 +662,12 @@ Page({
     derivedItems: [],
     catLabels: CAT_LABELS,
     catOrder: CAT_ORDER,
+
+    // 掷骰模块（游玩模式）
+    diceSelected: {},
+    diceRolling: false,
+    diceResult: null,
+    diceHistory: [],
   },
 
   // ==================== 生命周期 ====================
@@ -1601,6 +1607,46 @@ Page({
 
   closeRollDialog() {
     this.setData({ showRollDialog: false, rollSkill: null, rollResult: null, rollBonus: 0 });
+  },
+
+  // ==================== 掷骰模块 ====================
+  roll(d) { return Math.floor(Math.random() * d) + 1; },
+
+  _lastDicePress: 0,
+  selectDice(e) {
+    if (this.data.diceRolling) return;
+    const now = Date.now();
+    if (now - this._lastDicePress < 400) return;
+    const d = parseInt(e.currentTarget.dataset.d);
+    const sel = { ...this.data.diceSelected };
+    sel[d] = (sel[d] || 0) + 1;
+    this.setData({ diceSelected: sel, diceResult: null });
+  },
+  deselectDice(e) {
+    if (this.data.diceRolling) return;
+    this._lastDicePress = Date.now();
+    const d = parseInt(e.currentTarget.dataset.d);
+    const sel = { ...this.data.diceSelected };
+    if (sel[d]) { sel[d]--; if (sel[d] <= 0) delete sel[d]; }
+    this.setData({ diceSelected: sel, diceResult: null });
+  },
+  clearDice() { this.setData({ diceSelected: {}, diceResult: null }); },
+  clearDiceHistory() { this.setData({ diceHistory: [] }); },
+  rollDiceSelected() {
+    const sel = this.data.diceSelected, keys = Object.keys(sel);
+    if (keys.length === 0) { wx.showToast({ title: '⚠ 请先选择骰子', icon: 'none', duration: 1500 }); return; }
+    this.setData({ diceRolling: true, diceResult: null });
+    wx.vibrateShort({ type: 'medium' });
+    const dice = []; let total = 0;
+    keys.forEach(k => {
+      const sides = parseInt(k), count = sel[k];
+      for (let i = 0; i < count; i++) { const r = this.roll(sides); dice.push({ sides, result: r }); total += r; }
+    });
+    setTimeout(() => {
+      const result = { dice, total, time: new Date().toLocaleTimeString() };
+      const history = [result, ...this.data.diceHistory].slice(0, 50);
+      this.setData({ diceRolling: false, diceResult: result, diceHistory: history });
+    }, 700);
   },
 
 

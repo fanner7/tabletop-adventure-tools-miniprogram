@@ -1,0 +1,359 @@
+/* ===== 页面基调 ===== */
+page {
+  background: #1a1f25;
+}
+.page {
+  min-height: 100vh;
+  background: #1a1f25;
+  padding: 24rpx 24rpx 80rpx;
+  box-sizing: border-box;
+}
+
+/* ===== 结果展示区 ===== */
+.result-stage {
+  background: #222830;
+  border-radius: 20rpx;
+  min-height: 300rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48rpx 24rpx;
+  margin-bottom: 20rpx;
+  transition: all 0.3s;
+  border: 2rpx solid transparent;
+}
+.result-stage.has-result {
+  border-color: #333840;
+  background: #1e242c;
+}
+.result-stage.rolling {
+  border-color: #f1c40f30;
+}
+
+.stage-hint {
+  font-size: 28rpx;
+  color: #555a63;
+}
+
+.shake-hint {
+  font-size: 22rpx;
+  color: #4a5058;
+  margin-top: 10rpx;
+}
+
+.result-total {
+  font-size: 120rpx;
+  font-weight: 800;
+  color: #f0e6d3;
+  line-height: 1;
+  margin-bottom: 24rpx;
+  font-variant-numeric: tabular-nums;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.result-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  justify-content: center;
+}
+
+.result-chip {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 24rpx;
+  border: 1rpx solid;
+}
+
+.chip-label {
+  font-size: 24rpx;
+  opacity: 0.7;
+}
+
+.chip-val {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+
+/* 投掷中动画 */
+.rolling-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.rolling-dice {
+  font-size: 60rpx;
+  animation: shake 0.15s infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(-8deg) scale(1); }
+  50% { transform: rotate(8deg) scale(1.1); }
+}
+
+.rolling-text {
+  font-size: 26rpx;
+  color: #f1c40f;
+}
+
+/* ===== 快捷投掷 ===== */
+.quick-section {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-label {
+  font-size: 22rpx;
+  color: #555a63;
+  font-weight: bold;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+}
+
+.quick-scroll {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.quick-chip {
+  display: inline-block;
+  padding: 10rpx 22rpx;
+  background: #2a313a;
+  border: 1rpx solid #3a414a;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #aab0b8;
+  margin-right: 10rpx;
+  transition: all 0.15s;
+}
+
+.quick-chip:active {
+  background: #3a424d;
+  color: #f1c40f;
+  border-color: #f1c40f60;
+}
+
+.quick-chip.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ===== 骰子卡片网格 ===== */
+.dice-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+/* d100 占 2 格，填满 4×2 网格 */
+.dice-grid .dice-card:nth-child(7) {
+  grid-column: span 2;
+}
+
+.dice-card {
+  position: relative;
+  background: #252d38;
+  border: 2rpx solid #2e3642;
+  border-radius: 16rpx;
+  padding: 24rpx 8rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  transition: all 0.15s;
+}
+
+.dice-card:active {
+  transform: scale(0.96);
+}
+
+.dice-card.active {
+  border-color: var(--dice-color);
+  border-width: 2rpx;
+  box-shadow: inset 0 0 24rpx rgba(255,255,255,0.04);
+}
+
+.dice-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.dice-card-icon {
+  font-size: 40rpx;
+  color: #6a7078;
+  transition: color 0.15s;
+}
+
+.dice-card.active .dice-card-icon {
+  color: var(--dice-color);
+}
+
+.dice-card-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #c0c6ce;
+}
+
+.dice-card.active .dice-card-name {
+  color: var(--dice-color);
+}
+
+.dice-card-count {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  min-width: 40rpx;
+  height: 40rpx;
+  border-radius: 20rpx;
+  background: var(--dice-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-card-count text {
+  font-size: 22rpx;
+  font-weight: bold;
+  color: #1a1f25;
+}
+
+/* ===== 操作按钮栏 ===== */
+.action-bar {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.btn-clear {
+  flex: 1;
+  padding: 20rpx 0;
+  background: transparent;
+  border: 1rpx solid #3a414a;
+  border-radius: 14rpx;
+  font-size: 26rpx;
+  color: #7a828e;
+  text-align: center;
+}
+
+.btn-clear:active {
+  background: #252d38;
+  color: #aab0b8;
+}
+
+.btn-roll {
+  flex: 2;
+  padding: 20rpx 0;
+  background: linear-gradient(135deg, #f1c40f, #e67e22);
+  border: none;
+  border-radius: 14rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1a1f25;
+  text-align: center;
+  box-shadow: 0 4rpx 16rpx rgba(241, 196, 15, 0.2);
+}
+
+.btn-roll:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.btn-roll.disabled {
+  background: #2e3642;
+  color: #5a6068;
+  box-shadow: none;
+}
+
+/* ===== 历史面板 ===== */
+.history-panel {
+  background: #222830;
+  border-radius: 16rpx;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.history-panel.open {
+  max-height: 600rpx;
+}
+
+.history-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 20rpx 12rpx;
+  border-bottom: 1rpx solid #2e3642;
+}
+
+.history-title {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #aab0b8;
+}
+
+.history-clear {
+  font-size: 22rpx;
+  color: #555a63;
+  padding: 4rpx 10rpx;
+}
+
+.history-clear:active {
+  color: #e74c3c;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 14rpx 20rpx;
+  border-bottom: 1rpx solid #252d38;
+}
+
+.hi-total {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #f0e6d3;
+  min-width: 56rpx;
+}
+
+.hi-dice {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6rpx;
+}
+
+.hi-chip {
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 8rpx;
+  background: rgba(255,255,255,0.04);
+}
+
+.hi-time {
+  font-size: 20rpx;
+  color: #555a63;
+  flex-shrink: 0;
+}
+
+.history-empty {
+  padding: 40rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #555a63;
+}
