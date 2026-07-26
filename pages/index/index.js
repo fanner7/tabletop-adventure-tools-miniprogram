@@ -17,6 +17,20 @@ Page({
         url: '/pages/cairn-gen/cairn-gen'
       },
       {
+        id: 'coc7-gen',
+        icon: '🐙',
+        title: 'COC7 调查员创建',
+        desc: '克苏鲁的呼唤 7版 调查员角色创建工具。',
+        url: '/pages/coc7-gen/coc7-gen'
+      },
+      {
+        id: 'coc-keeper',
+        icon: '🔮',
+        title: 'COC 守密人助手',
+        desc: '任务管理、玩家卡与NPC卡导入监看、疯狂发作抽取。',
+        url: '/pages/coc-keeper/coc-keeper'
+      },
+      {
         id: 'liminal-horror-gen',
         icon: '🚪',
         title: '阈限恐怖 调查员生成',
@@ -36,20 +50,6 @@ Page({
         title: 'TES: BotSE 技能速查',
         desc: '上古卷轴：第二纪元的背叛 - 技能速查工具。',
         url: '/pages/tes-botse-skills/tes-botse-skills'
-      },
-      {
-        id: 'coc7-gen',
-        icon: '🐙',
-        title: 'COC7 调查员创建',
-        desc: '克苏鲁的呼唤 7版 调查员角色创建工具。',
-        url: '/pages/coc7-gen/coc7-gen'
-      },
-      {
-        id: 'coc-keeper',
-        icon: '🔮',
-        title: 'COC 守密人助手',
-        desc: '任务管理、玩家卡与NPC卡导入监看。',
-        url: '/pages/coc-keeper/coc-keeper'
       },
       {
         id: 'about',

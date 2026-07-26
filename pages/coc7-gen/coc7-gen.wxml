@@ -22,9 +22,9 @@
     <button class="btn btn-primary" bindtap="startNewCharacter">➕ 创建新角色</button>
     <button class="btn btn-secondary" bindtap="importCharacter">📥 导入调查员</button>
     <view class="saved-list" wx:if="{{savedCharacters.length > 0}}">
-      <text class="card-title">📂 已保存的角色</text>
+      <text class="card-title">已保存的角色</text>
       <view class="saved-item {{sc.completed ? 'completed' : ''}}" wx:for="{{savedCharacters}}" wx:for-item="sc" wx:key="index" bindtap="loadCharacter" data-index="{{index}}">
-        <view><text class="saved-name">{{sc.charInfo ? sc.charInfo.name : (sc.name || '未命名')}}</text><text class="saved-occ">{{sc.selectedOcc ? sc.selectedOcc.name : (sc.occupation || '未选择职业')}} {{sc.completed ? '✅' : '🖊'}}</text></view>
+        <view><text class="saved-name">{{sc.charInfo ? sc.charInfo.name : (sc.name || '未命名')}}</text><text class="saved-occ">{{sc.selectedOcc ? sc.selectedOcc.name : (sc.occupation || '未选择职业')}}</text><text class="saved-time" wx:if="{{sc._timeStr}}">{{sc._timeStr}}</text></view>
         <text class="saved-delete" catchtap="deleteCharacter" data-index="{{index}}">删除</text>
       </view>
     </view>
@@ -79,6 +79,14 @@
     <view class="age-mod-box" wx:if="{{ageModSummary}}">
       <text class="age-mod-title">📋 年龄修正结果</text>
       <text class="age-mod-text">{{ageModSummary}}</text>
+    </view>
+
+    <view class="random-name-section">
+      <text class="random-name-label">🎲 随机姓名 · 1920s 美国常见名</text>
+      <view class="random-name-btns">
+        <view class="random-name-btn" bindtap="randomMaleName"><text>♂ 抽取男性名</text></view>
+        <view class="random-name-btn" bindtap="randomFemaleName"><text>♀ 抽取女性名</text></view>
+      </view>
     </view>
   </block>
 
@@ -230,12 +238,16 @@
           </view>
           <text class="char-deriv-value" wx:if="{{!playMode}}">{{playMP}}/{{maxMP}}</text>
         </view>
+        <view wx:for="{{derivedItems}}" wx:for-item="d" wx:key="index" wx:if="{{d.l !== '生命 HP' && d.l !== '理智 SAN' && d.l !== '魔法 MP'}}">
+          <view class="char-deriv"><text class="char-deriv-label">{{d.l}}</text><text class="char-deriv-value">{{d.v}}</text></view>
+        </view>
         <view class="char-deriv major-wound-box {{majorWound ? 'major-wound-on' : ''}}" bindtap="toggleMajorWound">
           <text class="char-deriv-label">重伤</text>
           <text class="mw-check">{{majorWound ? '☑' : '☐'}}</text>
         </view>
-        <view wx:for="{{derivedItems}}" wx:for-item="d" wx:key="index" wx:if="{{d.l !== '生命 HP' && d.l !== '理智 SAN' && d.l !== '魔法 MP'}}">
-          <view class="char-deriv"><text class="char-deriv-label">{{d.l}}</text><text class="char-deriv-value">{{d.v}}</text></view>
+        <view class="char-deriv major-wound-box {{dying ? 'major-wound-on' : ''}}" bindtap="toggleDying">
+          <text class="char-deriv-label">濒死</text>
+          <text class="mw-check">{{dying ? '☑' : '☐'}}</text>
         </view>
       </view>
 
@@ -338,6 +350,10 @@
       <!-- 调查员伙伴 -->
       <text class="char-section-title">👥 调查员伙伴</text>
       <textarea class="char-textarea" placeholder="记录值得信赖的同伴信息…" value="{{charCompanions}}" bindinput="onCharFieldChange" data-field="companions" auto-height maxlength="-1" />
+
+      <!-- 资产 -->
+      <text class="char-section-title">💰 资产</text>
+      <textarea class="char-textarea" placeholder="信用评级对应的现金与资产…" value="{{charAssets}}" bindinput="onCharFieldChange" data-field="assets" auto-height maxlength="-1" />
     </view>
 
     <view class="saved-info" wx:if="{{savedAt > 0 && !playMode}}">💾 已保存</view>

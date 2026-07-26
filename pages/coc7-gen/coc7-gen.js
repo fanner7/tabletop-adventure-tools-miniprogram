@@ -15,6 +15,10 @@ const CAT_LABELS = {
 };
 const CAT_ORDER = ['investigate','social','combat','special','support','knowledge'];
 
+// ---------- 1920年代美国流行名字 ----------
+const MALE_NAMES = ['詹姆斯','约翰','威廉','罗伯特','约瑟夫','查尔斯','乔治','爱德华','托马斯','弗兰克','沃尔特','哈罗德','亨利','保罗','理查德','雷蒙德','阿尔伯特','亚瑟','哈里','唐纳德','拉尔夫','路易斯','杰克','克拉伦斯','卡尔'];
+const FEMALE_NAMES = ['玛丽','多萝西','海伦','贝蒂','玛格丽特','露丝','弗吉尼亚','米尔德里德','多丽丝','弗朗西斯','伊芙琳','安娜','玛莉','爱丽丝','琼','雪莉','芭芭拉','艾琳','弗洛伦斯','莉莲','路易丝','罗丝','凯瑟琳','玛莎','约瑟芬'];
+
 // ---------- 全部技能数据（含分类、基础值、说明） ----------
 // 说明文本来源于 COC7空白卡CY2lusFinal 附表
 const ALL_SKILLS = [
@@ -355,60 +359,60 @@ function makeAttrDisplay(values) {
 // 属性描述文案字典
 const traits_dictionary = {
   SIZ: [
-    '身材极其矮小瘦弱，如同未发育的孩童',   // 1-19
-    '身形相对娇小单薄',                      // 20-39
-    '有着一副并不惹眼的普通中等身材',        // 40-59
-    '体格高大魁梧',                          // 60-79
-    '宛如一尊极具压迫感的铁塔，体型庞大'     // 80+
+    "【极度瘦小】如未发育的孩童般孱弱",         // 1-19
+    "【偏小单薄】身形相对娇小",                  // 20-39
+    "【中等身材】体格属于大众均值",              // 40-59
+    "【高大健壮】骨架宽大且颇具压迫感",          // 60-79
+    "【极其魁梧】宛如一尊庞大的巨塔"             // 80+
   ],
   APP: [
-    '，容貌令人不敢直视，甚至带有某种可憎的缺陷。', // 1-19
-    '，样貌平庸且不修边幅。',                       // 20-39
-    '，长相大众化，很容易隐入人群中。',             // 40-59
-    '，容貌出众，举手投足间散发着迷人的魅力。',     // 60-79
-    '，拥有着惊为天人的完美容颜，让人无法移开视线。' // 80+
+    "【容貌骇人】，带有令人不适的明显生理缺陷。",
+    "【相貌平庸】，甚至显得有些粗糙邋遢。",
+    "【长相大众】，很容易完全隐入人群之中。",
+    "【容貌出众】，举手投足间颇具个人魅力。",
+    "【惊为天人】，拥有令人无法移开视线的绝美容颜。"
   ],
   CON: [
-    '你的身体羸弱不堪，常年被病痛折磨，',     // 1-19
-    '你的健康状况欠佳，很容易感到疲惫，',     // 20-39
-    '你有着普通人的健康体魄，',               // 40-59
-    '你的精力十分充沛，身体结实耐造，',       // 60-79
-    '你简直拥有钢铁般的强韧之躯，几乎百病不侵，' // 80+
+    "【体质极弱】常年被病痛折磨",
+    "【健康欠佳】比常人更容易感到疲劳",
+    "【体质正常】没有明显的健康问题",
+    "【精力充沛】身体硬朗且非常耐造",
+    "【坚如钢铁】拥有几乎百病不侵的强悍体魄"
   ],
   STR: [
-    '连提起稍微重一点的物品都显得极其吃力。', // 1-19
-    '力气略逊于常人，无法胜任重体力活。',     // 20-39
-    '力量表现中规中矩，和常人无异。',         // 40-59
-    '肌肉线条分明，蕴含着远超常人的爆发力。', // 60-79
-    '天生神力，举手投足间具备着可怕的破坏力。' // 80+
+    "【手无缚鸡之力】连提起重物都极度困难。",
+    "【力量略逊常人】难以胜任重体力劳动。",
+    "【力量中规中矩】和普通成年人无异。",
+    "【力量远超常人】肌肉中蕴含着强大的爆发力。",
+    "【拥有天生神力】具备极具破坏性的物理力量。"
   ],
   DEX: [
-    '平时行动时，你极其笨拙，步履蹒跚，甚至容易平地摔跤。',   // 1-19
-    '你的肢体显得有些僵硬，反应总是慢人半拍。',              // 20-39
-    '你的灵活性普通，能够应付大多数日常的行动需求。',         // 40-59
-    '你身手敏捷，反应迅速，动作如行云流水般利落。',          // 60-79
-    '你的身体柔韧如猫，具备着几乎能够媲美杂技演员的惊人协调性。' // 80+
+    "【极度笨拙】步履蹒跚，毫无协调性可言。",
+    "【肢体微僵】反应和动作总是慢人半拍。",
+    "【灵活度普通】足以应付日常的行动需求。",
+    "【身手敏捷】反应迅速且动作利落。",
+    "【动如脱兔】具备媲美杂技演员的惊人协调性。"
   ],
   INT: [
-    '在心智方面，你对复杂事物的理解极其迟缓',           // 1-19
-    '虽然你的反应不够灵敏，学习新事物颇为吃力',         // 20-39
-    '你拥有着正常水平的逻辑能力',                      // 40-59
-    '你极其聪明机警，思维敏捷得像一台精密的仪器',       // 60-79
-    '你无疑是个绝顶天才，能够轻易洞察隐秘事物的本质'    // 80+
+    "【思维极度迟缓】难以理解复杂事物",
+    "【理解能力较弱】学习新事物比较吃力",
+    "【逻辑能力正常】有着普通人的思考水平",
+    "【极其聪明机警】头脑灵活且思维敏捷",
+    "【堪称绝顶天才】能轻易洞察隐秘事物的本质"
   ],
   EDU: [
-    '，并且几乎毫无常识，宛如一张未受过教育的白纸。',           // 1-19
-    '，脑海中仅有最基础的生活常识，早早就告别了校园。',         // 20-39
-    '，接受过标准的教育，具备成年人应有的常识体系。',           // 40-59
-    '，而且受过良好的高等教育，学识渊博，谈吐不凡。',           // 60-79
-    '，庞大的知识储备让你如同行走的百科全书，在学术界也堪称泰斗。' // 80+
+    "【毫无常识】，宛如一张未受过教育的白纸。",
+    "【学历偏低】，仅具备最基础的生活常识。",
+    "【常识完备】，接受过标准的常规教育。",
+    "【学识广博】，受过良好的高等教育。",
+    "【知识储备惊人】，在学术领域堪称行走的百科全书。"
   ],
   POW: [
-    '然而，你的内心极其脆弱，面对未知极易陷入恐慌或被他人暗示操控。',       // 1-19
-    '在遭遇变故时，你时常优柔寡断，意志力略显薄弱。',                      // 20-39
-    '你的精神状态相对稳定，能够在大多数危机中保持理智。',                  // 40-59
-    '你意志坚定，即使面对不可名状的恐惧，也不易被动摇本心。',              // 60-79
-    '更可怕的是你那钢铁般的意志，或者说近乎狂热的信仰，足以让你直面深渊而不退缩。' // 80+
+    "【内心极度脆弱】面对未知极易陷入恐慌或崩溃。",
+    "【意志略显薄弱】遭遇变故时容易动摇或优柔寡断。",
+    "【精神状态稳定】能在大多数日常危机中保持理智。",
+    "【意志十分坚定】不易被恐惧或外界暗示所动摇。",
+    "【意志坚不可摧】足以直面深渊而绝对不退缩。"
   ]
 };
 
@@ -423,15 +427,22 @@ function getTraitIndex(value) {
 function generateAttrDesc(values) {
   const v = (k) => values[k] || 0;
   const idx = (k) => getTraitIndex(v(k));
-  const siz = traits_dictionary.SIZ[idx('siz')];
-  const app = traits_dictionary.APP[idx('app')];
-  const con = traits_dictionary.CON[idx('con')];
-  const str = traits_dictionary.STR[idx('str')];
-  const dex = traits_dictionary.DEX[idx('dex')];
-  const int = traits_dictionary.INT[idx('int')];
-  const edu = traits_dictionary.EDU[idx('edu')];
-  const pow = traits_dictionary.POW[idx('pow')];
-  return `一眼望去，你${siz}${app} ${con}${str} ${dex} ${int}${edu} ${pow}`;
+  const textSIZ = traits_dictionary.SIZ[idx('siz')];
+  const textAPP = traits_dictionary.APP[idx('app')];
+  const textCON = traits_dictionary.CON[idx('con')];
+  const textSTR = traits_dictionary.STR[idx('str')];
+  const textDEX = traits_dictionary.DEX[idx('dex')];
+  const textINT = traits_dictionary.INT[idx('int')];
+  const textEDU = traits_dictionary.EDU[idx('edu')];
+  const textPOW = traits_dictionary.POW[idx('pow')];
+
+  const s1 = `一眼望去，你的外在属于${textSIZ}，且${textAPP}`;
+  const s2 = `身体素质上，你${textCON}；在力量表现上，你${textSTR}`;
+  const s3 = `日常行动时，你${textDEX}`;
+  const s4 = `心智方面，你${textINT}，且${textEDU}`;
+  const s5 = `至于精神防线，你${textPOW}`;
+
+  return `${s1} ${s2} ${s3} ${s4} ${s5}`;
 }
 
 function calcDB(strSiz) {
@@ -562,6 +573,7 @@ Page({
     maxSAN: 0,
     maxMP: 0,
     majorWound: false,
+    dying: false,
     rollSkill: null,
     rollResult: null,
     rollBonus: 0,
@@ -656,6 +668,7 @@ Page({
     charMythos: '',            // 神话相关
     charSpells: '',            // 法术
     charCompanions: '',        // 调查员伙伴
+    charAssets: '',            // 资产
     // 角色卡预览
     derived: { hp: 0, san: 0, mp: 0, db: '+0', build: 0, mov: 8 },
     sortedSkillsByCat: [],
@@ -683,6 +696,16 @@ Page({
   loadSavedList() {
     try {
       const list = wx.getStorageSync('coc7_characters') || [];
+      // 为每个角色附加格式化时间
+      list.forEach(c => {
+        if (c.timestamp) {
+          const d = new Date(c.timestamp);
+          const pad = n => String(n).padStart(2, '0');
+          c._timeStr = `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        } else {
+          c._timeStr = '';
+        }
+      });
       this.setData({ savedCharacters: list });
     } catch (e) { this.setData({ savedCharacters: [] }); }
   },
@@ -751,11 +774,12 @@ Page({
         charWeapons: char.charWeapons || [],
         charBackstory: char.charBackstory || '', charGear: char.charGear || '',
         charMythos: char.charMythos || '', charSpells: char.charSpells || '', charCompanions: char.charCompanions || '',
+        charAssets: char.charAssets || '',
         playHP: char.playHP || d.hp,
         playSAN: char.playSAN || d.san,
         playMP: char.playMP || d.mp,
         playLuck: char.playLuck || attrVals.luck || 50,
-        majorWound: char.majorWound || false,
+        majorWound: char.majorWound || false, dying: char.dying || false,
         savedAt: char.timestamp || 0,
       });
     } catch (e) { wx.showToast({ title: '读取失败', icon: 'none' }); }
@@ -827,6 +851,8 @@ Page({
 
   // ==================== STEP 2：基础信息 ====================
   onCharInfoChange(e) { this.setData({ [`charInfo.${e.currentTarget.dataset.field}`]: e.detail.value }); this.checkStep2CanNext(); },
+  randomMaleName() { const n = MALE_NAMES[Math.floor(Math.random() * MALE_NAMES.length)]; this.setData({ 'charInfo.name': n }); this.checkStep2CanNext(); },
+  randomFemaleName() { const n = FEMALE_NAMES[Math.floor(Math.random() * FEMALE_NAMES.length)]; this.setData({ 'charInfo.name': n }); this.checkStep2CanNext(); },
   onAgeChange(e) {
     const idx = parseInt(e.detail.value);
     const age = 15 + idx;
@@ -1309,11 +1335,35 @@ Page({
       const cm = (this.data.occPts['克苏鲁神话'] || 0) + (this.data.intPts['克苏鲁神话'] || 0);
       const cmBase = getSkillBase('克苏鲁神话', this.data.attrValues.edu || 50, this.data.attrValues.dex || 50);
       const maxSAN = 99 - (cmBase + cm);
-      this.setData({ step: next, derived, derivedItems, sortedSkillsByCat, attrDisplay: makeAttrDisplay(this.data.attrValues), playHP: derived.hp, playSAN: derived.san, playMP: derived.mp, playLuck: this.data.attrValues.luck || 50, maxSAN: maxSAN, maxMP: derived.mp });
+      // 角色创建完成时，若背景故事/资产为空则填入默认模板
+      const backstory = this.data.charBackstory || this.getDefaultBackstory();
+      const cr = (this.data.occPts['信用评级'] || 0) + (this.data.intPts['信用评级'] || 0);
+      const assets = this.data.charAssets || this.getDefaultAssets(cr);
+      this.setData({ step: next, derived, derivedItems, sortedSkillsByCat, attrDisplay: makeAttrDisplay(this.data.attrValues), playHP: derived.hp, playSAN: derived.san, playMP: derived.mp, playLuck: this.data.attrValues.luck || 50, maxSAN: maxSAN, maxMP: derived.mp, charBackstory: backstory, charAssets: assets });
     } else {
       this.setData({ step: next, canNext: false });
       if (next === 3) this.filterOccs(this.data.occSearch || '');
     }
+  },
+  getDefaultBackstory() {
+    return '形象描述：\n思想与信念：\n重要之人：\n意义非凡之地：\n宝贵之物：\n特质：\n创伤和疤痕：\n恐惧症和躁狂症：\n典籍、法术和神话造物：\n第三类接触：';
+  },
+  getDefaultAssets(cr) {
+    let cash, assets, spending;
+    if (cr <= 0) {
+      cash = '$0.50'; assets = '无'; spending = '$0.50';
+    } else if (cr <= 9) {
+      cash = '$' + (cr * 1); assets = '$' + (cr * 10); spending = '$2';
+    } else if (cr <= 49) {
+      cash = '$' + (cr * 2); assets = '$' + (cr * 50); spending = '$10';
+    } else if (cr <= 89) {
+      cash = '$' + (cr * 5); assets = '$' + (cr * 500); spending = '$50';
+    } else if (cr <= 98) {
+      cash = '$' + (cr * 20); assets = '$' + (cr * 2000); spending = '$250';
+    } else {
+      cash = '$50,000'; assets = '$5,000,000+'; spending = '$5,000';
+    }
+    return '消费水平：' + spending + '\n现金：' + cash + '\n资产：' + assets;
   },
   prevStep() { const prev = this.data.step - 1; if (prev >= 0) { const opts = { step: prev, canNext: prev === 0 ? false : true }; if (prev === 0) { opts.playMode = false; opts.isCompleted = false; } this.setData(opts); if (prev === 3) this.filterOccs(this.data.occSearch || ''); } },
   goToStep(e) { const s = parseInt(e.currentTarget.dataset.step); if (s >= 1 && s <= 5) { if (this.data.step === 5 && s === 4 && this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc); this.setData({ step: s, canNext: true }); if (s === 3) this.filterOccs(this.data.occSearch || ''); } },
@@ -1334,6 +1384,7 @@ Page({
       charWeapons: this.data.charWeapons,
       charBackstory: this.data.charBackstory, charGear: this.data.charGear,
       charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
+      charAssets: this.data.charAssets,
       completed: true,
     };
     try {
@@ -1365,10 +1416,11 @@ Page({
       timestamp: Date.now(),
       tickedSkills: this.data.tickedSkills,
       playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
-      majorWound: this.data.majorWound,
+      majorWound: this.data.majorWound, dying: this.data.dying,
       charWeapons: this.data.charWeapons,
       charBackstory: this.data.charBackstory, charGear: this.data.charGear,
       charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
+      charAssets: this.data.charAssets,
       completed: true,
     };
     wx.setClipboardData({
@@ -1462,10 +1514,11 @@ Page({
         derived: this.data.derived, timestamp: Date.now(),
         tickedSkills: this.data.tickedSkills,
         playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
-      majorWound: this.data.majorWound,
+      majorWound: this.data.majorWound, dying: this.data.dying,
         charWeapons: this.data.charWeapons,
         charBackstory: this.data.charBackstory, charGear: this.data.charGear,
         charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
+        charAssets: this.data.charAssets,
         completed: this.data.isCompleted,
       };
       try {
@@ -1505,6 +1558,7 @@ Page({
   onSANChange(e) { this.setData({ playSAN: parseInt(e.detail.value) || 0 }); },
   onMPChange(e) { this.setData({ playMP: parseInt(e.detail.value) || 0 }); },
   toggleMajorWound() { this.setData({ majorWound: !this.data.majorWound }); },
+  toggleDying() { this.setData({ dying: !this.data.dying }); },
   onLuckChange(e) {
     const val = parseInt(e.detail.value) || 0;
     const newAttr = { ...this.data.attrValues, luck: val };
@@ -1700,10 +1754,11 @@ Page({
       derived: this.data.derived, timestamp: Date.now(),
       tickedSkills: this.data.tickedSkills,
       playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
-      majorWound: this.data.majorWound,
+      majorWound: this.data.majorWound, dying: this.data.dying,
       charWeapons: this.data.charWeapons,
       charBackstory: this.data.charBackstory, charGear: this.data.charGear,
       charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
+      charAssets: this.data.charAssets,
       completed: this.data.isCompleted,
     };
     try {
@@ -1891,7 +1946,7 @@ Page({
 
   onCharFieldChange(e) {
     const field = e.currentTarget.dataset.field;
-    const map = { backstory: 'charBackstory', gear: 'charGear', mythos: 'charMythos', spells: 'charSpells', companions: 'charCompanions' };
+    const map = { backstory: 'charBackstory', gear: 'charGear', mythos: 'charMythos', spells: 'charSpells', companions: 'charCompanions', assets: 'charAssets' };
     this.setData({ [map[field]]: e.detail.value });
   },
 

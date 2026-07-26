@@ -26,10 +26,21 @@ page {
 .section-title { font-size: 30rpx; font-weight: bold; color: #3b2e1e; margin-bottom: 12rpx; display: block; }
 .section-desc { font-size: 24rpx; color: #8b7355; margin-bottom: 20rpx; display: block; }
 
+/* ===== 通用卡片 ===== */
+.card { background: #fff; border-radius: 12rpx; padding: 18rpx; margin-bottom: 12rpx; box-shadow: 0 1px 6px rgba(0,0,0,0.05); }
+.card-title { font-size: 26rpx; font-weight: bold; color: #3b2e1e; display: block; margin-bottom: 10rpx; }
+
 /* ===== 按钮 ===== */
 .btn { width: 100%; padding: 28rpx 0; border-radius: 12rpx; font-size: 32rpx; font-weight: bold; text-align: center; border: none; margin-bottom: 16rpx; }
 .btn-primary { background: #6b4c2a; color: #fff; }
 .btn-primary:active { background: #5a3e22; }
+.btn-import-task {
+  width: 100%; padding: 28rpx 0; border-radius: 12rpx;
+  font-size: 30rpx; font-weight: bold; text-align: center;
+  border: 1px dashed #6b4c2a; background: transparent;
+  color: #6b4c2a; margin-bottom: 16rpx;
+}
+.btn-import-task:active { background: rgba(107, 76, 42, 0.08); }
 .btn-secondary { background: transparent; color: #6b4c2a; border: 2px solid #6b4c2a; }
 .btn-secondary:active { background: #f5f0e8; }
 .btn-half { width: calc(50% - 10rpx); display: inline-block; font-size: 28rpx; padding: 22rpx 0; }
@@ -83,25 +94,32 @@ page {
 .task-header-count { font-size: 22rpx; color: #8b7355; }
 
 /* ===== 卡片网格 ===== */
-.card-grid { display: flex; flex-wrap: wrap; gap: 16rpx; }
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; }
 .char-card {
-  width: calc(50% - 8rpx);
   background: #ffffff;
   border-radius: 12rpx;
   padding: 20rpx;
   box-sizing: border-box;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transition: transform 0.2s;
+  overflow: hidden;
+  min-width: 0;
 }
 .char-card:active { transform: translateY(-2rpx); }
 .char-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
-.char-card-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%; }
+.char-card-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+.char-card-actions { display: flex; gap: 8rpx; flex-shrink: 0; }
+.char-card-visible { font-size: 24rpx; padding: 0 2rpx; opacity: 0.7; }
+.char-card-visible.off { opacity: 0.3; }
+.char-card-edit { font-size: 28rpx; color: #8b7355; padding: 0 4rpx; }
 .char-card-delete { font-size: 32rpx; color: #c4b8a8; padding: 0 4rpx; }
 .char-card-occ { font-size: 22rpx; color: #8b7355; display: block; margin-bottom: 8rpx; }
 .char-card-stats { display: flex; gap: 8rpx; flex-wrap: wrap; }
 .char-card-stat { font-size: 20rpx; color: #6b4c2a; background: #faf6f0; border-radius: 6rpx; padding: 4rpx 10rpx; }
 .npc-card { border-left: 4rpx solid #c4b8a8; }
-.npc-card-preview { font-size: 22rpx; color: #7a6b58; line-height: 1.5; display: block; margin-top: 8rpx; }
+.npc-card.hidden { opacity: 0.45; }
+.char-card.hidden { opacity: 0.45; }
+.npc-card-preview { font-size: 22rpx; color: #7a6b58; line-height: 1.5; display: block; margin-top: 8rpx; word-break: break-all; overflow-wrap: break-word; }
 
 /* 空状态 */
 .empty-hint { text-align: center; padding: 40rpx 0; color: #c4b8a8; font-size: 26rpx; }
@@ -114,7 +132,7 @@ page {
 .detail-swiper { height: calc(100vh - 220rpx); }
 .detail-scroll { height: 100%; }
 
-.char-sheet { background: #fff; border-radius: 16rpx; padding: 24rpx; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+.char-sheet { background: #fff; border-radius: 16rpx; padding: 24rpx; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden; }
 .char-header { text-align: center; border-bottom: 2px solid #3b2e1e; padding-bottom: 16rpx; margin-bottom: 16rpx; }
 .char-name { font-size: 36rpx; font-weight: bold; color: #3b2e1e; display: block; }
 .char-sub { font-size: 24rpx; color: #7a6b58; display: block; margin-top: 4rpx; }
@@ -167,6 +185,62 @@ page {
 /* 文本块 */
 .char-text-block { background: #faf8f4; border: 1px solid #e8e0d6; border-radius: 8rpx; padding: 14rpx 16rpx; font-size: 26rpx; color: #3b2e1e; line-height: 1.7; white-space: pre-wrap; word-break: break-all; }
 .npc-text { min-height: 200rpx; }
+
+/* NPC HP/MP 调节栏 — 顶部并排 */
+.npc-stat-bar {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+}
+.npc-stat-item {
+  flex: 1;
+  min-width: 0;
+  background: #faf8f4;
+  border-radius: 10rpx;
+  padding: 14rpx 12rpx;
+  text-align: center;
+  overflow: hidden;
+}
+.npc-stat-label {
+  font-size: 22rpx;
+  color: #8b7355;
+  display: block;
+  margin-bottom: 8rpx;
+}
+.npc-stat-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+.npc-stat-val {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #3b2e1e;
+  min-width: 52rpx;
+  text-align: center;
+  flex-shrink: 0;
+}
+/* 小方块按钮 — view 替代 button，无默认样式干扰 */
+.npc-stat-btn {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  font-weight: bold;
+  border: 1.5px solid #d4c5a9;
+  background: #fff;
+  color: #3b2e1e;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.npc-stat-btn-active { background: #f0e8d8; }
+.npc-stat-btn.plus { border-color: #6b4c2a; color: #6b4c2a; background: #fdfaf4; }
+.npc-stat-btn.minus { border-color: #c4b8a8; color: #8b7355; }
 
 /* ===== 战斗轮排序（内联） ===== */
 .combat-bar { margin-bottom: 16rpx; }
@@ -262,3 +336,181 @@ page {
   box-sizing: border-box;
 }
 .form-input:focus { border-color: #8b7355; }
+.form-textarea {
+  width: 100%; min-height: 200rpx;
+  background: #faf8f4;
+  border: 2px solid #d4c5a9;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  font-size: 26rpx; color: #3b2e1e; line-height: 1.6;
+  box-sizing: border-box;
+}
+
+/* ================================================================== */
+/* 疯狂发作面板 */
+/* ================================================================== */
+
+/* 疯狂 Toggle 栏 */
+.madness-bar { margin-bottom: 16rpx; }
+.madness-bar .btn-subtle { width: 100%; box-sizing: border-box; text-align: center; }
+.madness-inline { margin-top: 10rpx; }
+
+/* 疯狂类型选择 */
+.madness-type-row { display: flex; gap: 16rpx; margin-bottom: 20rpx; }
+.madness-type-btn {
+  flex: 1; text-align: center; padding: 20rpx 0; border-radius: 10rpx;
+  border: 1.5px solid #d4c5a9; background: #fff; font-size: 26rpx; font-weight: bold; color: #5a3e22;
+}
+.madness-type-btn.on { border-color: #6b4c2a; background: #fdf5e6; color: #6b4c2a; }
+
+/* 疯狂掷骰按钮 */
+.madness-roll-btn { width: 100% !important; box-sizing: border-box; margin-top: 12rpx; }
+
+/* 疯狂步骤 */
+.madness-steps { margin-bottom: 20rpx; }
+.mstep {
+  display: flex; align-items: flex-start; gap: 14rpx; padding: 16rpx 18rpx;
+  margin-bottom: 10rpx; background: #fff; border-radius: 10rpx;
+  border-left: 4rpx solid #d4c5a9; opacity: 0.5; transition: all 0.35s;
+}
+.mstep.done { border-left-color: #6b4c2a; opacity: 1; background: #fdfaf4; }
+.mstep-num {
+  width: 40rpx; height: 40rpx; border-radius: 50%; background: #f0e8d8;
+  color: #8b7355; font-size: 22rpx; font-weight: bold; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2rpx;
+}
+.mstep.done .mstep-num { background: #6b4c2a; color: #fff; }
+.mstep-body { flex: 1; }
+.mstep-title { font-size: 24rpx; font-weight: bold; color: #3b2e1e; display: block; margin-bottom: 4rpx; }
+.mstep-result { font-size: 24rpx; color: #5a3e22; line-height: 1.5; display: block; }
+.mstep-dice {
+  display: inline-block; background: #6b4c2a; color: #fff; font-weight: bold;
+  font-size: 26rpx; min-width: 42rpx; text-align: center; border-radius: 6rpx;
+  padding: 1rpx 8rpx; margin: 0 4rpx;
+}
+
+/* 疯狂结果卡片 */
+.madness-result {
+  background: #fff; border-radius: 14rpx; padding: 22rpx;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08); border: 2px solid #d4c5a9; margin-bottom: 28rpx;
+}
+.madness-result-header {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1.5px solid #d4c5a9; padding-bottom: 14rpx; margin-bottom: 16rpx;
+}
+.madness-result-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.madness-result-type {
+  font-size: 20rpx; background: #6b4c2a; color: #fff; border-radius: 16rpx; padding: 3rpx 14rpx;
+}
+.madness-result-parts { display: flex; flex-direction: column; gap: 12rpx; }
+.madness-result-part { background: #faf8f4; border-radius: 8rpx; padding: 12rpx 16rpx; }
+.madness-result-label { font-size: 20rpx; color: #8b7355; display: block; margin-bottom: 2rpx; }
+.madness-result-value { font-size: 26rpx; color: #3b2e1e; line-height: 1.6; display: block; }
+
+/* ================================================================== */
+/* 掷骰（toggle 展开，适配 COC 棕色系） */
+/* ================================================================== */
+
+/* 掷骰 Toggle 栏 */
+.dice-bar { margin-bottom: 16rpx; }
+.dice-bar .btn-subtle { width: 100%; box-sizing: border-box; text-align: center; }
+.dice-inline { margin-top: 10rpx; }
+
+/* 投掷中提示 */
+.dice-rolling-hint { text-align: center; padding: 20rpx 0; font-size: 28rpx; color: #8b7355; }
+
+/* 投掷结果高亮区 */
+.dice-result-highlight {
+  margin-top: 8rpx; margin-bottom: 12rpx; padding: 20rpx;
+  background: #3b2e1e; border-radius: 12rpx; text-align: center;
+}
+.drh-total { font-size: 72rpx; font-weight: bold; color: #f5f0e8; display: block; line-height: 1.1; }
+.drh-dice { display: flex; flex-wrap: wrap; gap: 8rpx; justify-content: center; margin-top: 12rpx; }
+.drh-chip {
+  display: inline-block; padding: 6rpx 14rpx;
+  background: rgba(255,255,255,0.10); color: #c4b8a8;
+  border-radius: 20rpx; font-size: 20rpx;
+}
+
+/* 骰子行 */
+.dice-row { display: flex; flex-wrap: wrap; gap: 8rpx; }
+.dice-btn-wrap { position: relative; width: calc(25% - 6rpx); }
+.dice-btn {
+  display: block; width: 100%; padding: 14rpx 0;
+  background: #faf8f4; border: 1px solid #d4c5a9; border-radius: 8rpx;
+  font-size: 24rpx; font-weight: bold; color: #3b2e1e; text-align: center;
+}
+.dice-btn.sel { background: #6b4c2a; color: #fff; border-color: #6b4c2a; }
+.dice-badge {
+  position: absolute; top: -8rpx; right: -8rpx;
+  min-width: 32rpx; height: 32rpx; line-height: 32rpx;
+  background: #3b2e1e; color: #fff; border-radius: 16rpx;
+  font-size: 18rpx; font-weight: bold; text-align: center; padding: 0 6rpx;
+}
+
+/* 投掷/清除按钮 */
+.dice-actions { display: flex; gap: 10rpx; margin-top: 12rpx; }
+.btn-roll {
+  flex: 2; padding: 18rpx 0; background: #6b4c2a; color: #fff;
+  border: none; border-radius: 10rpx; font-size: 26rpx; font-weight: bold; text-align: center;
+}
+.btn-roll:active { background: #5a3e22; }
+.btn-roll.rolling { background: #b0a090; }
+.btn-clear-dice {
+  flex: 1; padding: 18rpx 0;
+  background: transparent; color: #7a6b58;
+  border: 1px solid #d4c5a9; border-radius: 10rpx;
+  font-size: 24rpx; text-align: center;
+}
+.btn-clear-dice:active { background: #f0e8d8; }
+
+/* 掷骰历史 */
+.dice-log { margin-top: 10rpx; border-top: 1px solid #e8e0d6; padding-top: 8rpx; }
+.dl-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6rpx; }
+.dl-title { font-size: 22rpx; color: #8b7355; font-weight: bold; }
+.dl-clear { font-size: 22rpx; color: #c4b8a8; padding: 2rpx 6rpx; }
+.dl-clear:active { color: #c0392b; }
+.dl-item {
+  display: block; font-size: 22rpx; color: #3b2e1e;
+  padding: 4rpx 0; border-bottom: 1px solid #f0e8d8;
+}
+.dl-detail { font-size: 18rpx; color: #8b7355; }
+.dl-time { font-size: 18rpx; color: #c4b8a8; margin-left: 8rpx; }
+
+/* ================================================================== */
+/* 守密人工具区 */
+/* ================================================================== */
+
+.tools-section-title {
+  text-align: center;
+  padding: 24rpx 0 16rpx;
+  margin-top: 20rpx;
+  border-top: 2px solid #d4c5a9;
+}
+.tools-section-title text {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #6b4c2a;
+  background: #f5f0e8;
+  padding: 0 20rpx;
+}
+
+/* ================================================================== */
+/* 任务导入导出 */
+/* ================================================================== */
+
+.task-io-bar { margin-bottom: 16rpx; }
+.task-io-bar .btn-subtle { width: 100%; box-sizing: border-box; text-align: center; }
+.task-io-inline { margin-top: 10rpx; }
+
+.task-io-options { display: flex; flex-direction: column; gap: 12rpx; }
+.task-io-option {
+  display: flex; align-items: center; gap: 16rpx;
+  background: #fff; border: 1px solid #d4c5a9; border-radius: 12rpx;
+  padding: 18rpx 20rpx;
+}
+.task-io-option:active { background: #f0e8d8; }
+.task-io-icon { font-size: 36rpx; flex-shrink: 0; }
+.task-io-text { flex: 1; min-width: 0; }
+.task-io-title { font-size: 26rpx; font-weight: bold; color: #3b2e1e; display: block; margin-bottom: 4rpx; }
+.task-io-desc { font-size: 22rpx; color: #8b7355; line-height: 1.4; display: block; }

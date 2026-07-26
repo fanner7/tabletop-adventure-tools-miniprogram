@@ -9,18 +9,7 @@ const DICE = [
 ];
 
 const QUICK_ROLLS = [
-  { label: '1d4',  dice: [{ sides: 4,  count: 1 }] },
-  { label: '1d6',  dice: [{ sides: 6,  count: 1 }] },
-  { label: '2d6',  dice: [{ sides: 6,  count: 2 }] },
-  { label: '3d6',  dice: [{ sides: 6,  count: 3 }] },
-  { label: '1d8',  dice: [{ sides: 8,  count: 1 }] },
-  { label: '2d8',  dice: [{ sides: 8,  count: 2 }] },
-  { label: '1d10', dice: [{ sides: 10, count: 1 }] },
-  { label: '2d10', dice: [{ sides: 10, count: 2 }] },
-  { label: '1d12', dice: [{ sides: 12, count: 1 }] },
-  { label: '1d20', dice: [{ sides: 20, count: 1 }] },
-  { label: '2d20', dice: [{ sides: 20, count: 2 }] },
-  { label: 'd100', dice: [{ sides: 100, count: 1 }] },
+  { label: '5d6',  dice: [{ sides: 6,  count: 5 }] },
 ];
 
 function roll(sides) {

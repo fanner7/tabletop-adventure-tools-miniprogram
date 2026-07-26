@@ -1,36 +1,172 @@
 // pages/coc-keeper/coc-keeper.js — COC 守密人助手
 const STORAGE_KEY = 'coc_keeper_tasks';
 
+// ========== 疯狂发作 — 表6: 即时症状 ==========
+var IMMEDIATE_SYMPTOMS = {
+  1:{name:'失忆',desc:'调查员对自己上一次抵达安全的场所后发生的事一无所知。在其看来上一刻他还在吃着早餐，而下一刻就已经身处怪物面前。',duration:{dice:'1D10',unit:'轮'}},
+  2:{name:'假性残疾',desc:'调查员陷入因心理作用引起的失明、耳聋或肢体失能中。',duration:{dice:'1D10',unit:'轮'}},
+  3:{name:'暴力倾向',desc:'调查员沉浸于狂怒，开始对四周的一切施加失控的暴力与破坏行为，无论敌友。',duration:{dice:'1D10',unit:'轮'}},
+  4:{name:'偏执妄想',desc:'调查员陷入严重的偏执妄想之中。所有人都正在与他为敌！没人值得信任！他正在被窥视着，有人背叛了他，他所看见的皆是虚伪的幻象。',duration:{dice:'1D10',unit:'轮'}},
+  5:{name:'人际依赖',desc:'浏览调查员背景故事的"重要之人"条目。调查员会将当前场景中的另一人误当做他的重要之人。调查员将依照他与重要之人之间关系的性质行事。',duration:{dice:'1D10',unit:'轮'}},
+  6:{name:'昏厥',desc:'调查员会立即昏倒，并在1D10轮后苏醒。',duration:{dice:'1D10',unit:'轮',note:'后苏醒'}},
+  7:{name:'惊慌逃窜',desc:'调查员会无法自制地用一切可能的方法远远逃开，即使这意味着他需要开走唯一的一辆车并抛下其他所有人。',duration:{dice:'1D10',unit:'轮'}},
+  8:{name:'歇斯底里',desc:'调查员情不自禁地开始狂笑、哭泣、尖叫，等等。',duration:{dice:'1D10',unit:'轮'}},
+  9:{name:'恐惧症',desc:'调查员患上一项新的恐惧症。即使引发这些恐惧症的源头并不在身边，调查员仍会在持续时间内想象那些东西正在那里。',needsPhobia:true,duration:{dice:'1D10',unit:'轮'}},
+  10:{name:'躁狂症',desc:'调查员患上一项新的躁狂症。调查员会在接下来的持续时间内沉浸在他新的躁狂症中。',needsMania:true,duration:{dice:'1D10',unit:'轮'}}
+};
+
+// ========== 表7: 总结症状 ==========
+var SUMMARY_SYMPTOMS = {
+  1:{name:'失忆',desc:'调查员恢复神志时身处陌生地点，连自己是谁都不记得。记忆会随时间流逝逐渐恢复。',duration:null},
+  2:{name:'被劫',desc:'调查员恢复神志时，财物已遭人打劫，但没有受到人身伤害。如果其携带着宝贵之物（参考调查员背景故事），进行一次幸运检定决定它是否被盗。其他所有值钱的物品都会自动丢失。',duration:{dice:'1D10',unit:'小时',note:'后恢复神志'}},
+  3:{name:'遍体鳞伤',desc:'调查员恢复神志时，遍体鳞伤，浑身淤青。生命值降低至疯狂前的一半，但这不会造成重伤。调查员的财物没有被劫走。这些伤害如何造成由守秘人决定。',duration:{dice:'1D10',unit:'小时',note:'后恢复神志'}},
+  4:{name:'暴力',desc:'调查员的情绪在暴力和破坏的冲动中爆发。调查员恢复神志时可能记得自己做过的事，也可能不记得。调查员对谁、对什么东西施以暴力，是杀死还是仅仅造成伤害，这些都由守秘人决定。',duration:null},
+  5:{name:'思想与信念',desc:'浏览调查员背景故事的"思想与信念"条目。调查员选择其中一项，将它以极端、疯魔、形之于色的方式展现出来。例如，信仰宗教的人后来可能在地铁上大声宣讲福音。',duration:null},
+  6:{name:'重要之人',desc:'浏览调查员背景故事的"重要之人"条目，及其重要的原因。在略过的时间中，调查员会尽一切努力接近重要之人，并以某种行动展现他们之间的关系。',duration:{dice:'1D10',unit:'小时',note:'或更久'}},
+  7:{name:'被收容',desc:'调查员恢复神志时身处精神病房或者警局拘留室当中。调查员会逐渐回想起他们身处此地的原因。',duration:null},
+  8:{name:'惊慌逃窜',desc:'调查员恢复神志时已经身处很远的地方，可能在荒野中迷失了方向，或是正坐在火车或长途巴士上。',duration:null},
+  9:{name:'恐惧症',desc:'调查员患上一项新的恐惧症。调查员恢复神志后，会采取一切预防措施逃避新患上的恐惧症。',needsPhobia:true,duration:{dice:'1D10',unit:'小时',note:'后恢复神志'}},
+  10:{name:'躁狂症',desc:'调查员患上一项新的躁狂症。在疯狂发作期间，调查员完全沉溺于新的躁狂症状当中。症状对其他人是否明显由守秘人和玩家决定。',needsMania:true,duration:{dice:'1D10',unit:'小时',note:'后恢复神志'}}
+};
+
+// ========== 表9: 范例恐惧症 (1D100) ==========
+var PHOBIAS = [
+  {name:'沐浴恐惧症',desc:'害怕洗漱和洗澡'},{name:'恐高症',desc:'害怕高处'},{name:'高空恐惧症',desc:'害怕飞行'},
+  {name:'广场恐惧症',desc:'害怕开放、人多的公共场所'},{name:'恐鸡症',desc:'害怕鸡'},{name:'恐蒜症',desc:'害怕大蒜'},
+  {name:'乘车恐惧症',desc:'害怕进入车辆或乘车出行'},{name:'恐风症',desc:'害怕风'},{name:'恐男症',desc:'害怕男人'},
+  {name:'恐英症',desc:'害怕英国、英国文化等'},{name:'恐花症',desc:'害怕花'},{name:'截肢恐惧症',desc:'害怕截过肢的人'},
+  {name:'蜘蛛恐惧症',desc:'害怕蜘蛛'},{name:'闪电恐惧症',desc:'害怕闪电'},{name:'遗迹恐惧症',desc:'害怕遗迹和遗址'},
+  {name:'长笛恐惧症',desc:'害怕长笛'},{name:'细菌恐惧症',desc:'害怕细菌'},{name:'飞弹恐惧症',desc:'害怕子弹和炮弹'},
+  {name:'步行恐惧症',desc:'害怕摔倒'},{name:'书籍恐惧症',desc:'害怕书'},{name:'植物恐惧症',desc:'害怕植物'},
+  {name:'美女恐惧症',desc:'害怕美女'},{name:'寒冷恐惧症',desc:'害怕寒冷'},{name:'钟表恐惧症',desc:'害怕钟表'},
+  {name:'幽闭恐惧症',desc:'害怕封闭空间'},{name:'小丑恐惧症',desc:'害怕小丑'},{name:'恐犬症',desc:'害怕犬类'},
+  {name:'恶魔恐惧症',desc:'害怕鬼魂和恶魔'},{name:'人群恐惧症',desc:'害怕人群'},{name:'牙医恐惧症',desc:'害怕牙医'},
+  {name:'弃物恐惧症',desc:'害怕扔掉东西（囤积狂）'},{name:'毛皮恐惧症',desc:'害怕毛皮'},{name:'过街恐惧症',desc:'害怕过马路'},
+  {name:'教堂恐惧症',desc:'害怕教堂'},{name:'窥镜恐惧症',desc:'害怕镜子'},{name:'尖端恐惧症',desc:'害怕针尖和钉尖'},
+  {name:'昆虫恐惧症',desc:'害怕昆虫'},{name:'恐猫症',desc:'害怕猫类'},{name:'过桥恐惧症',desc:'害怕过桥'},
+  {name:'恐老症',desc:'害怕老人、害怕衰老'},{name:'恐女症',desc:'害怕女人'},{name:'恐血症',desc:'害怕血液'},
+  {name:'犯罪恐惧症',desc:'害怕犯下罪过'},{name:'触摸恐惧症',desc:'害怕触摸'},{name:'爬虫恐惧症',desc:'害怕爬行动物'},
+  {name:'恐雾症',desc:'害怕雾气'},{name:'枪械恐惧症',desc:'害怕枪械'},{name:'恐水症',desc:'害怕水'},
+  {name:'睡眠恐惧症',desc:'害怕睡眠或被催眠'},{name:'恐医症',desc:'害怕医生'},{name:'恐鱼症',desc:'害怕鱼'},
+  {name:'雷电恐惧症',desc:'害怕打雷'},{name:'冰寒恐惧症',desc:'害怕寒冷的事物'},{name:'蔬菜恐惧症',desc:'害怕蔬菜'},
+  {name:'噪音恐惧症',desc:'害怕噪音'},{name:'湖泊恐惧症',desc:'害怕湖泊'},{name:'机械恐惧症',desc:'害怕机器和机械设备'},
+  {name:'蟑螂恐惧症',desc:'害怕蟑螂'},{name:'巨物恐惧症',desc:'害怕巨大的东西'},{name:'束缚恐惧症',desc:'害怕被束缚、捆绑'},
+  {name:'陨石恐惧症',desc:'害怕流星、陨石'},{name:'孤独恐惧症',desc:'害怕独处'},{name:'不洁恐惧症',desc:'害怕尘土和污染'},
+  {name:'黏液恐惧症',desc:'害怕黏液'},{name:'死亡恐惧症',desc:'害怕尸体'},{name:'八恐惧症',desc:'害怕数字八'},
+  {name:'牙齿恐惧症',desc:'害怕牙齿'},{name:'恐梦症',desc:'害怕做梦'},{name:'称名恐惧症',desc:'害怕听到某个字或词'},
+  {name:'恐蛇症',desc:'害怕蛇类'},{name:'恐鸟症',desc:'害怕鸟类'},{name:'寄生虫恐惧症',desc:'害怕寄生虫'},
+  {name:'人偶恐惧症',desc:'害怕人偶'},{name:'吞咽恐惧症',desc:'害怕吞咽、进食和被吃'},{name:'药物恐惧症',desc:'害怕药物'},
+  {name:'鬼魂恐惧症',desc:'害怕鬼魂'},{name:'日光恐惧症',desc:'害怕日光'},{name:'胡须恐惧症',desc:'害怕胡须'},
+  {name:'河流恐惧症',desc:'害怕河流'},{name:'酒精恐惧症',desc:'害怕酒和含酒精的饮料'},{name:'恐火症',desc:'害怕火'},
+  {name:'魔术恐惧症',desc:'害怕魔术'},{name:'暗影恐惧症',desc:'害怕黑暗或夜晚'},{name:'恐月症',desc:'害怕月亮'},
+  {name:'铁路恐惧症',desc:'害怕坐火车旅行'},{name:'恐星症',desc:'害怕星星'},{name:'狭室恐惧症',desc:'害怕狭小的事物和地点'},
+  {name:'对称恐惧症',desc:'害怕对称'},{name:'活埋恐惧症',desc:'害怕被活埋、害怕墓地'},{name:'恐牛症',desc:'害怕牛'},
+  {name:'电话恐惧症',desc:'害怕电话'},{name:'畸形恐惧症',desc:'害怕怪物'},{name:'海洋恐惧症',desc:'害怕海洋'},
+  {name:'手术恐惧症',desc:'害怕外科手术'},{name:'十三恐惧症',desc:'害怕数字13'},{name:'衣物恐惧症',desc:'害怕衣服'},
+  {name:'女巫恐惧症',desc:'害怕女巫和巫术'},{name:'恐黄症',desc:'害怕黄颜色和"黄"字'},{name:'外语恐惧症',desc:'害怕外国语'},
+  {name:'排外症',desc:'害怕陌生人或外国人'}
+];
+
+// ========== 表10: 范例躁狂症 (1D100) ==========
+var MANIAS = [
+  {name:'沐浴狂',desc:'强迫性地清洁身体'},{name:'意志缺失狂',desc:'病态的优柔寡断'},{name:'黑暗狂',desc:'过度喜爱黑暗'},
+  {name:'登高狂',desc:'强迫性地登高'},{name:'亲切狂',desc:'病态的友好行为'},{name:'旷野狂',desc:'强烈渴望进入开放空间'},
+  {name:'尖端狂',desc:'痴迷于尖锐锋利的物体'},{name:'嗜猫狂',desc:'反常地热爱猫类'},{name:'疼痛狂',desc:'痴迷于疼痛'},
+  {name:'大蒜狂',desc:'痴迷大蒜'},{name:'乘车狂',desc:'痴迷乘车'},{name:'欣喜狂',desc:'非理性的愉悦'},
+  {name:'花卉狂',desc:'痴迷花卉'},{name:'计数狂',desc:'强迫性的专心计数'},{name:'消费狂',desc:'冲动或鲁莽地消费'},
+  {name:'孤独狂',desc:'过度喜爱独处'},{name:'芭蕾狂',desc:'反常地热爱芭蕾舞'},{name:'盗书狂',desc:'强迫性地偷书'},
+  {name:'藏书狂',desc:'痴迷于书籍和读书'},{name:'磨牙狂',desc:'强迫性的磨牙'},{name:'鬼附身妄想狂',desc:'病态地相信自己被恶鬼缠身'},
+  {name:'美貌妄想狂',desc:'痴迷于自己的美貌'},{name:'地图狂',desc:'不可控制强迫性地到处看地图'},{name:'蹦极狂',desc:'痴迷于从高处往下跳'},
+  {name:'寒冷狂',desc:'对寒冷或寒冷物体的异常渴望'},{name:'舞蹈狂',desc:'无法控制地疯狂热衷跳舞'},{name:'卧床狂',desc:'过度想要呆在床上'},
+  {name:'墓地狂',desc:'痴迷于墓地'},{name:'色彩狂',desc:'痴迷于某种颜色'},{name:'小丑狂',desc:'痴迷于小丑'},
+  {name:'反抗狂',desc:'强迫性地体验令人恐惧的情境'},{name:'杀戮狂',desc:'痴迷于杀戮'},{name:'恶魔妄想狂',desc:'病态地相信自己被恶魔缠身'},
+  {name:'撕皮狂',desc:'强迫性地撕自己的皮肤'},{name:'正义狂',desc:'痴迷伸张正义'},{name:'嗜酒狂',desc:'反常地渴望饮酒'},
+  {name:'毛皮狂',desc:'痴迷于收藏毛皮'},{name:'送礼狂',desc:'痴迷于赠送礼物'},{name:'逃脱狂',desc:'强迫性地逃脱'},
+  {name:'流浪狂',desc:'痴迷于流浪'},{name:'自大狂',desc:'非理性的自我中心态度或者自我崇拜'},{name:'升官狂',desc:'渴望担任公职，不知满足'},
+  {name:'自罪妄想狂',desc:'病态地相信自己有罪过'},{name:'学识狂',desc:'痴迷掌握知识'},{name:'寂静狂',desc:'强迫性地保持安静'},
+  {name:'乙醚成瘾狂',desc:'渴望乙醚'},{name:'求偶狂',desc:'痴迷于提出奇怪的求婚'},{name:'狂笑狂',desc:'无法控制强迫性地大笑'},
+  {name:'巫术狂',desc:'痴迷于女巫和巫术'},{name:'书写狂',desc:'痴迷于写下每一件事'},{name:'裸露狂',desc:'强迫性地裸体'},
+  {name:'欣快狂',desc:'反常地倾向于产生愉快的幻觉（而非认清现实）'},{name:'蠕虫狂',desc:'过度喜爱蠕虫'},{name:'枪械狂',desc:'痴迷枪械'},
+  {name:'嗜水狂',desc:'非理性地渴求水分'},{name:'嗜鱼狂',desc:'痴迷鱼类'},{name:'画像狂',desc:'痴迷画像和肖像'},
+  {name:'偶像狂',desc:'痴迷或忠于偶像'},{name:'情报狂',desc:'过度热爱收集信息'},{name:'呐喊狂',desc:'非理性强迫性地大叫'},
+  {name:'偷窃狂',desc:'非理性强迫性地盗窃'},{name:'噪音狂',desc:'无法控制强迫性地发出巨大尖厉的噪音'},{name:'嗜绳狂',desc:'痴迷于线绳和琴弦'},
+  {name:'博彩狂',desc:'极度渴望参与博彩'},{name:'悲伤狂',desc:'异常的忧郁倾向'},{name:'巨石狂',desc:'周围有巨石圈或矗立的巨石时，异常倾向于产生怪异想法'},
+  {name:'音乐狂',desc:'痴迷于音乐或者某种曲调'},{name:'赋诗狂',desc:'无法满足的诗歌创作欲'},{name:'憎恶狂',desc:'憎恶一切事物，痴迷于憎恶某个问题或某群人'},
+  {name:'单一偏执狂',desc:'反常地痴迷于一个想法或念头'},{name:'虚言狂',desc:'不正常地说谎或夸大其辞'},{name:'疑病妄想狂',desc:'妄想自己得了想象中的病'},
+  {name:'记录狂',desc:'强迫性地记录每件事（如摄影）'},{name:'嗜名狂',desc:'痴迷于名称（人名、地名、事物名）'},{name:'称名狂',desc:'无法抗拒渴望重复某些字词'},
+  {name:'剔甲狂',desc:'强迫性地抠指甲'},{name:'偏食狂',desc:'反常地喜欢一种食物'},{name:'牢骚狂',desc:'发牢骚时会得到非正常的愉悦'},
+  {name:'面具狂',desc:'强迫性地佩戴面具'},{name:'嗜鬼狂',desc:'痴迷于鬼魂'},{name:'杀人狂',desc:'病态的杀人倾向'},
+  {name:'嗜光狂',desc:'病态地渴求照明'},{name:'漂泊狂',desc:'反常地想要违背社会准则'},{name:'豪富狂',desc:'痴迷渴望财富'},
+  {name:'谎语狂',desc:'非理性强迫性的撒谎'},{name:'纵火狂',desc:'强迫性地点火'},{name:'提问狂',desc:'强迫性的提问冲动'},
+  {name:'抠鼻狂',desc:'强迫性地抠鼻孔'},{name:'涂鸦狂',desc:'痴迷于涂鸦、乱写乱画'},{name:'铁路狂',desc:'对火车和铁路旅行的强烈入迷'},
+  {name:'大智妄想狂',desc:'妄想自己智慧超凡'},{name:'技术狂',desc:'痴迷于新技术'},{name:'死亡妄想狂',desc:'妄信自己被死亡魔法诅咒了'},
+  {name:'神格妄想狂',desc:'妄信自己是神'},{name:'搔痒狂',desc:'强迫性地给自己搔痒'},{name:'手术狂',desc:'非理性地喜爱进行外科手术'},
+  {name:'拔毛狂',desc:'渴望拔掉自己的毛发'},{name:'盲目狂',desc:'精神性失明'},{name:'亲外狂',desc:'痴迷于外国、外界的事物'},
+  {name:'动物狂',desc:'疯狂地喜爱动物'}
+];
+
+// ========== 掷骰工具 ==========
+function rollD10() { return Math.floor(Math.random() * 10) + 1; }
+function rollD100() { return Math.floor(Math.random() * 100) + 1; }
+
 Page({
   data: {
+    // --- 任务 ---
     tasks: [],
     currentTaskId: null,
     currentTask: null,
-    // Detail view
-    viewingType: '',   // 'player' | 'npc' | ''
+    viewingType: '',
     viewingData: null,
     viewingIndex: -1,
     detailScrollTop: 0,
-    // Create task dialog
     showCreateTask: false,
     createTaskName: '',
-    // Combat order
     showCombatOrder: false,
     combatOrder: [],
     combatHasTies: false,
     combatTieNames: '',
+    showMadness: false,
+
+    // --- NPC 编辑 ---
+    showEditNPC: false,
+    editNpcIndex: -1,
+    editNpcName: '',
+    editNpcDex: '',
+    editNpcHp: '',
+    editNpcMp: '',
+    editNpcData: '',
+
+    // --- 疯狂发作 ---
+    madnessType: 'immediate',
+    madnessSteps: [],
+    madnessStep: 0,
+    madnessResult: null,
+    madnessResultParts: [],
+    madnessRolling: false,
+    showMadnessSteps: false,
+
+    // --- 掷骰 ---
+    showDice: false,
+    diceSelected: {},
+    diceRolling: false,
+    diceResult: null,
+    diceHistory: [],
+
+    // --- 任务导入导出 ---
+    showExportTask: false,
   },
+
+  _lastDiceLongpress: 0,
 
   onLoad() { this.loadTasks(); },
   onShow() { this.loadTasks(); },
 
   // ==================== 任务存储 ====================
   loadTasks() {
-    const tasks = wx.getStorageSync(STORAGE_KEY) || [];
-    this.setData({ tasks });
-    // If we have a currentTaskId, refresh its data
+    var tasks = wx.getStorageSync(STORAGE_KEY) || [];
+    this.setData({ tasks: tasks });
     if (this.data.currentTaskId) {
-      const task = tasks.find(t => t.id === this.data.currentTaskId);
+      var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
       if (task) this.setData({ currentTask: task });
       else this.setData({ currentTaskId: null, currentTask: null });
     }
@@ -38,7 +174,7 @@ Page({
 
   saveTasks(tasks) {
     wx.setStorageSync(STORAGE_KEY, tasks);
-    this.setData({ tasks });
+    this.setData({ tasks: tasks });
   },
 
   // ==================== 任务管理 ====================
@@ -55,19 +191,10 @@ Page({
   },
 
   confirmCreateTask() {
-    const name = this.data.createTaskName.trim();
-    if (!name) {
-      wx.showToast({ title: '请输入任务名称', icon: 'none' });
-      return;
-    }
-    const tasks = this.data.tasks;
-    const task = {
-      id: Date.now(),
-      name: name,
-      createdAt: Date.now(),
-      players: [],
-      npcs: [],
-    };
+    var name = this.data.createTaskName.trim();
+    if (!name) { wx.showToast({ title: '请输入任务名称', icon: 'none' }); return; }
+    var tasks = this.data.tasks;
+    var task = { id: Date.now(), name: name, createdAt: Date.now(), players: [], npcs: [] };
     tasks.unshift(task);
     this.saveTasks(tasks);
     this.selectTaskById(task.id);
@@ -75,29 +202,29 @@ Page({
   },
 
   selectTask(e) {
-    const id = e.currentTarget.dataset.id;
-    this.selectTaskById(id);
+    this.selectTaskById(e.currentTarget.dataset.id);
   },
 
   selectTaskById(id) {
-    const task = this.data.tasks.find(t => t.id === id);
+    var task = this.data.tasks.find(function (t) { return t.id === id; });
     if (task) {
       this.setData({ currentTaskId: id, currentTask: task, viewingType: '', viewingData: null });
     }
   },
 
   deleteTask(e) {
-    const id = e.currentTarget.dataset.id;
-    const task = this.data.tasks.find(t => t.id === id);
+    var id = e.currentTarget.dataset.id;
+    var task = this.data.tasks.find(function (t) { return t.id === id; });
+    var that = this;
     wx.showModal({
       title: '删除任务',
-      content: `确定删除「${task ? task.name : ''}」及其所有数据吗？`,
-      success: (res) => {
+      content: '确定删除「' + (task ? task.name : '') + '」及其所有数据吗？',
+      success: function (res) {
         if (!res.confirm) return;
-        const tasks = this.data.tasks.filter(t => t.id !== id);
-        this.saveTasks(tasks);
-        if (this.data.currentTaskId === id) {
-          this.setData({ currentTaskId: null, currentTask: null, viewingType: '', viewingData: null });
+        var tasks = that.data.tasks.filter(function (t) { return t.id !== id; });
+        that.saveTasks(tasks);
+        if (that.data.currentTaskId === id) {
+          that.setData({ currentTaskId: null, currentTask: null, viewingType: '', viewingData: null });
         }
       }
     });
@@ -109,179 +236,447 @@ Page({
 
   // ==================== 导入 ====================
   importPlayer() {
+    var that = this;
     wx.getClipboardData({
-      success: (res) => {
+      success: function (res) {
         try {
-          const data = JSON.parse(res.data);
+          var data = JSON.parse(res.data);
           if (!data.attrValues || !data.charInfo) {
-            wx.showToast({ title: '剪贴板内容不是有效的调查员数据', icon: 'none' });
-            return;
+            wx.showToast({ title: '剪贴板内容不是有效的调查员数据', icon: 'none' }); return;
           }
-          const tasks = this.data.tasks;
-          const task = tasks.find(t => t.id === this.data.currentTaskId);
+          var tasks = that.data.tasks;
+          var task = tasks.find(function (t) { return t.id === that.data.currentTaskId; });
           if (!task) return;
-          const name = data.charInfo.name || '未命名';
-          // Check for duplicate name
-          if (task.players.find(p => p.charInfo && p.charInfo.name === name)) {
-            wx.showToast({ title: `已存在同名调查员「${name}」`, icon: 'none' });
-            return;
+          var name = data.charInfo.name || '未命名';
+          if (task.players.find(function (p) { return p.charInfo && p.charInfo.name === name; })) {
+            wx.showToast({ title: '已存在同名调查员「' + name + '」', icon: 'none' }); return;
           }
           task.players.push(data);
-          this.saveTasks(tasks);
-          this.setData({ currentTask: task });
-          wx.showToast({ title: `✅ 已导入「${name}」`, icon: 'success' });
+          that.saveTasks(tasks);
+          that.setData({ currentTask: task });
+          wx.showToast({ title: '✅ 已导入「' + name + '」', icon: 'success' });
         } catch (e) {
           wx.showToast({ title: '数据解析失败，请检查剪贴板', icon: 'none' });
         }
       },
-      fail: () => {
-        wx.showToast({ title: '读取剪贴板失败，请先复制调查员数据', icon: 'none' });
-      }
+      fail: function () { wx.showToast({ title: '读取剪贴板失败，请先复制调查员数据', icon: 'none' }); }
     });
   },
 
-  // ==================== NPC 导入 ====================
   importNPC() {
+    var that = this;
     wx.getClipboardData({
-      success: (res) => {
-        const text = (res.data || '').trim();
-        if (!text) {
-          wx.showToast({ title: '剪贴板为空，请先复制 NPC 数据', icon: 'none' });
-          return;
-        }
-        // 第一行作为名称
-        const lines = text.split('\n');
-        const name = lines[0].trim() || '未命名 NPC';
-        // 提取 DEX 值
-        const dexMatch = text.match(/DEX\s*(\d+)/i);
-        const dex = dexMatch ? parseInt(dexMatch[1]) : null;
-
-        const tasks = this.data.tasks;
-        const task = tasks.find(t => t.id === this.data.currentTaskId);
+      success: function (res) {
+        var text = (res.data || '').trim();
+        if (!text) { wx.showToast({ title: '剪贴板为空，请先复制 NPC 数据', icon: 'none' }); return; }
+        var lines = text.split('\n');
+        var name = lines[0].trim() || '未命名 NPC';
+        var dexMatch = text.match(/DEX\s*(\d+)/i);
+        var dex = dexMatch ? parseInt(dexMatch[1]) : null;
+        var hpMatch = text.match(/\bHP[：:\s]*(\d+)/i);
+        var hp = hpMatch ? parseInt(hpMatch[1]) : null;
+        var mpMatch = text.match(/\bMP[：:\s]*(\d+)/i);
+        var mp = mpMatch ? parseInt(mpMatch[1]) : null;
+        var tasks = that.data.tasks;
+        var task = tasks.find(function (t) { return t.id === that.data.currentTaskId; });
         if (!task) return;
-        task.npcs.push({ id: Date.now(), name, dex, data: text });
-        this.saveTasks(tasks);
-        this.setData({ currentTask: task });
-        const dexInfo = dex !== null ? ` (DEX ${dex})` : '';
-        wx.showToast({ title: `✅ 已导入「${name}」${dexInfo}`, icon: 'success' });
+        task.npcs.push({ id: Date.now(), name: name, dex: dex, hp: hp, mp: mp, data: text, visible: true });
+        that.saveTasks(tasks);
+        that.setData({ currentTask: task });
+        var dexInfo = dex !== null ? ' (DEX ' + dex + ')' : '';
+        wx.showToast({ title: '✅ 已导入「' + name + '」' + dexInfo, icon: 'success' });
       },
-      fail: () => {
-        wx.showToast({ title: '读取剪贴板失败，请先复制 NPC 数据', icon: 'none' });
-      }
+      fail: function () { wx.showToast({ title: '读取剪贴板失败，请先复制 NPC 数据', icon: 'none' }); }
     });
   },
 
   // ==================== 详情查看 ====================
   viewPlayer(e) {
-    const index = e.currentTarget.dataset.index;
-    const player = this.data.currentTask.players[index];
-    this.setData({ viewingType: 'player', viewingData: player, viewingIndex: index });
+    var index = e.currentTarget.dataset.index;
+    this.setData({ viewingType: 'player', viewingData: this.data.currentTask.players[index], viewingIndex: index });
   },
-
   viewNPC(e) {
-    const index = e.currentTarget.dataset.index;
-    const npc = this.data.currentTask.npcs[index];
-    this.setData({ viewingType: 'npc', viewingData: npc, viewingIndex: index });
+    var index = e.currentTarget.dataset.index;
+    this.setData({ viewingType: 'npc', viewingData: this.data.currentTask.npcs[index], viewingIndex: index });
   },
-
   onPlayerSwiperChange(e) {
-    const index = e.detail.current;
-    const player = this.data.currentTask.players[index];
-    this.setData({ viewingIndex: index, viewingData: player });
+    var index = e.detail.current;
+    this.setData({ viewingIndex: index, viewingData: this.data.currentTask.players[index] });
   },
-
   onNPCSwiperChange(e) {
-    const index = e.detail.current;
-    const npc = this.data.currentTask.npcs[index];
-    this.setData({ viewingIndex: index, viewingData: npc });
+    var index = e.detail.current;
+    this.setData({ viewingIndex: index, viewingData: this.data.currentTask.npcs[index] });
   },
-
-  onDetailScroll(e) {
-    this.setData({ detailScrollTop: e.detail.scrollTop });
-  },
-
-  closeDetail() {
-    this.setData({ viewingType: '', viewingData: null, viewingIndex: -1, detailScrollTop: 0 });
-  },
+  onDetailScroll(e) { this.setData({ detailScrollTop: e.detail.scrollTop }); },
+  closeDetail() { this.setData({ viewingType: '', viewingData: null, viewingIndex: -1, detailScrollTop: 0 }); },
 
   // ==================== 战斗轮排序 ====================
   openCombatOrder() {
-    // 如果已显示则隐藏
-    if (this.data.showCombatOrder) {
-      this.setData({ showCombatOrder: false });
-      return;
-    }
-    const task = this.data.currentTask;
+    if (this.data.showCombatOrder) { this.setData({ showCombatOrder: false }); return; }
+    var task = this.data.currentTask;
     if (!task) return;
-    const items = [];
-
-    task.players.forEach((p, i) => {
-      const dex = (p.attrValues && p.attrValues.dex) ? p.attrValues.dex : 0;
-      items.push({ key: 'p' + i, name: p.charInfo.name || '未命名', dex, type: 'player' });
+    var items = [];
+    task.players.forEach(function (p, i) {
+      if (p.visible === false) return;
+      var dex = (p.attrValues && p.attrValues.dex) ? p.attrValues.dex : 0;
+      items.push({ key: 'p' + i, name: p.charInfo.name || '未命名', dex: dex, type: 'player' });
     });
-
-    task.npcs.forEach((n, i) => {
-      const dex = n.dex !== null && n.dex !== undefined ? n.dex : 0;
-      items.push({ key: 'n' + i, name: n.name, dex, type: 'npc' });
+    task.npcs.forEach(function (n, i) {
+      if (n.visible === false) return;
+      var dex = n.dex !== null && n.dex !== undefined ? n.dex : 0;
+      items.push({ key: 'n' + i, name: n.name, dex: dex, type: 'npc' });
     });
-
-    items.sort((a, b) => b.dex - a.dex);
-
-    const ties = new Set();
-    for (let i = 0; i < items.length - 1; i++) {
-      if (items[i].dex === items[i + 1].dex && items[i].dex > 0) {
-        ties.add(i);
-        ties.add(i + 1);
-      }
+    items.sort(function (a, b) { return b.dex - a.dex; });
+    var ties = new Set();
+    for (var i = 0; i < items.length - 1; i++) {
+      if (items[i].dex === items[i + 1].dex && items[i].dex > 0) { ties.add(i); ties.add(i + 1); }
     }
-    const tieNames = [];
-    items.forEach((item, i) => {
-      item.tie = ties.has(i);
-      if (item.tie) tieNames.push(item.name);
-    });
-
+    var tieNames = [];
+    items.forEach(function (item, i) { item.tie = ties.has(i); if (item.tie) tieNames.push(item.name); });
     this.setData({
-      showCombatOrder: true,
-      combatOrder: items,
-      combatHasTies: ties.size > 0,
-      combatTieNames: [...new Set(tieNames)].join('、'),
+      showCombatOrder: true, combatOrder: items,
+      combatHasTies: ties.size > 0, combatTieNames: Array.from(new Set(tieNames)).join('、')
     });
   },
 
   // ==================== 删除卡片 ====================
   deletePlayer(e) {
-    const index = e.currentTarget.dataset.index;
-    const tasks = this.data.tasks;
-    const task = tasks.find(t => t.id === this.data.currentTaskId);
+    var index = e.currentTarget.dataset.index;
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
     if (!task) return;
-    const name = task.players[index].charInfo.name || '未命名';
+    var name = task.players[index].charInfo.name || '未命名';
+    var that = this;
     wx.showModal({
-      title: '删除调查员',
-      content: `确定从任务中移除「${name}」吗？`,
-      success: (res) => {
+      title: '删除调查员', content: '确定从任务中移除「' + name + '」吗？',
+      success: function (res) {
         if (!res.confirm) return;
         task.players.splice(index, 1);
-        this.saveTasks(tasks);
-        this.setData({ currentTask: task, viewingType: '', viewingData: null, viewingIndex: -1 });
+        that.saveTasks(tasks);
+        that.setData({ currentTask: task, viewingType: '', viewingData: null, viewingIndex: -1 });
       }
     });
   },
 
   deleteNPC(e) {
-    const index = e.currentTarget.dataset.index;
-    const tasks = this.data.tasks;
-    const task = tasks.find(t => t.id === this.data.currentTaskId);
+    var index = e.currentTarget.dataset.index;
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
     if (!task) return;
-    const name = task.npcs[index].name;
+    var name = task.npcs[index].name;
+    var that = this;
     wx.showModal({
-      title: '删除 NPC',
-      content: `确定删除 NPC「${name}」吗？`,
-      success: (res) => {
+      title: '删除 NPC', content: '确定删除 NPC「' + name + '」吗？',
+      success: function (res) {
         if (!res.confirm) return;
         task.npcs.splice(index, 1);
-        this.saveTasks(tasks);
-        this.setData({ currentTask: task, viewingType: '', viewingData: null, viewingIndex: -1 });
+        that.saveTasks(tasks);
+        that.setData({ currentTask: task, viewingType: '', viewingData: null, viewingIndex: -1 });
       }
     });
   },
+
+  // ==================== NPC 可见性 ====================
+  togglePlayerVisible(e) {
+    var index = e.currentTarget.dataset.index;
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
+    if (!task || !task.players[index]) return;
+    task.players[index].visible = task.players[index].visible === false ? true : false;
+    this.saveTasks(tasks);
+    this.setData({ currentTask: task });
+  },
+
+  toggleNpcVisible(e) {
+    var index = e.currentTarget.dataset.index;
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
+    if (!task || !task.npcs[index]) return;
+    // 默认视为可见，所以 undefined / true → false，false → true
+    task.npcs[index].visible = task.npcs[index].visible === false ? true : false;
+    this.saveTasks(tasks);
+    this.setData({ currentTask: task });
+  },
+
+  // ==================== NPC 编辑 ====================
+  editNPC(e) {
+    var index = e.currentTarget.dataset.index;
+    var task = this.data.currentTask;
+    if (!task || !task.npcs[index]) return;
+    var npc = task.npcs[index];
+    this.setData({
+      showEditNPC: true,
+      editNpcIndex: index,
+      editNpcName: npc.name || '',
+      editNpcDex: npc.dex !== null && npc.dex !== undefined ? String(npc.dex) : '',
+      editNpcData: npc.data || ''
+    });
+  },
+
+  closeEditNPC() {
+    this.setData({ showEditNPC: false, editNpcIndex: -1, editNpcName: '', editNpcDex: '', editNpcHp: '', editNpcMp: '', editNpcData: '' });
+  },
+
+  onEditNpcNameInput(e) { this.setData({ editNpcName: e.detail.value }); },
+  onEditNpcDexInput(e) { this.setData({ editNpcDex: e.detail.value }); },
+  onEditNpcDataInput(e) { this.setData({ editNpcData: e.detail.value }); },
+
+  confirmEditNPC() {
+    var name = this.data.editNpcName.trim();
+    if (!name) { wx.showToast({ title: '请输入 NPC 名称', icon: 'none' }); return; }
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
+    if (!task) return;
+    var idx = this.data.editNpcIndex;
+    if (!task.npcs[idx]) return;
+
+    var dexRaw = this.data.editNpcDex.trim();
+    var dex = dexRaw ? parseInt(dexRaw) : null;
+    if (dexRaw && (isNaN(dex) || dex < 0)) {
+      wx.showToast({ title: 'DEX 请输入有效数字', icon: 'none' }); return;
+    }
+
+    var hpRaw = this.data.editNpcHp.trim();
+    var hp = hpRaw ? parseInt(hpRaw) : null;
+    if (hpRaw && (isNaN(hp) || hp < 0)) {
+      wx.showToast({ title: 'HP 请输入有效数字', icon: 'none' }); return;
+    }
+
+    var mpRaw = this.data.editNpcMp.trim();
+    var mp = mpRaw ? parseInt(mpRaw) : null;
+    if (mpRaw && (isNaN(mp) || mp < 0)) {
+      wx.showToast({ title: 'MP 请输入有效数字', icon: 'none' }); return;
+    }
+
+    task.npcs[idx].name = name;
+    task.npcs[idx].dex = dex;
+    task.npcs[idx].hp = hp;
+    task.npcs[idx].mp = mp;
+    task.npcs[idx].data = this.data.editNpcData;
+
+    this.saveTasks(tasks);
+    this.setData({ currentTask: task });
+    this.setData({ showEditNPC: false, editNpcIndex: -1, editNpcName: '', editNpcDex: '', editNpcHp: '', editNpcMp: '', editNpcData: '' });
+    wx.showToast({ title: '✅ NPC 已更新', icon: 'success' });
+  },
+
+  // ==================== NPC HP / MP 调节 ====================
+  adjustNpcHp(e) {
+    var delta = parseInt(e.currentTarget.dataset.delta) || 0;
+    this._adjustNpcStat('hp', delta);
+  },
+  adjustNpcMp(e) {
+    var delta = parseInt(e.currentTarget.dataset.delta) || 0;
+    this._adjustNpcStat('mp', delta);
+  },
+  _adjustNpcStat(key, delta) {
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
+    if (!task) return;
+    var idx = this.data.viewingIndex;
+    var npc = task.npcs[idx];
+    if (!npc) return;
+    if (npc[key] === null || npc[key] === undefined) {
+      npc[key] = Math.max(0, delta);
+    } else {
+      npc[key] = Math.max(0, npc[key] + delta);
+    }
+    this.saveTasks(tasks);
+    this.setData({ currentTask: task, viewingData: npc });
+  },
+
+  // ==================== 疯狂发作 ====================
+  toggleMadness() {
+    if (this.data.showMadness) {
+      this.setData({ showMadness: false });
+    } else {
+      this.setData({ showMadness: true, showMadnessSteps: false, madnessStep: 0, madnessSteps: [], madnessResult: null, madnessResultParts: [] });
+    }
+  },
+
+  switchMadnessType(e) {
+    var type = e.currentTarget.dataset.type;
+    this.setData({ madnessType: type, showMadnessSteps: false, madnessStep: 0, madnessSteps: [], madnessResult: null, madnessResultParts: [] });
+  },
+
+  doMadnessRoll() {
+    if (this.data.madnessRolling) return;
+    var isImmediate = this.data.madnessType === 'immediate';
+    var table = isImmediate ? IMMEDIATE_SYMPTOMS : SUMMARY_SYMPTOMS;
+    var that = this;
+    var DELAY = 500;
+
+    this.setData({ madnessRolling: true, showMadnessSteps: true, madnessStep: 0, madnessSteps: [], madnessResult: null, madnessResultParts: [] });
+
+    setTimeout(function () {
+      var d10 = rollD10();
+      var symptom = table[d10];
+      var steps = [{ label: '1D10', value: d10, detail: symptom.name }];
+      that.setData({ madnessStep: 1, madnessSteps: steps });
+
+      if (symptom.needsPhobia || symptom.needsMania) {
+        setTimeout(function () {
+          var d100 = rollD100();
+          var subEntry = symptom.needsPhobia ? PHOBIAS[d100 - 1] : MANIAS[d100 - 1];
+          var subLabel = symptom.needsPhobia ? '恐惧症 1D100' : '躁狂症 1D100';
+          steps.push({ label: subLabel, value: d100, detail: subEntry.name + '：' + subEntry.desc });
+          that.setData({ madnessStep: 2, madnessSteps: steps });
+          that._scheduleMadnessDuration(symptom, steps, isImmediate, DELAY);
+        }, DELAY);
+      } else {
+        that._scheduleMadnessDuration(symptom, steps, isImmediate, DELAY);
+      }
+    }, DELAY);
+  },
+
+  _scheduleMadnessDuration(symptom, steps, isImmediate, delay) {
+    var that = this;
+    setTimeout(function () {
+      var dur = symptom.duration;
+      var durStep = null;
+      if (dur) {
+        var durRoll = rollD10();
+        durStep = { label: '持续时间 ' + dur.dice, value: durRoll, detail: durRoll + ' ' + dur.unit + (dur.note || '') };
+        steps.push(durStep);
+      }
+      var finalStep = durStep ? 3 : (symptom.needsPhobia || symptom.needsMania ? 2 : 1);
+      that.setData({ madnessStep: finalStep, madnessSteps: steps, madnessRolling: false });
+      that._buildMadnessResult(symptom, steps, isImmediate, durStep);
+    }, delay);
+  },
+
+  _buildMadnessResult(symptom, steps, isImmediate, durStep) {
+    var parts = [];
+    var typeLabel = isImmediate ? '即时症状' : '总结症状';
+    parts.push({ label: '疯狂类型', value: typeLabel });
+    parts.push({ label: '1D10 结果', value: steps[0].value + ' — ' + symptom.name });
+    parts.push({ label: '症状描述', value: symptom.desc });
+
+    if (steps.length >= 2 && (symptom.needsPhobia || symptom.needsMania)) {
+      var subLabel = symptom.needsPhobia ? '恐惧症' : '躁狂症';
+      parts.push({ label: subLabel + ' 1D100', value: steps[1].value + ' — ' + steps[1].detail });
+    }
+    if (durStep) {
+      parts.push({ label: '持续时间', value: durStep.detail });
+    }
+
+    var txt = '【' + typeLabel + '】\n';
+    txt += '1D10 = ' + steps[0].value + '：' + symptom.name + '\n';
+    txt += symptom.desc;
+    if (steps.length >= 2 && (symptom.needsPhobia || symptom.needsMania)) {
+      var sl = symptom.needsPhobia ? '恐惧症' : '躁狂症';
+      txt += '\n\n' + sl + ' 1D100 = ' + steps[1].value + '：' + steps[1].detail;
+    }
+    if (durStep) txt += '\n\n持续时间：' + durStep.detail;
+
+    this.setData({ madnessResult: txt, madnessResultParts: parts });
+  },
+
+  // ==================== 掷骰 ====================
+  toggleDice() { this.setData({ showDice: !this.data.showDice }); },
+
+  _diceRoll(d) { return Math.floor(Math.random() * d) + 1; },
+
+  selectDice(e) {
+    if (this.data.diceRolling) return;
+    var now = Date.now();
+    if (now - this._lastDiceLongpress < 400) return;
+    var d = parseInt(e.currentTarget.dataset.d);
+    var sel = {};
+    var keys = Object.keys(this.data.diceSelected);
+    for (var i = 0; i < keys.length; i++) { sel[keys[i]] = this.data.diceSelected[keys[i]]; }
+    sel[d] = (sel[d] || 0) + 1;
+    this.setData({ diceSelected: sel, diceResult: null });
+  },
+
+  deselectDice(e) {
+    if (this.data.diceRolling) return;
+    this._lastDiceLongpress = Date.now();
+    var d = parseInt(e.currentTarget.dataset.d);
+    var sel = {};
+    var keys = Object.keys(this.data.diceSelected);
+    for (var i = 0; i < keys.length; i++) { sel[keys[i]] = this.data.diceSelected[keys[i]]; }
+    if (sel[d]) { sel[d]--; if (sel[d] <= 0) delete sel[d]; }
+    this.setData({ diceSelected: sel, diceResult: null });
+  },
+
+  clearDice() { this.setData({ diceSelected: {}, diceResult: null }); },
+
+  clearDiceHistory() { this.setData({ diceHistory: [] }); },
+
+  rollSelected() {
+    var sel = this.data.diceSelected;
+    var keys = Object.keys(sel);
+    if (keys.length === 0) { wx.showToast({ title: '⚠ 请先选择骰子', icon: 'none', duration: 1500 }); return; }
+    this.setData({ diceRolling: true, diceResult: null });
+    wx.vibrateShort({ type: 'medium' });
+    var that = this;
+    var dice = [];
+    var total = 0;
+    keys.forEach(function (k) {
+      var sides = parseInt(k);
+      var count = sel[k];
+      for (var i = 0; i < count; i++) {
+        var r = that._diceRoll(sides);
+        dice.push({ sides: sides, result: r });
+        total += r;
+      }
+    });
+    setTimeout(function () {
+      var result = { dice: dice, total: total, time: new Date().toLocaleTimeString() };
+      var history = [result].concat(that.data.diceHistory).slice(0, 50);
+      that.setData({ diceRolling: false, diceResult: result, diceHistory: history });
+    }, 700);
+  },
+
+  // ==================== 任务导入导出 ====================
+  toggleExportTask() { this.setData({ showExportTask: !this.data.showExportTask }); },
+
+  exportTask() {
+    var task = this.data.currentTask;
+    if (!task) return;
+    var data = JSON.parse(JSON.stringify(task));
+    var that = this;
+    wx.setClipboardData({
+      data: JSON.stringify(data, null, 2),
+      success: function () {
+        wx.showToast({ title: '任务数据已复制到剪贴板', icon: 'success', duration: 1500 });
+        that.setData({ showExportTask: false });
+      },
+      fail: function () { wx.showToast({ title: '复制失败', icon: 'none' }); }
+    });
+  },
+
+  importTask() {
+    var that = this;
+    wx.getClipboardData({
+      success: function (res) {
+        var data;
+        try { data = JSON.parse(res.data); } catch (e) {
+          wx.showToast({ title: '剪贴板中没有有效的任务数据', icon: 'none', duration: 2000 });
+          return;
+        }
+        if (!data.name || !data.players || !data.npcs || data.id === undefined) {
+          wx.showToast({ title: '数据格式不符，非任务数据', icon: 'none', duration: 2000 });
+          return;
+        }
+        // 赋予新 ID 避免冲突
+        data.id = Date.now();
+        data.createdAt = Date.now();
+        var tasks = that.data.tasks;
+        // 检查同名任务
+        if (tasks.find(function (t) { return t.name === data.name; })) {
+          wx.showToast({ title: '已存在同名任务「' + data.name + '」，请先重命名', icon: 'none', duration: 2000 });
+          return;
+        }
+        tasks.unshift(data);
+        that.saveTasks(tasks);
+        that.setData({ showExportTask: false });
+        wx.showToast({ title: '已导入任务「' + data.name + '」', icon: 'success', duration: 1500 });
+      },
+      fail: function () { wx.showToast({ title: '读取剪贴板失败', icon: 'none', duration: 2000 }); }
+    });
+  },
+
+  preventTouchMove() {},
 });

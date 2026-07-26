@@ -3,7 +3,6 @@ page {
   background: #1a1f25;
 }
 .page {
-  min-height: 100vh;
   background: #1a1f25;
   padding: 24rpx 24rpx 80rpx;
   box-sizing: border-box;
