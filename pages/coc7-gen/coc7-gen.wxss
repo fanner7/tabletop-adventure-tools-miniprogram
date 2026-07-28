@@ -39,6 +39,198 @@ page {
 .override-toggle-text { font-size: 24rpx; color: #6b4c2a; }
 .step-desc { font-size: 26rpx; color: #7a6b58; text-align: center; margin-bottom: 30rpx; display: block; line-height: 1.6; }
 
+/* ===== STEP 0 首页 ===== */
+.coc-home {
+  margin-bottom: 24rpx;
+}
+
+.home-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 28rpx 26rpx;
+  border-radius: 16rpx;
+  background: #fffaf2;
+  border: 1px solid #e8ddd0;
+  box-shadow: 0 4rpx 14rpx rgba(107,76,42,0.08);
+}
+
+.home-hero-copy {
+  min-width: 0;
+}
+
+.home-kicker {
+  display: block;
+  font-size: 20rpx;
+  color: #9a7f62;
+  line-height: 1.2;
+}
+
+.home-title {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #3b2e1e;
+  line-height: 1.2;
+}
+
+.home-count {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 16rpx;
+  background: #6b4c2a;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.home-count-num {
+  font-size: 40rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.home-count-label {
+  margin-top: 6rpx;
+  font-size: 20rpx;
+  opacity: 0.82;
+}
+
+.home-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14rpx;
+  margin-top: 16rpx;
+}
+
+.home-action {
+  min-height: 128rpx;
+  border-radius: 16rpx;
+  padding: 20rpx 18rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  border: 1px solid #d4c5a9;
+  background: #ffffff;
+  box-shadow: 0 2rpx 10rpx rgba(107,76,42,0.06);
+}
+
+.home-action:active {
+  transform: translateY(2rpx);
+  background: #f7efe2;
+}
+
+.home-action.primary {
+  background: #6b4c2a;
+  border-color: #6b4c2a;
+  color: #ffffff;
+}
+
+.home-action.primary:active {
+  background: #5a3e22;
+}
+
+.home-action.secondary {
+  color: #6b4c2a;
+}
+
+.home-action-icon {
+  width: 48rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  text-align: center;
+  border-radius: 12rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+  background: rgba(107,76,42,0.10);
+  flex-shrink: 0;
+}
+
+.home-action.primary .home-action-icon {
+  background: rgba(255,255,255,0.16);
+}
+
+.home-action-copy {
+  min-width: 0;
+}
+
+.home-action-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: bold;
+  line-height: 1.25;
+}
+
+.home-action-sub {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 21rpx;
+  line-height: 1.25;
+  opacity: 0.78;
+}
+
+.home-saved-list {
+  margin-top: 24rpx;
+}
+
+.saved-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.saved-head-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #3b2e1e;
+}
+
+.saved-head-count {
+  min-width: 42rpx;
+  height: 42rpx;
+  line-height: 42rpx;
+  padding: 0 12rpx;
+  text-align: center;
+  border-radius: 21rpx;
+  background: #fdf5e6;
+  color: #6b4c2a;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+.saved-avatar {
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 14rpx;
+  background: #fdf5e6;
+  color: #6b4c2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 22rpx;
+  font-weight: bold;
+}
+
+.saved-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.saved-empty {
+  padding: 36rpx 0;
+  text-align: center;
+  color: #b0a090;
+  font-size: 24rpx;
+}
+
 /* ===== 通用卡片 ===== */
 .card { background: #ffffff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 16rpx; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
 .card-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; margin-bottom: 16rpx; display: block; }
@@ -295,11 +487,11 @@ page {
 /* ===== 已保存角色列表 ===== */
 /* ===== 已保存角色列表 ===== */
 .saved-list { margin-top: 20rpx; }
-.saved-item { display: flex; justify-content: space-between; align-items: center; padding: 20rpx; background: #fff; border-radius: 12rpx; margin-bottom: 12rpx; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.saved-item { display: flex; justify-content: space-between; align-items: center; gap: 14rpx; padding: 20rpx; background: #fff; border-radius: 12rpx; margin-bottom: 12rpx; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
 .saved-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
 .saved-occ { font-size: 24rpx; color: #8b7355; display: block; margin-top: 4rpx; }
 .saved-time { font-size: 22rpx; color: #b0a090; display: block; margin-top: 2rpx; }
-.saved-delete { color: #cd5c5c; font-size: 28rpx; padding: 8rpx 16rpx; }
+.saved-delete { color: #cd5c5c; font-size: 28rpx; padding: 8rpx 16rpx; flex-shrink: 0; }
 
 
 
@@ -366,6 +558,9 @@ page {
   color: #5a4a3a;
 }
 
+.weapon-picker-meta { font-size:20rpx; color:#8b7355; }
+.weapon-picker-add { font-size:28rpx; color:#6b4c2a; }
+
 /* ===== 掷骰模块 ===== */
 .dice-rolling-hint { text-align:center; padding:12rpx 0; font-size:26rpx; color:#8b7355; }
 .dice-result-highlight { margin-top:4rpx; margin-bottom:12rpx; padding:20rpx; background:#3b2e1e; border-radius:12rpx; text-align:center; }
@@ -394,3 +589,349 @@ page {
 .dl-item { display:block; font-size:22rpx; color:#3b2e1e; padding:4rpx 0; border-bottom:1px solid #f0ece5; }
 .dl-detail { font-size:18rpx; color:#8b7355; }
 .dl-time { font-size:18rpx; color:#b0a590; margin-left:8rpx; }
+
+.theme-dark.container {
+  background: #111827;
+  color: #e6edf7;
+}
+
+.theme-dark .header,
+.theme-dark .skill-cat-title,
+.theme-dark .char-section-title,
+.theme-dark .char-header,
+.theme-dark .dialog-spec-section,
+.theme-dark .dice-log {
+  border-color: #3a4a62;
+}
+
+.theme-dark .header-title,
+.theme-dark .step-title,
+.theme-dark .card-title,
+.theme-dark .form-label,
+.theme-dark .occ-name,
+.theme-dark .occ-selected-name,
+.theme-dark .occ-info-name,
+.theme-dark .skill-points-label,
+.theme-dark .skill-grid-name,
+.theme-dark .dialog-title,
+.theme-dark .dialog-spec-label,
+.theme-dark .char-name,
+.theme-dark .char-attr-value,
+.theme-dark .char-deriv-value,
+.theme-dark .stat-sep,
+.theme-dark .mw-check,
+.theme-dark .weapon-cell,
+.theme-dark .saved-name,
+.theme-dark .age-mod-prompt,
+.theme-dark .age-mod-input-row,
+.theme-dark .growth-tag,
+.theme-dark .export-option-title,
+.theme-dark .roll-total,
+.theme-dark .attr-desc-text,
+.theme-dark .dl-item {
+  color: #f4efe4;
+}
+
+.theme-dark .header-subtitle,
+.theme-dark .step-desc,
+.theme-dark .step-label,
+.theme-dark .attr-label,
+.theme-dark .attr-roll-result,
+.theme-dark .random-name-label,
+.theme-dark .form-picker-arrow,
+.theme-dark .occ-selected-skill-list,
+.theme-dark .occ-selected-cr,
+.theme-dark .occ-opt-group-label,
+.theme-dark .skill-grid-base,
+.theme-dark .dialog-sub,
+.theme-dark .dialog-desc-text,
+.theme-dark .dialog-slider-sub,
+.theme-dark .dialog-slider-add,
+.theme-dark .char-sub,
+.theme-dark .char-attr-label,
+.theme-dark .char-deriv-label,
+.theme-dark .saved-occ,
+.theme-dark .saved-time,
+.theme-dark .play-banner-sub,
+.theme-dark .threshold-text,
+.theme-dark .growth-hint,
+.theme-dark .export-option-desc,
+.theme-dark .roll-numbers,
+.theme-dark .roll-target,
+.theme-dark .dice-rolling-hint,
+.theme-dark .dl-title,
+.theme-dark .dl-detail,
+.theme-dark .dl-time,
+.theme-dark .weapon-picker-meta,
+.theme-dark .weapon-empty-text {
+  color: #aab6c8;
+}
+
+.theme-dark .card,
+.theme-dark .attr-block,
+.theme-dark .bottom-nav,
+.theme-dark .form-input,
+.theme-dark .form-picker,
+.theme-dark .random-name-btn,
+.theme-dark .occupation-search,
+.theme-dark .occupation-list,
+.theme-dark .occ-selected-card,
+.theme-dark .occ-selected-skills,
+.theme-dark .occ-info-card,
+.theme-dark .skill-points-bar-full,
+.theme-dark .skill-grid-item,
+.theme-dark .skill-grid.review .skill-grid-item,
+.theme-dark .dialog-sheet,
+.theme-dark .dialog-desc-section,
+.theme-dark .char-sheet,
+.theme-dark .char-attr,
+.theme-dark .char-deriv,
+.theme-dark .weapon-table,
+.theme-dark .weapon-header,
+.theme-dark .char-textarea,
+.theme-dark .saved-item,
+.theme-dark .age-mod-box,
+.theme-dark .age-mod-option,
+.theme-dark .age-mod-input,
+.theme-dark .threshold-toggle,
+.theme-dark .growth-tag,
+.theme-dark .export-option,
+.theme-dark .attr-desc-box,
+.theme-dark .dice-btn,
+.theme-dark .dice-btn-clear,
+.theme-dark .roll-bonus-btn,
+.theme-dark .dialog-btn.cancel {
+  background: #1d2636;
+  border-color: #3a4a62;
+  box-shadow: 0 8rpx 22rpx rgba(0,0,0,0.20);
+}
+
+.theme-dark .occ-sticky-header {
+  background: #111827;
+  border-bottom-color: #2f3b50;
+}
+
+.theme-dark .attr-block.rolling,
+.theme-dark .occ-item.selected,
+.theme-dark .skill-grid-item:active,
+.theme-dark .skill-grid-item.occ,
+.theme-dark .occ-selected-card,
+.theme-dark .occ-info-card,
+.theme-dark .char-deriv,
+.theme-dark .age-mod-option.selected,
+.theme-dark .threshold-toggle,
+.theme-dark .roll-die.picked,
+.theme-dark .dice-btn.sel,
+.theme-dark .dialog-btn.cancel:active {
+  background: #243044;
+}
+
+.theme-dark .occ-item,
+.theme-dark .weapon-row {
+  border-bottom-color: #2f3b50;
+}
+
+.theme-dark .occ-item:active,
+.theme-dark .random-name-btn:active,
+.theme-dark .form-picker:active,
+.theme-dark .dialog-btn.cancel:active,
+.theme-dark .export-option:active,
+.theme-dark .dice-btn:active,
+.theme-dark .dice-btn-clear:active {
+  background: #2d3b52;
+}
+
+.theme-dark .step-dot,
+.theme-dark .step-connector,
+.theme-dark .skill-points-bar-bg,
+.theme-dark .dialog-handle {
+  background: #3a4a62;
+}
+
+.theme-dark .step-dot.active,
+.theme-dark .step-dot.done,
+.theme-dark .step-connector.done,
+.theme-dark .btn-primary,
+.theme-dark .dialog-btn.confirm,
+.theme-dark .dice-btn-roll,
+.theme-dark .roll-bonus-btn.active,
+.theme-dark .occ-opt-skill.selected,
+.theme-dark .occ-skills-tag,
+.theme-dark .dice-btn.sel,
+.theme-dark .dice-badge {
+  background: #d5a95c;
+  border-color: #d5a95c;
+  color: #111827;
+}
+
+.theme-dark .btn-primary:active,
+.theme-dark .dialog-btn.confirm:active,
+.theme-dark .dice-btn-roll:active {
+  background: #f0c56f;
+}
+
+.theme-dark .btn-primary:disabled,
+.theme-dark .dice-btn-roll.rolling {
+  background: #3a4a62;
+  color: #768398;
+}
+
+.theme-dark .btn-secondary,
+.theme-dark .override-toggle,
+.theme-dark .age-mod-btn,
+.theme-dark .weapon-add-btn {
+  background: transparent;
+  border-color: #d5a95c;
+  color: #d5a95c;
+}
+
+.theme-dark .btn-secondary:active,
+.theme-dark .override-toggle:active,
+.theme-dark .age-mod-btn:active {
+  background: #2f2a20;
+}
+
+.theme-dark .skill-cat-title,
+.theme-dark .char-section-title,
+.theme-dark .skill-grid-val,
+.theme-dark .skill-points-value,
+.theme-dark .dialog-readonly-val,
+.theme-dark .dialog-slider-label,
+.theme-dark .play-banner-text,
+.theme-dark .threshold-toggle-text,
+.theme-dark .weapon-header .weapon-cell,
+.theme-dark .dice-rolling,
+.theme-dark .weapon-picker-add {
+  color: #d5a95c;
+}
+
+.theme-dark .occ-points,
+.theme-dark .tick-mark.ticked,
+.theme-dark .skill-points-bar-fill {
+  color: #55c878;
+  background: #55c878;
+}
+
+.theme-dark .occ-points,
+.theme-dark .tick-mark.ticked {
+  background: transparent;
+}
+
+.theme-dark .tick-mark {
+  color: #768398;
+}
+
+.theme-dark .occ-opt-skill,
+.theme-dark .roll-bonus-btn {
+  background: #243044;
+  border-color: #3a4a62;
+  color: #aab6c8;
+}
+
+.theme-dark .major-wound-box.major-wound-on,
+.theme-dark .occ-spec-warning,
+.theme-dark .growth-result.fail {
+  background: #3a2426;
+  border-color: #7d343d;
+}
+
+.theme-dark .occ-spec-warning-text,
+.theme-dark .major-wound-on .mw-check,
+.theme-dark .saved-delete,
+.theme-dark .age-mod-remaining,
+.theme-dark .dl-clear:active {
+  color: #ff7b72;
+}
+
+.theme-dark .growth-result.success {
+  background: #173522;
+  color: #55c878;
+}
+
+.theme-dark .export-dialog,
+.theme-dark .dialog-overlay {
+  box-shadow: none;
+}
+
+.theme-dark .dialog-overlay {
+  background: rgba(0,0,0,0.62);
+}
+
+.theme-dark .dice-result-highlight {
+  background: #161d2a;
+  border: 1rpx solid #3a4a62;
+}
+
+.theme-dark .drh-total {
+  color: #f4efe4;
+}
+
+.theme-dark .drh-chip {
+  background: rgba(255,255,255,0.08);
+  color: #d5a95c;
+}
+
+.theme-dark .form-input,
+.theme-dark .form-picker,
+.theme-dark .occupation-search,
+.theme-dark .char-textarea,
+.theme-dark .age-mod-input,
+.theme-dark .play-stat-input,
+.theme-dark .dice-btn,
+.theme-dark .dice-btn-clear {
+  color: #e6edf7;
+}
+
+.theme-dark .dice-btn.sel {
+  color: #111827;
+}
+
+.theme-dark .home-hero,
+.theme-dark .home-action,
+.theme-dark .saved-avatar,
+.theme-dark .saved-head-count {
+  background: #1d2636;
+  border-color: #3a4a62;
+  box-shadow: 0 8rpx 22rpx rgba(0,0,0,0.20);
+}
+
+.theme-dark .home-title,
+.theme-dark .home-action-title,
+.theme-dark .saved-head-title {
+  color: #f4efe4;
+}
+
+.theme-dark .home-kicker,
+.theme-dark .home-action-sub,
+.theme-dark .saved-empty {
+  color: #aab6c8;
+}
+
+.theme-dark .home-count,
+.theme-dark .home-action.primary {
+  background: #d5a95c;
+  border-color: #d5a95c;
+  color: #111827;
+}
+
+.theme-dark .home-action.primary:active {
+  background: #f0c56f;
+}
+
+.theme-dark .home-action.secondary,
+.theme-dark .saved-avatar,
+.theme-dark .saved-head-count {
+  color: #d5a95c;
+}
+
+.theme-dark .home-action.secondary:active {
+  background: #243044;
+}
+
+.theme-dark .home-action-icon {
+  background: rgba(213,169,92,0.14);
+}
+
+.theme-dark .home-action.primary .home-action-icon {
+  background: rgba(17,24,39,0.14);
+}

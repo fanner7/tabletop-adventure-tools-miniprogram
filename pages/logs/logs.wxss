@@ -5,6 +5,11 @@ page {
   display: flex;
   flex-direction: column;
 }
+.logs-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 .scrollarea {
   flex: 1;
   overflow-y: hidden;
@@ -12,7 +17,20 @@ page {
 .log-item {
   margin-top: 20rpx;
   text-align: center;
+  color: #3b2e1e;
 }
 .log-item:last-child {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+.theme-light.logs-page {
+  background: #f6f2ea;
+}
+
+.theme-dark.logs-page {
+  background: #111827;
+}
+
+.theme-dark .log-item {
+  color: #e6edf7;
 }

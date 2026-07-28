@@ -167,3 +167,186 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 
 .cairn-attribution { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; padding: 16rpx 0 calc(16rpx + env(safe-area-inset-bottom, 20rpx)); }
 .cairn-attribution text { font-size: 22rpx; color: #b0a090; }
+
+.theme-dark.cairn-container {
+  background: #111827;
+  color: #e6edf7;
+}
+
+.theme-dark .header,
+.theme-dark .play-header {
+  border-bottom-color: #2f3b50;
+}
+
+.theme-dark .header-title,
+.theme-dark .section-title,
+.theme-dark .play-name,
+.theme-dark .card-title,
+.theme-dark .dialog-title,
+.theme-dark .check-title,
+.theme-dark .check-roll,
+.theme-dark .export-option-title,
+.theme-dark .spell-name {
+  color: #f4efe4;
+}
+
+.theme-dark .char-item-name {
+  color: #f4efe4;
+}
+
+.theme-dark .header-subtitle,
+.theme-dark .char-item-meta,
+.theme-dark .am-label,
+.theme-dark .hpl,
+.theme-dark .agl,
+.theme-dark .coin-label,
+.theme-dark .dialog-hint,
+.theme-dark .export-option-desc,
+.theme-dark .spell-desc,
+.theme-dark .dice-rolling-hint,
+.theme-dark .dl-title,
+.theme-dark .dl-detail,
+.theme-dark .dl-time,
+.theme-dark .cairn-attribution text,
+.theme-dark .empty-hint {
+  color: #aab6c8;
+}
+
+.theme-dark .card,
+.theme-dark .char-item,
+.theme-dark .dialog-sheet,
+.theme-dark .check-popup,
+.theme-dark .export-option,
+.theme-dark .spell-item {
+  background: #1d2636;
+  border-color: #33435b;
+  box-shadow: 0 8rpx 22rpx rgba(0,0,0,0.22);
+}
+
+.theme-dark .btn-primary,
+.theme-dark .btn-roll,
+.theme-dark .dialog-btn.confirm,
+.theme-dark .spell-add,
+.theme-dark .dice-btn.sel {
+  background: #3c8f57;
+  color: #ffffff;
+  border-color: #3c8f57;
+}
+
+.theme-dark .btn-primary:active,
+.theme-dark .btn-roll:active,
+.theme-dark .dialog-btn.confirm:active,
+.theme-dark .spell-add:active {
+  background: #317848;
+}
+
+.theme-dark .btn-import,
+.theme-dark .back-btn,
+.theme-dark .notes-toggle {
+  color: #55c878;
+  border-color: #55c878;
+}
+
+.theme-dark .btn-import:active {
+  background: rgba(85,200,120,0.10);
+}
+
+.theme-dark .attr-mini.str {
+  background: #332a24;
+  border-color: #5b4030;
+}
+
+.theme-dark .attr-mini.dex {
+  background: #1f3328;
+  border-color: #315b3f;
+}
+
+.theme-dark .attr-mini.wil {
+  background: #1d2d43;
+  border-color: #315077;
+}
+
+.theme-dark .hp-block {
+  background: #332525;
+}
+
+.theme-dark .ag-item,
+.theme-dark .btn-fatigue-lg,
+.theme-dark .inv-input,
+.theme-dark .ag-inp,
+.theme-dark .coin-inp,
+.theme-dark .dice-btn,
+.theme-dark .btn-clear,
+.theme-dark .notes-area,
+.theme-dark .dialog-btn.cancel,
+.theme-dark .spell-search-input {
+  background: #243044;
+  border-color: #3a4a62;
+  color: #e6edf7;
+}
+
+.theme-dark .btn-fatigue-lg,
+.theme-dark .btn-subtle {
+  color: #55c878;
+}
+
+.theme-dark .btn-fatigue-lg:active,
+.theme-dark .btn-clear:active,
+.theme-dark .btn-subtle:active,
+.theme-dark .dialog-btn.cancel:active,
+.theme-dark .export-option:active {
+  background: #2d3b52;
+}
+
+.theme-dark .am-pm {
+  background: rgba(255,255,255,0.08);
+  color: #e6edf7;
+}
+
+.theme-dark .inv-idx,
+.theme-dark .inv-del,
+.theme-dark .char-item-del,
+.theme-dark .dl-clear {
+  color: #768398;
+}
+
+.theme-dark .dice-result-highlight {
+  background: #182b1e;
+  border: 1rpx solid #2d5a3a;
+}
+
+.theme-dark .drh-total {
+  color: #f4efe4;
+}
+
+.theme-dark .dice-log,
+.theme-dark .dl-item,
+.theme-dark .spell-item {
+  border-color: #2f3b50;
+}
+
+.theme-dark .dl-item,
+.theme-dark .dice-btn,
+.theme-dark .hpv {
+  color: #e6edf7;
+}
+
+.theme-dark .dialog-handle {
+  background: #3a4a62;
+}
+
+.theme-dark .dialog-overlay {
+  background: rgba(0,0,0,0.62);
+}
+
+.theme-dark .check-target {
+  color: #aab6c8;
+}
+
+.theme-dark .check-result.success {
+  color: #55c878;
+}
+
+.theme-dark .check-result.fail {
+  color: #ff7b72;
+}

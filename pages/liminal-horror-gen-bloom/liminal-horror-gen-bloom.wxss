@@ -163,3 +163,67 @@ page {
 .copy-button:active {
   background-color: #343a40;
 }
+
+.theme-dark.container {
+  background: #111827;
+  color: #e6edf7;
+}
+
+.theme-dark .header {
+  border-bottom-color: #2f3b50;
+}
+
+.theme-dark .h1 {
+  color: #f4efe4;
+}
+
+.theme-dark .section-title {
+  color: #5bd3a1;
+  border-bottom-color: #2b9a72;
+}
+
+.theme-dark .generator-button {
+  background-color: #15805f;
+  color: #ffffff;
+}
+
+.theme-dark .generator-button:active {
+  background-color: #116b50;
+}
+
+.theme-dark .character-sheet,
+.theme-dark .json-export-area {
+  background-color: #1d2636;
+  border-color: #33435b;
+  box-shadow: 0 8rpx 22rpx rgba(0,0,0,0.22);
+}
+
+.theme-dark .stat-block,
+.theme-dark .json-textarea {
+  background-color: #243044;
+  border-color: #3a4a62;
+}
+
+.theme-dark .stat-label,
+.theme-dark .info-label,
+.theme-dark .json-textarea {
+  color: #aab6c8;
+}
+
+.theme-dark .stat-value,
+.theme-dark .info-text {
+  color: #e6edf7;
+}
+
+.theme-dark .info-block {
+  border-bottom-color: #2f3b50;
+}
+
+.theme-dark .copy-button {
+  background-color: #3a4a62;
+  color: #ffffff;
+}
+
+.theme-dark .copy-button:active {
+  background-color: #4b5f7d;
+}

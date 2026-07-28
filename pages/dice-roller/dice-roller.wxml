@@ -1,4 +1,4 @@
-<view class="page">
+<view class="page theme-{{theme}}">
   <!-- 结果展示区 -->
   <view class="result-stage {{result ? 'has-result' : ''}} {{rolling ? 'rolling' : ''}}">
     <block wx:if="{{result}}">

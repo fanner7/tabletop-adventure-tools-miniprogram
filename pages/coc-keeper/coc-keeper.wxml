@@ -1,5 +1,5 @@
 <!-- pages/coc-keeper/coc-keeper.wxml — COC 守密人助手 -->
-<view class="keeper-container">
+<view class="keeper-container theme-{{theme}}">
 
   <!-- ===== 顶部标题 ===== -->
   <view class="keeper-header" wx:if="{{!viewingType}}">

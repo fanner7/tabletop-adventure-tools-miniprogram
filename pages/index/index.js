@@ -54,8 +54,8 @@ Page({
       {
         id: 'about',
         icon: 'ℹ️',
-        title: '关于',
-        desc: '应用介绍与开源信息。',
+        title: '设置&关于',
+        desc: '外观模式、应用介绍与开源信息。',
         url: '/pages/about/about'
       }
     ]

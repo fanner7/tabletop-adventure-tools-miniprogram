@@ -8,7 +8,7 @@
 -->
 
 <!-- 页面根容器 -->
-<view class="page-wrapper">
+<view class="page-wrapper theme-{{theme}}">
 
   <!-- ========== 顶部标题区 ========== -->
   <view class="header">

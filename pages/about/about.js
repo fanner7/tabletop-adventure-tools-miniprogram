@@ -1,8 +1,16 @@
 // pages/about/about.js
 Page({
   data: {
-    version: '1.5.1',
+    version: '1.5.2',
     year: new Date().getFullYear(),
+  },
+
+  onThemeModeTap(e) {
+    const mode = e.currentTarget.dataset.mode;
+    const app = getApp();
+    if (app && typeof app.setThemeMode === 'function') {
+      app.setThemeMode(mode);
+    }
   },
 
   onCopyRepo() {

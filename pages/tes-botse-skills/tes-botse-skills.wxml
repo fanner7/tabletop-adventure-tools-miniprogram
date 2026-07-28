@@ -1,4 +1,4 @@
-<view class="page-wrapper">
+<view class="page-wrapper theme-{{theme}}">
   <!-- 固定顶部搜索栏 -->
   <view class="header">
     <view class="search-box">

@@ -2,6 +2,7 @@ page {
   background: #f5f0e8;
 }
 .page {
+  --theme-safe-top: 114rpx;
   background: #f5f0e8;
   padding: 24rpx 24rpx 80rpx;
   box-sizing: border-box;
@@ -59,6 +60,47 @@ page {
   display: block;
 }
 
+/* Theme settings */
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+}
+
+.theme-option {
+  min-height: 76rpx;
+  border-radius: 12rpx;
+  border: 1rpx solid #d4c5a9;
+  background: #faf8f4;
+  color: #6b4c2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.theme-option:active {
+  background: #f0ece5;
+}
+
+.theme-option.active {
+  background: #6b4c2a;
+  border-color: #6b4c2a;
+  color: #ffffff;
+}
+
+.theme-option-title {
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.theme-status {
+  margin-top: 14rpx;
+  color: #8b7355;
+  font-size: 22rpx;
+  text-align: center;
+}
+
 /* Tags */
 .tag-row {
   display: flex;
@@ -96,4 +138,58 @@ page {
   margin-top: 12rpx;
   font-size: 22rpx;
   color: #b0a590;
+}
+
+.theme-dark.page {
+  background: #111827;
+}
+
+.theme-dark .card {
+  background: #1d2636;
+  border: 1rpx solid #2f3b50;
+  box-shadow: 0 8rpx 22rpx rgba(0,0,0,0.20);
+}
+
+.theme-dark .hero-title,
+.theme-dark .section-title {
+  color: #f4efe4;
+}
+
+.theme-dark .hero-sub,
+.theme-dark .section-text {
+  color: #aab6c8;
+}
+
+.theme-dark .hero-ver,
+.theme-dark .footnote,
+.theme-dark .theme-status {
+  color: #768398;
+}
+
+.theme-dark .tag {
+  background: #243044;
+  border-color: #3a4a62;
+  color: #d5a95c;
+}
+
+.theme-dark .link-row,
+.theme-dark .theme-option {
+  background: #243044;
+  border-color: #3a4a62;
+  color: #d5a95c;
+}
+
+.theme-dark .link-row:active,
+.theme-dark .theme-option:active {
+  background: #2d3b52;
+}
+
+.theme-dark .theme-option.active {
+  background: #d5a95c;
+  border-color: #d5a95c;
+  color: #111827;
+}
+
+.theme-dark .link-text {
+  color: #d5a95c;
 }

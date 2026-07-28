@@ -514,3 +514,246 @@ page {
 .task-io-text { flex: 1; min-width: 0; }
 .task-io-title { font-size: 26rpx; font-weight: bold; color: #3b2e1e; display: block; margin-bottom: 4rpx; }
 .task-io-desc { font-size: 22rpx; color: #8b7355; line-height: 1.4; display: block; }
+
+.theme-dark.keeper-container {
+  background: #111827;
+  color: #e6edf7;
+}
+
+.theme-dark .keeper-header,
+.theme-dark .task-header-bar,
+.theme-dark .tools-section-title,
+.theme-dark .char-section-title,
+.theme-dark .skill-cat-title,
+.theme-dark .char-header,
+.theme-dark .dice-log,
+.theme-dark .madness-result-header {
+  border-color: #3a4a62;
+}
+
+.theme-dark .keeper-title,
+.theme-dark .section-title,
+.theme-dark .card-title,
+.theme-dark .task-name,
+.theme-dark .task-header-name,
+.theme-dark .char-card-name,
+.theme-dark .char-name,
+.theme-dark .char-attr-value,
+.theme-dark .char-deriv-value,
+.theme-dark .skill-grid-name,
+.theme-dark .weapon-cell,
+.theme-dark .char-text-block,
+.theme-dark .npc-stat-val,
+.theme-dark .dialog-title,
+.theme-dark .form-label,
+.theme-dark .mstep-title,
+.theme-dark .madness-result-title,
+.theme-dark .madness-result-value,
+.theme-dark .dl-item,
+.theme-dark .task-io-title {
+  color: #f4efe4;
+}
+
+.theme-dark .keeper-subtitle,
+.theme-dark .section-desc,
+.theme-dark .task-meta,
+.theme-dark .task-header-count,
+.theme-dark .char-card-occ,
+.theme-dark .npc-card-preview,
+.theme-dark .empty-hint,
+.theme-dark .char-sub,
+.theme-dark .char-attr-label,
+.theme-dark .char-deriv-label,
+.theme-dark .weapon-empty-text,
+.theme-dark .npc-stat-label,
+.theme-dark .dialog-hint,
+.theme-dark .mstep-result,
+.theme-dark .madness-result-label,
+.theme-dark .dice-rolling-hint,
+.theme-dark .dl-title,
+.theme-dark .dl-detail,
+.theme-dark .dl-time,
+.theme-dark .task-io-desc {
+  color: #aab6c8;
+}
+
+.theme-dark .card,
+.theme-dark .task-item,
+.theme-dark .char-card,
+.theme-dark .char-sheet,
+.theme-dark .char-attr,
+.theme-dark .char-deriv,
+.theme-dark .skill-grid-item,
+.theme-dark .skill-grid.review .skill-grid-item,
+.theme-dark .weapon-table,
+.theme-dark .weapon-header,
+.theme-dark .char-text-block,
+.theme-dark .npc-stat-item,
+.theme-dark .npc-stat-btn,
+.theme-dark .dialog-sheet,
+.theme-dark .form-input,
+.theme-dark .form-textarea,
+.theme-dark .madness-type-btn,
+.theme-dark .mstep,
+.theme-dark .madness-result,
+.theme-dark .madness-result-part,
+.theme-dark .dice-btn,
+.theme-dark .btn-clear-dice,
+.theme-dark .task-io-option,
+.theme-dark .btn-subtle,
+.theme-dark .dialog-btn.cancel {
+  background: #1d2636;
+  border-color: #3a4a62;
+  box-shadow: 0 8rpx 22rpx rgba(0,0,0,0.20);
+}
+
+.theme-dark .task-item:active,
+.theme-dark .char-card:active,
+.theme-dark .btn-subtle:active,
+.theme-dark .dialog-btn.cancel:active,
+.theme-dark .form-input:focus,
+.theme-dark .task-io-option:active,
+.theme-dark .dice-btn:active,
+.theme-dark .btn-clear-dice:active {
+  background: #243044;
+}
+
+.theme-dark .btn-primary,
+.theme-dark .dialog-btn.confirm,
+.theme-dark .btn-roll,
+.theme-dark .dice-btn.sel,
+.theme-dark .dice-badge,
+.theme-dark .mstep-dice,
+.theme-dark .madness-result-type,
+.theme-dark .mstep.done .mstep-num {
+  background: #d5a95c;
+  border-color: #d5a95c;
+  color: #111827;
+}
+
+.theme-dark .btn-primary:active,
+.theme-dark .dialog-btn.confirm:active,
+.theme-dark .btn-roll:active {
+  background: #f0c56f;
+}
+
+.theme-dark .btn-import-task,
+.theme-dark .btn-secondary,
+.theme-dark .btn-subtle,
+.theme-dark .back-btn,
+.theme-dark .char-card-edit,
+.theme-dark .npc-stat-btn.plus,
+.theme-dark .tools-section-title text,
+.theme-dark .skill-cat-title,
+.theme-dark .char-section-title,
+.theme-dark .skill-grid-val,
+.theme-dark .weapon-header .weapon-cell,
+.theme-dark .task-io-icon,
+.theme-dark .task-io-title {
+  color: #d5a95c;
+  border-color: #d5a95c;
+}
+
+.theme-dark .btn-import-task:active,
+.theme-dark .btn-secondary:active,
+.theme-dark .npc-stat-btn-active {
+  background: #2f2a20;
+}
+
+.theme-dark .char-card-stat,
+.theme-dark .tools-section-title text,
+.theme-dark .combat-tag-idx {
+  background: #243044;
+}
+
+.theme-dark .char-card-stat {
+  color: #d5a95c;
+}
+
+.theme-dark .task-delete,
+.theme-dark .char-card-delete,
+.theme-dark .dl-clear:active {
+  color: #ff7b72;
+}
+
+.theme-dark .char-card-visible,
+.theme-dark .task-delete,
+.theme-dark .char-card-delete,
+.theme-dark .dl-clear {
+  color: #768398;
+}
+
+.theme-dark .npc-card {
+  border-left-color: #52627a;
+}
+
+.theme-dark .weapon-row,
+.theme-dark .dl-item {
+  border-bottom-color: #2f3b50;
+}
+
+.theme-dark .dialog-handle {
+  background: #3a4a62;
+}
+
+.theme-dark .dialog-overlay {
+  background: rgba(0,0,0,0.62);
+}
+
+.theme-dark .madness-type-btn.on,
+.theme-dark .mstep.done,
+.theme-dark .madness-result {
+  background: #243044;
+  border-color: #d5a95c;
+}
+
+.theme-dark .mstep-num {
+  background: #3a4a62;
+  color: #aab6c8;
+}
+
+.theme-dark .combat-tie-warn {
+  background: #3a2f18;
+  border-color: #d5a95c;
+}
+
+.theme-dark .combat-tie-warn text {
+  color: #f0c56f;
+}
+
+.theme-dark .combat-tag.player {
+  background: #162742;
+  color: #8ab4ff;
+  border-color: #31548c;
+}
+
+.theme-dark .combat-tag.npc {
+  background: #3a2028;
+  color: #ff9aaa;
+  border-color: #7d343d;
+}
+
+.theme-dark .dice-result-highlight {
+  background: #161d2a;
+  border: 1rpx solid #3a4a62;
+}
+
+.theme-dark .drh-total {
+  color: #f4efe4;
+}
+
+.theme-dark .drh-chip {
+  background: rgba(255,255,255,0.08);
+  color: #d5a95c;
+}
+
+.theme-dark .form-input,
+.theme-dark .form-textarea,
+.theme-dark .dice-btn,
+.theme-dark .btn-clear-dice {
+  color: #e6edf7;
+}
+
+.theme-dark .dice-btn.sel {
+  color: #111827;
+}

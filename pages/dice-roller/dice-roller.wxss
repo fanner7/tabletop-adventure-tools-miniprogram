@@ -3,6 +3,7 @@ page {
   background: #1a1f25;
 }
 .page {
+  --theme-safe-top: 114rpx;
   background: #1a1f25;
   padding: 24rpx 24rpx 80rpx;
   box-sizing: border-box;
@@ -355,4 +356,127 @@ page {
   text-align: center;
   font-size: 24rpx;
   color: #555a63;
+}
+
+.theme-dark.page {
+  background: #1a1f25;
+}
+
+.theme-light.page {
+  background: #f7f1e7;
+  color: #2f281d;
+}
+
+.theme-light .result-stage {
+  background: #fffaf2;
+  border-color: #eadcc5;
+  box-shadow: 0 4rpx 18rpx rgba(92,64,34,0.08);
+}
+
+.theme-light .result-stage.has-result {
+  background: #fff6e8;
+  border-color: #dec8a8;
+}
+
+.theme-light .result-stage.rolling {
+  border-color: #d69d2538;
+}
+
+.theme-light .stage-hint {
+  color: #9b8b7a;
+}
+
+.theme-light .shake-hint,
+.theme-light .section-label,
+.theme-light .hi-time,
+.theme-light .history-empty {
+  color: #a99a87;
+}
+
+.theme-light .result-total,
+.theme-light .hi-total {
+  color: #3b2e1e;
+}
+
+.theme-light .rolling-text {
+  color: #c98216;
+}
+
+.theme-light .quick-chip {
+  background: #fffaf2;
+  border-color: #e2d2b8;
+  color: #6b5a4a;
+}
+
+.theme-light .quick-chip:active {
+  background: #f5ead8;
+  color: #9a650c;
+  border-color: #d69d25;
+}
+
+.theme-light .dice-card {
+  background: #fffaf2;
+  border-color: #e4d5bd;
+  box-shadow: 0 2rpx 10rpx rgba(92,64,34,0.06);
+}
+
+.theme-light .dice-card.active {
+  box-shadow: inset 0 0 26rpx rgba(107,76,42,0.06);
+}
+
+.theme-light .dice-card-icon {
+  color: #a39482;
+}
+
+.theme-light .dice-card-name {
+  color: #3b2e1e;
+}
+
+.theme-light .dice-card-count text {
+  color: #1f2933;
+}
+
+.theme-light .btn-clear {
+  border-color: #dccbb2;
+  color: #7a6b58;
+}
+
+.theme-light .btn-clear:active {
+  background: #fffaf2;
+  color: #3b2e1e;
+}
+
+.theme-light .btn-roll {
+  color: #2f220e;
+  box-shadow: 0 6rpx 16rpx rgba(214, 157, 37, 0.20);
+}
+
+.theme-light .btn-roll.disabled {
+  background: #e8ded0;
+  color: #a99a87;
+}
+
+.theme-light .history-panel {
+  background: #fffaf2;
+  border: 1rpx solid #e4d5bd;
+}
+
+.theme-light .history-head {
+  border-bottom-color: #eadcc5;
+}
+
+.theme-light .history-title {
+  color: #5a4a3a;
+}
+
+.theme-light .history-clear {
+  color: #9b8b7a;
+}
+
+.theme-light .history-item {
+  border-bottom-color: #f0e4d3;
+}
+
+.theme-light .hi-chip {
+  background: rgba(107,76,42,0.06);
 }
