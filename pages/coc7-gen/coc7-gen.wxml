@@ -2,7 +2,7 @@
 
   <!-- 顶部标题 -->
   <view class="header" wx:if="{{!playMode}}">
-    <text class="header-title">🐙 COC7 调查员创建</text>
+    <text class="header-title">🐙 COC 调查员工具</text>
     <text class="header-subtitle">Call of Cthulhu 7th Edition — Character Generator</text>
   </view>
 

@@ -1,4 +1,4 @@
-/* pages/coc7-gen/coc7-gen.wxss — COC7 调查员创建工具 */
+/* pages/coc7-gen/coc7-gen.wxss — COC 调查员工具 */
 
 page {
   padding-top: 90rpx;

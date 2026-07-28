@@ -1,4 +1,4 @@
-// pages/coc7-gen/coc7-gen.js — COC7 调查员创建工具
+// pages/coc7-gen/coc7-gen.js — COC 调查员工具
 // ============================================================
 // 数据来源：COC7空白卡CY2lusFinal (1).xlsx 分析结果
 // 注意：所有角色数据仅保存到手机本地（wx.setStorageSync）
@@ -466,6 +466,19 @@ function makeDerivedItems(d) {
   ];
 }
 
+function calcDerivedFrom(attrVals, charInfo) {
+  const v = attrVals || {};
+  const n = key => parseInt(v[key]) || 50;
+  const age = parseInt(charInfo && charInfo.age) || 25;
+  const hp = Math.floor((n('con') + n('siz')) / 10);
+  const san = n('pow');
+  const mp = Math.floor(n('pow') / 5);
+  const strSiz = n('str') + n('siz');
+  const dbInfo = calcDB(strSiz);
+  const mov = Math.max(1, getAgeMov(age));
+  return { hp, san, mp, db: dbInfo.db, build: dbInfo.build, mov };
+}
+
 function detectAgeModType(age) {
   if (age >= 15 && age <= 19) return 'teen';
   if (age >= 40) return 'decay';
@@ -595,6 +608,18 @@ Page({
     growthLuckNew: 0,
     growthCredInput: 0,
     growthLocked: false,
+    playLog: [],
+    showSanDialog: false,
+    sanFormula: '0/1D6',
+    sanRollResult: null,
+    sanFormulaPresets: ['0/1', '0/1D3', '0/1D6', '1/1D6', '1D3/1D10', '1D6/1D20'],
+    sanDayStart: 0,
+    sessionSanLoss: 0,
+    sanDailyLimit: 1,
+    hpPercent: 0,
+    sanPercent: 0,
+    mpPercent: 0,
+    luckPercent: 50,
     // 困难和极难数值显示开关
     showThresholds: false,
     // 导出弹窗开关
@@ -640,6 +665,7 @@ Page({
     usedOccPoints: 0, totalOccPoints: 0,
     usedIntPoints: 0, totalIntPoints: 0,
     skillGroups: [],        // 按分类分组的技能列表
+    skillValidation: { warnings: [], crValue: 0, crRange: '', crState: 'neutral', crHint: '', occRemain: 0, intRemain: 0 },
     // 技能 dialog (slider)
     dialogSkill: null,      // 当前编辑的技能信息
     dialogOccVal: 0,        // 职业技能 slider 值
@@ -691,6 +717,11 @@ Page({
     this.loadSavedList();
   },
   onShow() { this.loadSavedList(); },
+  onHide() {
+    if (this.data.step === 5 && this.data.isCompleted && !this.data.growthLocked) {
+      this.persistCharacter(this.buildCharacterData(this.data.isCompleted));
+    }
+  },
 
   // ==================== 本地存储 ====================
   loadSavedList() {
@@ -708,6 +739,167 @@ Page({
       });
       this.setData({ savedCharacters: list });
     } catch (e) { this.setData({ savedCharacters: [] }); }
+  },
+
+  getVitalState(overrides = {}) {
+    const d = { ...this.data, ...overrides };
+    const pct = (value, max) => {
+      const n = parseInt(value) || 0;
+      const m = Math.max(1, parseInt(max) || 1);
+      return Math.max(0, Math.min(100, Math.round((n / m) * 100)));
+    };
+    const sanStart = parseInt(d.sanDayStart) || parseInt(d.playSAN) || 0;
+    return {
+      hpPercent: pct(d.playHP, d.derived && d.derived.hp),
+      sanPercent: pct(d.playSAN, d.maxSAN),
+      mpPercent: pct(d.playMP, d.maxMP),
+      luckPercent: pct(d.playLuck, 99),
+      sanDailyLimit: Math.max(1, Math.ceil(sanStart / 5)),
+    };
+  },
+
+  refreshPlayDashboard() {
+    this.setData(this.getVitalState());
+  },
+
+  parseCreditRange(range) {
+    const m = String(range || '').match(/(\d+)\s*-\s*(\d+)/);
+    if (!m) return null;
+    return { min: parseInt(m[1]), max: parseInt(m[2]) };
+  },
+
+  getCreditRatingValue() {
+    const edu = this.data.attrValues.edu || 50;
+    const dex = this.data.attrValues.dex || 50;
+    return getSkillBase('信用评级', edu, dex) + (this.data.occPts['信用评级'] || 0) + (this.data.intPts['信用评级'] || 0);
+  },
+
+  buildSkillValidation() {
+    const warnings = [];
+    const occRemain = this.data.totalOccPoints - this.data.usedOccPoints;
+    const intRemain = this.data.totalIntPoints - this.data.usedIntPoints;
+    const crValue = this.getCreditRatingValue();
+    const crRange = this.data.selectedOcc ? this.data.selectedOcc.cr_range || '' : '';
+    const parsedCR = this.parseCreditRange(crRange);
+    let crState = 'neutral';
+    let crHint = crRange ? `CR ${crValue} / ${crRange}` : `CR ${crValue}`;
+
+    if (this.data.selectedOcc && parsedCR) {
+      if (crValue < parsedCR.min) {
+        crState = 'danger';
+        warnings.push(`信用评级低于职业要求，还需要 ${parsedCR.min - crValue} 点。`);
+      } else if (crValue > parsedCR.max) {
+        crState = 'danger';
+        warnings.push(`信用评级高于职业上限，需要降到 ${parsedCR.max} 或以下。`);
+      } else {
+        crState = 'ok';
+        crHint = `CR ${crValue}，符合 ${crRange}`;
+      }
+    }
+
+    if (this.data.usedOccPoints > this.data.totalOccPoints) {
+      warnings.push(`职业技能点超出 ${this.data.usedOccPoints - this.data.totalOccPoints} 点。`);
+    } else if (occRemain > 0) {
+      warnings.push(`职业技能点还剩 ${occRemain} 点未分配。`);
+    }
+
+    if (this.data.usedIntPoints > this.data.totalIntPoints) {
+      warnings.push(`兴趣技能点超出 ${this.data.usedIntPoints - this.data.totalIntPoints} 点。`);
+    } else if (intRemain > 0) {
+      warnings.push(`兴趣技能点还剩 ${intRemain} 点未分配。`);
+    }
+
+    const missingSpecs = this.getMissingRequiredSpecs();
+    if (missingSpecs.length > 0) warnings.push(`专攻未完成：${missingSpecs.join('、')}。`);
+
+    return { warnings, crValue, crRange, crState, crHint, occRemain, intRemain };
+  },
+
+  refreshSkillValidation() {
+    this.setData({ skillValidation: this.buildSkillValidation() });
+  },
+
+  getBlockingCreationMessages() {
+    const messages = [];
+    const parsedCR = this.data.selectedOcc ? this.parseCreditRange(this.data.selectedOcc.cr_range) : null;
+    const crValue = this.getCreditRatingValue();
+    if (!this.data.overrideLimits && this.data.usedOccPoints > this.data.totalOccPoints) messages.push('职业技能点已超出上限');
+    if (!this.data.overrideLimits && this.data.usedIntPoints > this.data.totalIntPoints) messages.push('兴趣技能点已超出上限');
+    if (!this.data.overrideLimits && parsedCR && (crValue < parsedCR.min || crValue > parsedCR.max)) {
+      messages.push(`信用评级需在 ${this.data.selectedOcc.cr_range} 内`);
+    }
+    const missingSpecs = this.getMissingRequiredSpecs();
+    if (missingSpecs.length > 0) messages.push(`请先选择专攻：${missingSpecs[0]}`);
+    return messages;
+  },
+
+  formatLogTime() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  },
+
+  addPlayLog(entry) {
+    const log = {
+      id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      time: this.formatLogTime(),
+      type: entry.type || 'note',
+      title: entry.title || '记录',
+      meta: entry.meta || '',
+    };
+    this.setData({ playLog: [log, ...(this.data.playLog || [])].slice(0, 80) });
+  },
+
+  clearPlayLog() {
+    this.setData({ playLog: [] });
+  },
+
+  buildCharacterData(completed) {
+    const derived = calcDerivedFrom(this.data.attrValues, this.data.charInfo);
+    const derivedItems = makeDerivedItems(derived);
+    return {
+      schemaVersion: 2,
+      attrValues: this.data.attrValues, attrRolls: this.data.attrRolls,
+      attrDesc: this.data.attrDesc, attrDisplay: this.data.attrDisplay,
+      charInfo: this.data.charInfo, selectedOcc: this.data.selectedOcc,
+      occPts: this.data.occPts, intPts: this.data.intPts, skillSpecs: this.data.skillSpecs,
+      usedOccPoints: this.data.usedOccPoints, totalOccPoints: this.data.totalOccPoints,
+      usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
+      derived, derivedItems,
+      sortedSkillsByCat: this.data.sortedSkillsByCat,
+      timestamp: Date.now(),
+      tickedSkills: this.data.tickedSkills,
+      playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
+      majorWound: this.data.majorWound, dying: this.data.dying,
+      sanDayStart: this.data.sanDayStart, sessionSanLoss: this.data.sessionSanLoss,
+      playLog: this.data.playLog, diceHistory: this.data.diceHistory,
+      charWeapons: this.data.charWeapons,
+      charBackstory: this.data.charBackstory, charGear: this.data.charGear,
+      charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
+      charAssets: this.data.charAssets,
+      completed: completed !== undefined ? completed : this.data.isCompleted,
+    };
+  },
+
+  persistCharacter(charData, toastTitle) {
+    try {
+      const list = wx.getStorageSync('coc7_characters') || [];
+      const loadIdx = this.data._loadIndex;
+      let savedIndex = loadIdx;
+      if (loadIdx !== undefined && loadIdx >= 0 && loadIdx < list.length) {
+        list[loadIdx] = charData;
+      } else {
+        list.push(charData);
+        savedIndex = list.length - 1;
+      }
+      wx.setStorageSync('coc7_characters', list);
+      this.setData({ _loadIndex: savedIndex, savedAt: charData.timestamp, savedCharacters: list });
+      if (toastTitle) wx.showToast({ title: toastTitle, icon: 'success', duration: 1500 });
+      return true;
+    } catch (e) {
+      wx.showToast({ title: '保存失败，存储空间不足', icon: 'none' });
+      return false;
+    }
   },
 
   // ==================== STEP 0 ====================
@@ -738,6 +930,12 @@ Page({
       occFixedSkills: [], occSpecRequired: [], occSpecMissing: [],
       occPts: {}, intPts: {}, skillSpecs: {}, usedOccPoints: 0, totalOccPoints: 0, usedIntPoints: 0, totalIntPoints: 0,
       skillGroups: [], dialogSkill: null, showDialog: false, canNext: false, overrideLimits: false,
+      skillValidation: { warnings: [], crValue: 0, crRange: '', crState: 'neutral', crHint: '', occRemain: 0, intRemain: 0 },
+      playLog: [], diceHistory: [], diceSelected: {}, diceResult: null,
+      playMode: false, playHP: 0, playSAN: 0, playMP: 0, playLuck: 50,
+      majorWound: false, dying: false, sanDayStart: 0, sessionSanLoss: 0,
+      showSanDialog: false, sanRollResult: null, sanFormula: '0/1D6',
+      hpPercent: 0, sanPercent: 0, mpPercent: 0, luckPercent: 50, sanDailyLimit: 1,
     });
   },
 
@@ -749,18 +947,24 @@ Page({
       const char = list[idx];
       // 恢复并构建预览技能
       const pSkills = this.buildPreviewSkills(char.occPts || {}, char.intPts || {}, char.attrValues);
-      const d = char.derived || { hp: 0, san: 0, mp: 0, db: '+0', build: 0, mov: 8 };
-      const derivedItems = makeDerivedItems(d);
       const attrVals = char.attrValues || { str: 0, con: 0, dex: 0, app: 0, pow: 0, siz: 0, int: 0, edu: 0, luck: 0 };
+      const charInfo = char.charInfo || { name: '', player: '', age: '25', gender: '男', era: '1920s' };
+      const d = calcDerivedFrom(attrVals, charInfo);
+      const derivedItems = makeDerivedItems(d);
+      const cm = (char.occPts && char.occPts['克苏鲁神话'] || 0) + (char.intPts && char.intPts['克苏鲁神话'] || 0);
+      const cmBase = getSkillBase('克苏鲁神话', attrVals.edu || 50, attrVals.dex || 50);
+      const maxSAN = 99 - (cmBase + cm);
+      const playSAN = char.playSAN !== undefined ? char.playSAN : d.san;
+      const sanDayStart = char.sanDayStart || playSAN;
       this.setData({
         step: 5,
         attrValues: attrVals,
         attrDisplay: makeAttrDisplay(attrVals),
         attrDesc: char.attrDesc || generateAttrDesc(attrVals),
         attrRolls: char.attrRolls || {},
-        rolled: { str: true, con: true, dex: true, app: true, pow: true, siz: true, int: true, edu: true },
+        rolled: { str: true, con: true, dex: true, app: true, pow: true, siz: true, int: true, edu: true, luck: true },
         allRolled: true,
-        charInfo: char.charInfo || { name: '', player: '', age: '25', gender: '男', era: '1920s' },
+        charInfo: charInfo,
         selectedOcc: char.selectedOcc || null,
         occPts: char.occPts || {}, intPts: char.intPts || {}, skillSpecs: char.skillSpecs || {},
         usedOccPoints: char.usedOccPoints || 0, totalOccPoints: char.totalOccPoints || 0,
@@ -776,11 +980,22 @@ Page({
         charMythos: char.charMythos || '', charSpells: char.charSpells || '', charCompanions: char.charCompanions || '',
         charAssets: char.charAssets || '',
         playHP: char.playHP || d.hp,
-        playSAN: char.playSAN || d.san,
+        playSAN: playSAN,
         playMP: char.playMP || d.mp,
         playLuck: char.playLuck || attrVals.luck || 50,
+        maxSAN: maxSAN,
+        maxMP: d.mp,
         majorWound: char.majorWound || false, dying: char.dying || false,
+        playLog: char.playLog || [],
+        diceHistory: char.diceHistory || [],
+        sessionSanLoss: char.sessionSanLoss || 0,
+        sanDayStart: sanDayStart,
+        sanRollResult: null,
+        showSanDialog: false,
         savedAt: char.timestamp || 0,
+      }, () => {
+        this.refreshPlayDashboard();
+        this.refreshSkillValidation();
       });
     } catch (e) { wx.showToast({ title: '读取失败', icon: 'none' }); }
   },
@@ -805,6 +1020,8 @@ Page({
             wx.showToast({ title: '剪贴板内容不是有效的调查员数据', icon: 'none' });
             return;
           }
+          charData.derived = calcDerivedFrom(charData.attrValues, charData.charInfo);
+          charData.derivedItems = makeDerivedItems(charData.derived);
           charData.completed = true;
           charData.timestamp = Date.now();
           const list = wx.getStorageSync('coc7_characters') || [];
@@ -965,8 +1182,10 @@ Page({
     this.setData({
       totalOccPoints: occPoints, totalIntPoints: intPoints,
       usedOccPoints: 0, usedIntPoints: crAutoPts, occPts: {}, intPts,
+    }, () => {
+      this.buildSkillList(occ);
+      this.refreshSkillValidation();
     });
-    this.buildSkillList(occ);
   },
 
   buildSkillList(occ) {
@@ -1072,13 +1291,19 @@ Page({
       delete opt[name];
       const occPts = { ...this.data.occPts };
       delete occPts[name];
-      this.setData({ selectedOptSkills: opt, occPts, occOptGroups: groups });
-      this.recalcTotals();
+      this.setData({ selectedOptSkills: opt, occPts, occOptGroups: groups }, () => {
+        this.recalcTotals();
+        this.buildSkillList(this.data.selectedOcc);
+      });
+      return;
     } else {
       opt[name] = true;
-      this.setData({ selectedOptSkills: opt, occOptGroups: groups });
+      this.setData({ selectedOptSkills: opt, occOptGroups: groups }, () => {
+        this.buildSkillList(this.data.selectedOcc);
+        this.refreshSkillValidation();
+      });
+      return;
     }
-    this.buildSkillList(this.data.selectedOcc);
   },
 
   recalcTotals() {
@@ -1089,7 +1314,9 @@ Page({
       newUsedOcc += occPts[sk.name] || 0;
       newUsedInt += intPts[sk.name] || 0;
     }
-    this.setData({ usedOccPoints: newUsedOcc, usedIntPoints: newUsedInt });
+    this.setData({ usedOccPoints: newUsedOcc, usedIntPoints: newUsedInt }, () => {
+      this.refreshSkillValidation();
+    });
   },
 
   // ==================== STEP 4：技能分配（双池 slider） ====================
@@ -1098,7 +1325,7 @@ Page({
     const isOcc = this.isOccSkill(name);
     const edu = this.data.attrValues.edu || 50;
     const dex = this.data.attrValues.dex || 50;
-    const base = getSkillBase(name, edu, dex);
+    const base = getSkillBase(name, edu, dex, this.data.skillSpecs);
     const curOcc = this.data.occPts[name] || 0;
     const curInt = this.data.intPts[name] || 0;
     const { usedOccPoints, totalOccPoints, usedIntPoints, totalIntPoints, overrideLimits } = this.data;
@@ -1186,6 +1413,7 @@ Page({
     });
     this.updateOccSpecMissing();
     if (this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc);
+    this.refreshSkillValidation();
   },
   onSpecTextInput(e) {
     const val = e.detail.value;
@@ -1196,6 +1424,7 @@ Page({
     });
     this.updateOccSpecMissing();
     if (this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc);
+    this.refreshSkillValidation();
   },
 
   confirmSkillDialog() {
@@ -1247,22 +1476,14 @@ Page({
       showDialog: false,
       dialogSkill: null,
       canNext: newUsedOcc > 0 || newUsedInt > 0,
+    }, () => {
+      this.refreshSkillValidation();
     });
   },
 
   // ==================== STEP 5：角色卡预览 ====================
   calcDerived() {
-    const v = this.data.attrValues;
-    const age = parseInt(this.data.charInfo.age) || 25;
-    const ageMods = getAgeMods(age);
-    const hp = Math.floor((v.con + v.siz) / 10);
-    const san = v.pow || 50;
-    const mp = Math.floor((v.pow || 50) / 5);
-    const strSiz = (v.str || 50) + (v.siz || 50);
-    const dbInfo = calcDB(strSiz);
-    const mov2 = getAgeMov(age);
-    const mov = Math.max(1, mov2);
-    return { hp, san, mp, db: dbInfo.db, build: dbInfo.build, mov };
+    return calcDerivedFrom(this.data.attrValues, this.data.charInfo);
   },
 
   buildPreviewSkills(occPts, intPts, attrVals) {
@@ -1327,6 +1548,15 @@ Page({
         return;
       }
     }
+
+    if (this.data.step === 4) {
+      const blockingMessages = this.getBlockingCreationMessages();
+      if (blockingMessages.length > 0) {
+        wx.showToast({ title: blockingMessages[0], icon: 'none', duration: 2200 });
+        this.refreshSkillValidation();
+        return;
+      }
+    }
     
     if (next === 5) {
       const derived = this.calcDerived();
@@ -1339,7 +1569,23 @@ Page({
       const backstory = this.data.charBackstory || this.getDefaultBackstory();
       const cr = (this.data.occPts['信用评级'] || 0) + (this.data.intPts['信用评级'] || 0);
       const assets = this.data.charAssets || this.getDefaultAssets(cr);
-      this.setData({ step: next, derived, derivedItems, sortedSkillsByCat, attrDisplay: makeAttrDisplay(this.data.attrValues), playHP: derived.hp, playSAN: derived.san, playMP: derived.mp, playLuck: this.data.attrValues.luck || 50, maxSAN: maxSAN, maxMP: derived.mp, charBackstory: backstory, charAssets: assets });
+      const nextHP = this.data.isCompleted ? (this.data.playHP || derived.hp) : derived.hp;
+      const nextSAN = this.data.isCompleted ? (this.data.playSAN || derived.san) : derived.san;
+      const nextMP = this.data.isCompleted ? (this.data.playMP || derived.mp) : derived.mp;
+      const nextLuck = this.data.isCompleted ? (this.data.playLuck || this.data.attrValues.luck || 50) : (this.data.attrValues.luck || 50);
+      const nextSanDayStart = this.data.sanDayStart || nextSAN;
+      const vitalState = this.getVitalState({
+        derived, playHP: nextHP, playSAN: nextSAN, playMP: nextMP, playLuck: nextLuck,
+        maxSAN: maxSAN, maxMP: derived.mp, sanDayStart: nextSanDayStart,
+      });
+      this.setData({
+        step: next, derived, derivedItems, sortedSkillsByCat,
+        attrDisplay: makeAttrDisplay(this.data.attrValues),
+        playHP: nextHP, playSAN: nextSAN, playMP: nextMP, playLuck: nextLuck,
+        maxSAN: maxSAN, maxMP: derived.mp, sanDayStart: nextSanDayStart,
+        ...vitalState,
+        charBackstory: backstory, charAssets: assets,
+      });
     } else {
       this.setData({ step: next, canNext: false });
       if (next === 3) this.filterOccs(this.data.occSearch || '');
@@ -1370,32 +1616,11 @@ Page({
 
   // ==================== 保存角色 ====================
   saveCharacter() {
-    // 进入预览页时已计算 derived 和 sortedSkillsByCat
-    const charData = {
-      attrValues: this.data.attrValues, attrRolls: this.data.attrRolls,
-      charInfo: this.data.charInfo, selectedOcc: this.data.selectedOcc,
-      occPts: this.data.occPts, intPts: this.data.intPts, skillSpecs: this.data.skillSpecs,
-      usedOccPoints: this.data.usedOccPoints, totalOccPoints: this.data.totalOccPoints,
-      usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
-      derived: this.data.derived, timestamp: Date.now(),
-      tickedSkills: this.data.tickedSkills,
-      playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
-      majorWound: this.data.majorWound,
-      charWeapons: this.data.charWeapons,
-      charBackstory: this.data.charBackstory, charGear: this.data.charGear,
-      charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
-      charAssets: this.data.charAssets,
-      completed: true,
-    };
-    try {
-      let list = wx.getStorageSync('coc7_characters') || [];
-      const loadIdx = this.data._loadIndex;
-      if (loadIdx !== undefined && loadIdx >= 0 && loadIdx < list.length) list[loadIdx] = charData;
-      else { list.push(charData); this.setData({ _loadIndex: list.length - 1 }); }
-      wx.setStorageSync('coc7_characters', list);
-      this.setData({ isCompleted: true, savedAt: Date.now(), showSaveSuccess: true });
+    const charData = this.buildCharacterData(true);
+    if (this.persistCharacter(charData)) {
+      this.setData({ isCompleted: true, savedAt: charData.timestamp, showSaveSuccess: true });
       setTimeout(() => { this.setData({ showSaveSuccess: false }); }, 2000);
-    } catch (e) { wx.showToast({ title: '保存失败，存储空间不足', icon: 'none' }); }
+    }
   },
 
   // ==================== 导出角色 ====================
@@ -1404,25 +1629,7 @@ Page({
   },
 
   doExportClipboard() {
-    const charData = {
-      attrValues: this.data.attrValues, attrRolls: this.data.attrRolls,
-      attrDesc: this.data.attrDesc, attrDisplay: this.data.attrDisplay,
-      charInfo: this.data.charInfo, selectedOcc: this.data.selectedOcc,
-      occPts: this.data.occPts, intPts: this.data.intPts, skillSpecs: this.data.skillSpecs,
-      usedOccPoints: this.data.usedOccPoints, totalOccPoints: this.data.totalOccPoints,
-      usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
-      derived: this.data.derived, derivedItems: this.data.derivedItems,
-      sortedSkillsByCat: this.data.sortedSkillsByCat,
-      timestamp: Date.now(),
-      tickedSkills: this.data.tickedSkills,
-      playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
-      majorWound: this.data.majorWound, dying: this.data.dying,
-      charWeapons: this.data.charWeapons,
-      charBackstory: this.data.charBackstory, charGear: this.data.charGear,
-      charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
-      charAssets: this.data.charAssets,
-      completed: true,
-    };
+    const charData = this.buildCharacterData(true);
     wx.setClipboardData({
       data: JSON.stringify(charData, null, 2),
       success: () => { wx.showToast({ title: '已复制到剪贴板', icon: 'success' }); this.setData({ showExportDialog: false }); },
@@ -1505,31 +1712,12 @@ Page({
   togglePlayMode() {
     if (this.data.playMode) {
       // 退出游玩：自动保存
-      const charData = {
-        attrValues: this.data.attrValues, attrRolls: this.data.attrRolls,
-        charInfo: this.data.charInfo, selectedOcc: this.data.selectedOcc,
-        occPts: this.data.occPts, intPts: this.data.intPts, skillSpecs: this.data.skillSpecs,
-        usedOccPoints: this.data.usedOccPoints, totalOccPoints: this.data.totalOccPoints,
-        usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
-        derived: this.data.derived, timestamp: Date.now(),
-        tickedSkills: this.data.tickedSkills,
-        playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
-      majorWound: this.data.majorWound, dying: this.data.dying,
-        charWeapons: this.data.charWeapons,
-        charBackstory: this.data.charBackstory, charGear: this.data.charGear,
-        charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
-        charAssets: this.data.charAssets,
-        completed: this.data.isCompleted,
-      };
-      try {
-        let list = wx.getStorageSync('coc7_characters') || [];
-        const loadIdx = this.data._loadIndex;
-        if (loadIdx !== undefined && loadIdx >= 0 && loadIdx < list.length) list[loadIdx] = charData;
-        else list.push(charData);
-        wx.setStorageSync('coc7_characters', list);
-        this.setData({ savedAt: Date.now() });
-        wx.showToast({ title: '已自动保存', icon: 'success', duration: 1500 });
-      } catch (e) {}
+      this.persistCharacter(this.buildCharacterData(this.data.isCompleted), '已自动保存');
+    } else if (!this.data.sanDayStart) {
+      const sanStart = parseInt(this.data.playSAN) || parseInt(this.data.derived.san) || 0;
+      this.setData({ sanDayStart: sanStart, sessionSanLoss: 0 }, () => {
+        this.refreshPlayDashboard();
+      });
     }
     this.setData({ playMode: !this.data.playMode });
   },
@@ -1539,7 +1727,9 @@ Page({
   },
 
   toggleOverride() {
-    this.setData({ overrideLimits: !this.data.overrideLimits });
+    this.setData({ overrideLimits: !this.data.overrideLimits }, () => {
+      this.refreshSkillValidation();
+    });
   },
 
   toggleSkillTick(e) {
@@ -1554,15 +1744,158 @@ Page({
     this.setData({ tickedSkills: ticked });
   },
 
-  onHPChange(e) { this.setData({ playHP: parseInt(e.detail.value) || 0 }); },
-  onSANChange(e) { this.setData({ playSAN: parseInt(e.detail.value) || 0 }); },
-  onMPChange(e) { this.setData({ playMP: parseInt(e.detail.value) || 0 }); },
-  toggleMajorWound() { this.setData({ majorWound: !this.data.majorWound }); },
-  toggleDying() { this.setData({ dying: !this.data.dying }); },
+  onHPChange(e) {
+    const val = Math.max(0, parseInt(e.detail.value) || 0);
+    this.setData({ playHP: val, ...this.getVitalState({ playHP: val }) });
+  },
+  onSANChange(e) {
+    const val = Math.max(0, parseInt(e.detail.value) || 0);
+    this.setData({ playSAN: val, ...this.getVitalState({ playSAN: val }) });
+  },
+  onMPChange(e) {
+    const val = Math.max(0, parseInt(e.detail.value) || 0);
+    this.setData({ playMP: val, ...this.getVitalState({ playMP: val }) });
+  },
+  toggleMajorWound() {
+    const next = !this.data.majorWound;
+    this.setData({ majorWound: next });
+    if (this.data.playMode) this.addPlayLog({ type: next ? 'harm' : 'note', title: next ? '标记重伤' : '解除重伤', meta: this.data.charInfo.name || '调查员' });
+  },
+  toggleDying() {
+    const next = !this.data.dying;
+    this.setData({ dying: next });
+    if (this.data.playMode) this.addPlayLog({ type: next ? 'harm' : 'note', title: next ? '标记濒死' : '解除濒死', meta: this.data.charInfo.name || '调查员' });
+  },
   onLuckChange(e) {
     const val = parseInt(e.detail.value) || 0;
     const newAttr = { ...this.data.attrValues, luck: val };
-    this.setData({ playLuck: val, attrValues: newAttr, attrDisplay: makeAttrDisplay(newAttr) });
+    this.setData({ playLuck: val, attrValues: newAttr, attrDisplay: makeAttrDisplay(newAttr), ...this.getVitalState({ playLuck: val }) });
+  },
+  adjustStat(e) {
+    const field = e.currentTarget.dataset.field;
+    const delta = parseInt(e.currentTarget.dataset.delta) || 0;
+    const map = {
+      hp: { key: 'playHP', label: 'HP', max: this.data.derived.hp || 99 },
+      san: { key: 'playSAN', label: 'SAN', max: this.data.maxSAN || 99 },
+      mp: { key: 'playMP', label: 'MP', max: this.data.maxMP || 99 },
+      luck: { key: 'playLuck', label: '幸运', max: 99 },
+    };
+    const cfg = map[field];
+    if (!cfg) return;
+    const oldVal = parseInt(this.data[cfg.key]) || 0;
+    const newVal = Math.max(0, Math.min(cfg.max, oldVal + delta));
+    if (newVal === oldVal) return;
+    const update = { [cfg.key]: newVal };
+    if (field === 'luck') {
+      const attrValues = { ...this.data.attrValues, luck: newVal };
+      update.attrValues = attrValues;
+      update.attrDisplay = makeAttrDisplay(attrValues);
+    }
+    if (field === 'san' && delta < 0) {
+      update.sessionSanLoss = (this.data.sessionSanLoss || 0) + Math.abs(delta);
+    }
+    this.setData({ ...update, ...this.getVitalState(update) });
+    this.addPlayLog({
+      type: delta < 0 ? 'harm' : 'heal',
+      title: `${cfg.label} ${delta > 0 ? '+' : ''}${delta}`,
+      meta: `${oldVal} → ${newVal}`,
+    });
+  },
+  resetSanDay() {
+    const start = parseInt(this.data.playSAN) || 0;
+    this.setData({ sanDayStart: start, sessionSanLoss: 0, ...this.getVitalState({ sanDayStart: start, sessionSanLoss: 0 }) });
+    this.addPlayLog({ type: 'note', title: '重置理智日累计', meta: `当日起始 SAN ${start}` });
+  },
+
+  openSanDialog() {
+    this.setData({ showSanDialog: true, sanRollResult: null });
+  },
+  closeSanDialog() {
+    this.setData({ showSanDialog: false, sanRollResult: null });
+  },
+  setSanFormula(e) {
+    const formula = e.currentTarget.dataset.formula;
+    this.setData({ sanFormula: formula, sanRollResult: null });
+  },
+  onSanFormulaInput(e) {
+    this.setData({ sanFormula: e.detail.value, sanRollResult: null });
+  },
+  parseSanFormula(formula) {
+    const raw = String(formula || '0/1D6').replace(/\s/g, '').toUpperCase();
+    const parts = raw.split('/');
+    return {
+      raw,
+      successLoss: parts[0] || '0',
+      failLoss: parts[1] || parts[0] || '0',
+    };
+  },
+  rollLossExpression(expr) {
+    const raw = String(expr || '0').replace(/\s/g, '').toUpperCase();
+    if (!raw || raw === '0' || raw === '-') return { total: 0, detail: '0' };
+    const terms = raw.replace(/-/g, '+-').split('+').filter(Boolean);
+    let total = 0;
+    const details = [];
+
+    for (const term of terms) {
+      const sign = term[0] === '-' ? -1 : 1;
+      const body = sign < 0 ? term.slice(1) : term;
+      const diceMatch = body.match(/^(\d*)D(\d+)$/);
+      if (diceMatch) {
+        const count = Math.min(parseInt(diceMatch[1] || '1'), 20);
+        const sides = Math.min(parseInt(diceMatch[2]), 100);
+        const rolls = [];
+        for (let i = 0; i < count; i++) rolls.push(this.roll(sides));
+        const subtotal = rolls.reduce((sum, n) => sum + n, 0);
+        total += sign * subtotal;
+        details.push(`${sign < 0 ? '-' : ''}${body}(${rolls.join(',')})`);
+      } else {
+        const n = parseInt(body);
+        if (!isNaN(n)) {
+          total += sign * n;
+          details.push(`${sign < 0 ? '-' : ''}${n}`);
+        }
+      }
+    }
+
+    return { total: Math.max(0, total), detail: details.join(' + ') || '0' };
+  },
+  rollSanCheck() {
+    const san = parseInt(this.data.playSAN) || 0;
+    const formula = this.parseSanFormula(this.data.sanFormula);
+    const roll = this.rollDice();
+    const level = this.getSuccessLevel(roll, san);
+    const success = ['critical', 'extreme', 'hard', 'normal'].includes(level.level);
+    const lossExpr = success ? formula.successLoss : formula.failLoss;
+    const lossRoll = this.rollLossExpression(lossExpr);
+    const oldSAN = san;
+    const newSAN = Math.max(0, Math.min(this.data.maxSAN || 99, oldSAN - lossRoll.total));
+    const sessionSanLoss = (this.data.sessionSanLoss || 0) + lossRoll.total;
+    const sanDayStart = this.data.sanDayStart || oldSAN;
+    const dailyLimit = Math.max(1, Math.ceil(sanDayStart / 5));
+    const result = {
+      roll,
+      success,
+      levelLabel: level.label,
+      loss: lossRoll.total,
+      lossDetail: lossRoll.detail,
+      oldSAN,
+      newSAN,
+      tempInsanity: lossRoll.total >= 5,
+      indefiniteRisk: sessionSanLoss >= dailyLimit,
+    };
+
+    this.setData({
+      playSAN: newSAN,
+      sessionSanLoss,
+      sanDayStart,
+      sanRollResult: result,
+      ...this.getVitalState({ playSAN: newSAN, sessionSanLoss, sanDayStart }),
+    });
+    this.addPlayLog({
+      type: lossRoll.total > 0 ? 'san' : 'roll',
+      title: `SAN 检定${success ? '成功' : '失败'}`,
+      meta: `投 ${roll} / ${oldSAN}，损失 ${lossRoll.total}，SAN ${oldSAN} → ${newSAN}`,
+    });
   },
 
   rollDice() {
@@ -1633,13 +1966,10 @@ Page({
     const level = this.getSuccessLevel(roll, skill);
     const extraDice = tensDice.length > 1 ? tensDice.slice(1).map(d => d * 10).join('、') : '';
     
-    // Mark skill as ticked on any success
-    if (['critical','extreme','hard','normal'].includes(level.level)) {
-      const ticked = { ...this.data.tickedSkills, [this.data.rollSkill.name]: true };
-      this.setData({ tickedSkills: ticked });
-    }
-    
-    this.setData({
+    const rollName = this.data.rollSkill.name;
+    const isSkillRoll = ALL_SKILLS.some(s => s.name === rollName);
+    const canTick = isSkillRoll && rollName !== '克苏鲁神话' && ['critical','extreme','hard','normal'].includes(level.level);
+    const update = {
       rollResult: {
         roll,
         tensDice,
@@ -1649,12 +1979,23 @@ Page({
         extraDice,
         bonus,
       }
-    });
+    };
+    if (canTick) update.tickedSkills = { ...this.data.tickedSkills, [rollName]: true };
+
+    this.setData(update);
+    if (this.data.playMode) {
+      this.addPlayLog({
+        type: level.level,
+        title: `${rollName} ${level.label}`,
+        meta: `投 ${roll} / 目标 ${skill}${bonus ? `，${bonus > 0 ? '奖励' : '惩罚'}骰 ${Math.abs(bonus)}` : ''}`,
+      });
+    }
   },
 
   setBonus(e) {
-    this.setData({ rollBonus: parseInt(e.currentTarget.dataset.bonus) || 0 });
-    this.doRoll();
+    this.setData({ rollBonus: parseInt(e.currentTarget.dataset.bonus) || 0 }, () => {
+      this.doRoll();
+    });
   },
 
   preventTouchMove() {},
@@ -1700,6 +2041,13 @@ Page({
       const result = { dice, total, time: new Date().toLocaleTimeString() };
       const history = [result, ...this.data.diceHistory].slice(0, 50);
       this.setData({ diceRolling: false, diceResult: result, diceHistory: history });
+      if (this.data.playMode) {
+        this.addPlayLog({
+          type: 'dice',
+          title: `通用掷骰 ${total}`,
+          meta: dice.map(r => `d${r.sides}=${r.result}`).join('，'),
+        });
+      }
     }, 700);
   },
 
@@ -1714,10 +2062,11 @@ Page({
     const specs = this.data.skillSpecs || {};
     const list = Object.keys(ticked).filter(k => ticked[k]).map(name => {
       const sk = ALL_SKILLS.find(s => s.name === name);
+      if (!sk || name === '克苏鲁神话') return null;
       const base = sk ? getSkillBase(sk.name, edu, dex, specs) : 0;
       const total = base + (this.data.occPts[name] || 0) + (this.data.intPts[name] || 0);
       return { name, value: total, removed: false };
-    });
+    }).filter(Boolean);
     
     this.setData({
       showGrowth: true,
@@ -1735,9 +2084,18 @@ Page({
     });
   },
   finishGrowth() {
-    this.applyCredit();
-    this.setData({ growthLocked: false });
-    this.closeGrowth();
+    this.applyCredit(() => {
+      const log = {
+        id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        time: this.formatLogTime(),
+        type: 'growth',
+        title: '幕间成长完成',
+        meta: `成长技能 ${this.data.growthResults.length} 项，SAN ${this.data.playSAN}，幸运 ${this.data.playLuck}`,
+      };
+      this.setData({ playLog: [log, ...(this.data.playLog || [])].slice(0, 80), growthLocked: false }, () => {
+        this.closeGrowth();
+      });
+    });
   },
   closeGrowth() {
     if (this.data.growthLocked) {
@@ -1745,34 +2103,13 @@ Page({
       return;
     }
     // Save all current state
-    const charData = {
-      attrValues: this.data.attrValues, attrRolls: this.data.attrRolls,
-      charInfo: this.data.charInfo, selectedOcc: this.data.selectedOcc,
-      occPts: this.data.occPts, intPts: this.data.intPts, skillSpecs: this.data.skillSpecs,
-      usedOccPoints: this.data.usedOccPoints, totalOccPoints: this.data.totalOccPoints,
-      usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
-      derived: this.data.derived, timestamp: Date.now(),
-      tickedSkills: this.data.tickedSkills,
-      playHP: this.data.playHP, playSAN: this.data.playSAN, playMP: this.data.playMP, playLuck: this.data.playLuck,
-      majorWound: this.data.majorWound, dying: this.data.dying,
-      charWeapons: this.data.charWeapons,
-      charBackstory: this.data.charBackstory, charGear: this.data.charGear,
-      charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
-      charAssets: this.data.charAssets,
-      completed: this.data.isCompleted,
-    };
-    try {
-      let list = wx.getStorageSync('coc7_characters') || [];
-      const loadIdx = this.data._loadIndex;
-      if (loadIdx !== undefined && loadIdx >= 0 && loadIdx < list.length) list[loadIdx] = charData;
-      else list.push(charData);
-      wx.setStorageSync('coc7_characters', list);
-      this.setData({ savedAt: Date.now() });
-    } catch (e) {}
+    this.persistCharacter(this.buildCharacterData(this.data.isCompleted));
     
     // Rebuild skill display with updated points
     const grouped = this.buildPreviewSkills(this.data.occPts, this.data.intPts, this.data.attrValues);
-    this.setData({ showGrowth: false, sortedSkillsByCat: grouped });
+    this.setData({ showGrowth: false, sortedSkillsByCat: grouped }, () => {
+      this.refreshPlayDashboard();
+    });
   },
   
   removeGrowthSkill(e) {
@@ -1787,6 +2124,8 @@ Page({
     const skills = this.data.growthSkills.filter(s => !s.removed);
     const results = [];
     let reached90 = false;
+    const intPts = { ...this.data.intPts };
+    const occPts = this.data.occPts || {};
     
     for (const sk of skills) {
       const roll = Math.floor(Math.random() * 100) + 1;
@@ -1797,18 +2136,23 @@ Page({
         newVal = Math.min(99, sk.value + gain);
         if (newVal >= 90) reached90 = true;
         // Update skill points (add to intPts)
-        const currentPts = (this.data.occPts[sk.name] || 0) + (this.data.intPts[sk.name] || 0);
-        const diff = newVal - (getSkillBase(sk.name, this.data.attrValues.edu || 50, this.data.attrValues.dex || 50) + currentPts);
+        const currentPts = (occPts[sk.name] || 0) + (intPts[sk.name] || 0);
+        const diff = newVal - (getSkillBase(sk.name, this.data.attrValues.edu || 50, this.data.attrValues.dex || 50, this.data.skillSpecs) + currentPts);
         if (diff > 0) {
-          const intPts = { ...this.data.intPts, [sk.name]: (this.data.intPts[sk.name] || 0) + diff };
-          this.setData({ intPts });
+          intPts[sk.name] = (intPts[sk.name] || 0) + diff;
         }
       }
       results.push({ name: sk.name, roll, success, gain, newVal });
     }
+    let usedOccPoints = 0;
+    let usedIntPoints = 0;
+    for (const sk of ALL_SKILLS) {
+      usedOccPoints += occPts[sk.name] || 0;
+      usedIntPoints += intPts[sk.name] || 0;
+    }
     
     // Clear ticked and lock
-    this.setData({ tickedSkills: {}, growthLocked: true, growthPhase: 1, growthResults: results, growthReached90: reached90 });
+    this.setData({ intPts, usedOccPoints, usedIntPoints, tickedSkills: {}, growthLocked: true, growthPhase: 1, growthResults: results, growthReached90: reached90 });
   },
   
   nextGrowthPhase() {
@@ -1832,7 +2176,14 @@ Page({
       bonus += d1 + d2;
     }
     const newSAN = Math.min(maxSAN, oldSAN + bonus);
-    this.setData({ playSAN: newSAN, growthPhase: 3, growthSANOld: oldSAN, growthSANBonus: bonus, growthSANMax: maxSAN });
+    this.setData({
+      playSAN: newSAN,
+      growthPhase: 3,
+      growthSANOld: oldSAN,
+      growthSANBonus: bonus,
+      growthSANMax: maxSAN,
+      ...this.getVitalState({ playSAN: newSAN, maxSAN }),
+    });
   },
   
   doLuckGrowth() {
@@ -1844,25 +2195,36 @@ Page({
       gain = Math.floor(Math.random() * 10) + 1;
       newLuck = Math.min(99, oldLuck + gain);
       const newAttr = { ...this.data.attrValues, luck: newLuck };
-      this.setData({ playLuck: newLuck, attrValues: newAttr, attrDisplay: makeAttrDisplay(newAttr) });
+      this.setData({ playLuck: newLuck, attrValues: newAttr, attrDisplay: makeAttrDisplay(newAttr), ...this.getVitalState({ playLuck: newLuck }) });
     }
     this.setData({ growthPhase: 4, growthLuckOld: oldLuck, growthLuckRoll: roll, growthLuckSuccess: success, growthLuckGain: gain, growthLuckNew: newLuck });
   },
   
-  applyCredit() {
+  applyCredit(callback) {
     const val = parseInt(this.data.growthCredInput) || 0;
     const edu = this.data.attrValues.edu || 50;
     const dex = this.data.attrValues.dex || 50;
     const base = getSkillBase('信用评级', edu, dex);
     const diff = val - base;
+    let intPts = { ...this.data.intPts };
+    let occPts = { ...this.data.occPts };
+    delete occPts['信用评级'];
     if (diff > 0) {
-      const intPts = { ...this.data.intPts, '信用评级': diff };
-      const occPts = { ...this.data.occPts };
-      delete occPts['信用评级'];
-      this.setData({ intPts, occPts });
+      intPts['信用评级'] = diff;
+    } else {
+      delete intPts['信用评级'];
     }
-    const grouped = this.buildPreviewSkills(this.data.occPts, this.data.intPts, this.data.attrValues);
-    this.setData({ sortedSkillsByCat: grouped, growthPhase: 5 });
+    const grouped = this.buildPreviewSkills(occPts, intPts, this.data.attrValues);
+    let usedOccPoints = 0;
+    let usedIntPoints = 0;
+    for (const sk of ALL_SKILLS) {
+      usedOccPoints += occPts[sk.name] || 0;
+      usedIntPoints += intPts[sk.name] || 0;
+    }
+    this.setData({ intPts, occPts, usedOccPoints, usedIntPoints, sortedSkillsByCat: grouped, growthPhase: 5 }, () => {
+      this.refreshSkillValidation();
+      if (callback) callback();
+    });
   },
   
   onGrowthSANInput(e) { this.setData({ growthSANInput: parseInt(e.detail.value) || 0 }); },
@@ -1873,6 +2235,8 @@ Page({
       step: 0, playMode: false, isCompleted: false, overrideLimits: false,
       selectedOcc: null, occPts: {}, intPts: {}, skillSpecs: {},
       selectedOptSkills: {}, occOptGroups: [], occFixedSkills: [], occSpecRequired: [], occSpecMissing: [],
+      skillValidation: { warnings: [], crValue: 0, crRange: '', crState: 'neutral', crHint: '', occRemain: 0, intRemain: 0 },
+      showSanDialog: false, sanRollResult: null,
     });
     this.loadSavedList();
   },

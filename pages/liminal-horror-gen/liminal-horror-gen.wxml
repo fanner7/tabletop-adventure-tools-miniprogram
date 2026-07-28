@@ -1,75 +1,282 @@
-<view class="container theme-{{theme}}">
-  <view class="header">
-    <text class="h1">阈限恐怖 调查员生成器</text>
-  </view>
+<!-- pages/liminal-horror-gen/liminal-horror-gen.wxml — 阈限恐怖 Liminal Horror -->
+<view class="lh-container theme-{{theme}}">
 
-  <button id="generateBtn" class="generator-button" bindtap="generateCharacter">重新生成</button>
+  <!-- ===== STEP 0: 角色列表 ===== -->
+  <block wx:if="{{step === 0}}">
+    <view class="header">
+      <text class="header-title">🌑 阈限恐怖 调查员</text>
+      <text class="header-subtitle">Liminal Horror — Character Generator & Play Kit</text>
+    </view>
+    <button class="btn btn-primary" bindtap="startNew">➕ 创建新调查员</button>
+    <button class="btn-import" bindtap="importCharacter">📥 从剪贴板导入角色</button>
+    <view class="char-list" wx:if="{{characters.length > 0}}">
+      <text class="section-title">📂 已保存的调查员</text>
+      <view class="char-item" wx:for="{{characters}}" wx:for-item="ch" wx:key="id" bindtap="openChar" data-index="{{index}}">
+        <view class="char-item-info">
+          <view class="char-item-head">
+            <text class="char-item-name">{{ch.name || '未命名'}}</text>
+            <text class="char-item-time">{{ch._time}}</text>
+          </view>
+          <text class="char-item-meta">{{ch.background}} · HP {{ch.hp}}/{{ch.hpMax}}</text>
+        </view>
+        <text class="char-item-del" catchtap="deleteChar" data-index="{{index}}">✕</text>
+      </view>
+    </view>
+    <view class="empty-hint" wx:if="{{characters.length === 0}}">
+      <text>暂无角色，点击上方按钮创建</text>
+    </view>
+    <view class="lh-attribution">
+      <text>Liminal Horror © Goblin Archives · 中文翻译 ZzNoah</text>
+    </view>
+  </block>
 
-  <view class="character-sheet" id="character-sheet">
-    <view wx:if="{{generated}}" class="sheet-content">
-      <text class="section-title">核心属性</text>
-      <view class="section-grid">
-        <view class="stat-block">
-          <text class="stat-label">力量</text>
-          <text class="stat-value">{{strength}}</text>
-        </view>
-        <view class="stat-block">
-          <text class="stat-label">敏捷</text>
-          <text class="stat-value">{{agility}}</text>
-        </view>
-        <view class="stat-block">
-          <text class="stat-label">意志</text>
-          <text class="stat-value">{{will}}</text>
+  <!-- ===== STEP 1: 角色卡 ===== -->
+  <block wx:if="{{step === 1 && char}}">
+    <view class="play-header">
+      <text class="back-btn" bindtap="backToList">← 返回</text>
+      <input class="play-name-input" value="{{char.name}}" bindinput="onNameInput" placeholder="调查员姓名…" maxlength="20" />
+      <text class="play-save" bindtap="saveChar">💾</text>
+    </view>
+
+    <!-- ===== 属性卡片 ===== -->
+    <view class="card attr-card">
+      <view class="attr-mini str" bindtap="doCheck" data-attr="strength">
+        <text class="am-val">{{char.strength}}<text class="am-max">/{{char.strengthMax}}</text></text>
+        <text class="am-label">力量 STR</text>
+        <view class="am-btns">
+          <text class="am-pm" catchtap="statDelta" data-field="strength" data-delta="-1">−</text>
+          <text class="am-pm" catchtap="statDelta" data-field="strength" data-delta="1">+</text>
         </view>
       </view>
-      <view class="section-grid" style="margin-top: 30rpx;">
-        <view class="stat-block">
-          <text class="stat-label">耐久度 (HP)</text>
-          <text class="stat-value">{{hp}}</text>
-        </view>
-        <view class="stat-block">
-          <text class="stat-label">现金</text>
-          <text class="stat-value">¥{{cash}}</text>
+      <view class="attr-mini agi" bindtap="doCheck" data-attr="agility">
+        <text class="am-val">{{char.agility}}<text class="am-max">/{{char.agilityMax}}</text></text>
+        <text class="am-label">敏捷 AGI</text>
+        <view class="am-btns">
+          <text class="am-pm" catchtap="statDelta" data-field="agility" data-delta="-1">−</text>
+          <text class="am-pm" catchtap="statDelta" data-field="agility" data-delta="1">+</text>
         </view>
       </view>
-
-      <text class="section-title">初始信息</text>
-      <view class="section">
-        <view class="info-block">
-          <text class="info-label">出身:</text>
-          <text class="info-text">{{backgroundString}}</text>
-        </view>
-        <view class="info-block">
-          <text class="info-label">固定装备:</text>
-          <text class="info-text">智能手机</text>
-        </view>
-      </view>
-
-      <text class="section-title">调查员细节</text>
-      <view class="section">
-        <view class="info-block">
-          <text class="info-label">外观:</text>
-          <text class="info-text">{{appearance}}</text>
-        </view>
-        <view class="info-block">
-          <text class="info-label">特质:</text>
-          <text class="info-text">体格[{{traits.physique}}], 面容[{{traits.face}}], 言谈[{{traits.speech}}], 美德[{{traits.virtue}}], 缺陷[{{traits.vice}}], 厄运[{{traits.misfortune}}]</text>
-        </view>
-        <view class="info-block">
-          <text class="info-label">深渊回眸:</text>
-          <text class="info-text">{{firstEncounter}}</text>
-        </view>
-        <view class="info-block">
-          <text class="info-label">意识形态:</text>
-          <text class="info-text">{{ideology}}</text>
+      <view class="attr-mini wil" bindtap="doCheck" data-attr="will">
+        <text class="am-val">{{char.will}}<text class="am-max">/{{char.willMax}}</text></text>
+        <text class="am-label">意志 WIL</text>
+        <view class="am-btns">
+          <text class="am-pm" catchtap="statDelta" data-field="will" data-delta="-1">−</text>
+          <text class="am-pm" catchtap="statDelta" data-field="will" data-delta="1">+</text>
         </view>
       </view>
     </view>
+
+    <!-- ===== HP / 护甲 / 稳定 / 幸运 ===== -->
+    <view class="card hp-card-row">
+      <view class="hp-block">
+        <text class="hpl">耐久 HP</text>
+        <text class="hpv">{{char.hp}} / {{char.hpMax}}</text>
+        <view class="am-btns">
+          <text class="am-pm" bindtap="statDelta" data-field="hp" data-delta="-1">−</text>
+          <text class="am-pm" bindtap="statDelta" data-field="hp" data-delta="1">+</text>
+        </view>
+      </view>
+      <view class="ag-block">
+        <view class="ag-item">
+          <text class="agl">护甲</text>
+          <input class="ag-inp" type="number" value="{{char.armor}}" bindinput="onArmorInput" />
+        </view>
+        <view class="ag-item">
+          <text class="agl">稳定</text>
+          <input class="ag-inp" type="number" value="{{char.stability}}" bindinput="onStabilityInput" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 幸运 + 金钱 -->
+    <view class="card hp-card-row">
+      <view class="hp-block luck-block" bindtap="doCheck" data-attr="luck">
+        <text class="hpl">🍀 幸运</text>
+        <text class="hpv luck-v">{{char.luck}} / {{char.luckMax}}</text>
+        <view class="am-btns">
+          <text class="am-pm" catchtap="statDelta" data-field="luck" data-delta="-1">−</text>
+          <text class="am-pm" catchtap="statDelta" data-field="luck" data-delta="1">+</text>
+        </view>
+      </view>
+      <view class="ag-block">
+        <view class="ag-item coins-row">
+          <text class="coin-label">¥</text>
+          <input class="coin-inp big" type="number" value="{{char.money}}" bindinput="onMoneyInput" />
+        </view>
+    </view>
+    </view>
+
+    <!-- ===== 状态 ===== -->
+    <view class="card">
+      <text class="card-title">⚠ 状态</text>
+      <view class="cond-row">
+        <view class="cond-chip {{char.conditions.hungry ? 'on' : ''}}" bindtap="toggleCondition" data-key="hungry"><text>🍞 饥饿</text></view>
+        <view class="cond-chip {{char.conditions.thirsty ? 'on' : ''}}" bindtap="toggleCondition" data-key="thirsty"><text>💧 干渴</text></view>
+        <view class="cond-chip {{char.conditions.fatigued ? 'on' : ''}}" bindtap="toggleCondition" data-key="fatigued"><text>😴 疲惫</text></view>
+        <view class="cond-chip {{char.conditions.scared ? 'on' : ''}}" bindtap="toggleCondition" data-key="scared"><text>😱 惊恐</text></view>
+        <view class="cond-chip {{char.conditions.deprived ? 'on' : ''}}" bindtap="toggleCondition" data-key="deprived"><text>🚫 匮乏</text></view>
+        <view class="cond-chip {{char.conditions.wounded ? 'on' : ''}}" bindtap="toggleCondition" data-key="wounded"><text>🩹 创伤</text></view>
+        <view class="cond-chip {{char.conditions.poisoned ? 'on' : ''}}" bindtap="toggleCondition" data-key="poisoned"><text>☠️ 中毒</text></view>
+        <view class="cond-chip {{char.conditions.depleted ? 'on' : ''}}" bindtap="toggleCondition" data-key="depleted"><text>🌀 衰竭</text></view>
+        <view class="cond-chip {{char.conditions.weary ? 'on' : ''}}" bindtap="toggleCondition" data-key="weary"><text>💀 疲乏</text></view>
+      </view>
+    </view>
+
+    <!-- ===== 背包 ===== -->
+    <view class="card">
+      <view class="inv-head">
+        <text class="card-title">背包 {{invUsed}}/10</text>
+        <text class="card-title" style="font-weight:normal;font-size:22rpx;color:#888;" wx:if="{{invUsed > 10}}">⚠ 超载</text>
+      </view>
+      <view class="inv-slot" wx:for="{{char.inventory}}" wx:for-index="i" wx:key="i">
+        <text class="inv-idx">{{i+1}}</text>
+        <input class="inv-input" value="{{item}}" bindinput="onInvInput" data-index="{{i}}" placeholder="空" />
+        <text class="inv-del" catchtap="deleteInvItem" data-index="{{i}}">✕</text>
+      </view>
+      <view class="inv-actions">
+        <view class="btn-fatigue-lg" bindtap="addBulkItem">+ 笨重物品（占 2 栏）</view>
+      </view>
+    </view>
+
+    <!-- ===== 掷骰 ===== -->
+    <view class="card">
+      <text class="card-title">掷骰</text>
+      <!-- 骰子选择 -->
+      <view class="dice-rolling-hint" wx:if="{{diceRolling}}"><text>投掷中…</text></view>
+      <view class="dice-result-highlight" wx:if="{{diceResult}}">
+        <text class="drh-total">{{diceResult.total}}</text>
+        <view class="drh-dice">
+          <text class="drh-chip" wx:for="{{diceResult.dice}}" wx:for-item="r" wx:key="index">d{{r.sides}} → {{r.result}}</text>
+        </view>
+      </view>
+      <view class="dice-row">
+        <view class="dice-btn-wrap" wx:for="{{[4,6,8,10,12,20,100]}}" wx:for-item="d" wx:key="d">
+          <text class="dice-btn {{diceSelected[d] ? 'sel' : ''}}" bindtap="selectDice" bindlongpress="deselectDice" data-d="{{d}}">d{{d}}</text>
+          <text class="dice-badge" wx:if="{{diceSelected[d]}}">{{diceSelected[d]}}</text>
+        </view>
+      </view>
+      <view class="dice-actions">
+        <button class="btn-roll {{diceRolling ? 'rolling' : ''}}" bindtap="rollSelected" disabled="{{diceRolling}}">{{diceRolling ? '...' : '投掷'}}</button>
+        <button class="btn-clear" bindtap="clearDice">清除</button>
+      </view>
+      <view class="dice-log" wx:if="{{diceHistory.length > 0}}">
+        <view class="dl-head">
+          <text class="dl-title">历史</text>
+          <text class="dl-clear" bindtap="clearHistory">清空</text>
+        </view>
+        <text class="dl-item" wx:for="{{diceHistory}}" wx:for-item="h" wx:key="index">{{h.total}} <text class="dl-detail" wx:for="{{h.dice}}" wx:for-item="r" wx:key="idx">d{{r.sides}}({{r.result}}) </text><text class="dl-time">{{h.time}}</text></text>
+      </view>
+    </view>
+
+    <!-- ===== 细节 ===== -->
+    <view class="card">
+      <text class="card-title">📝 调查员细节</text>
+      <view class="detail-row"><text class="dlbl">出身</text><text class="dval">{{char.background}}</text></view>
+      <view class="detail-row"><text class="dlbl">外观</text><text class="dval">{{char.details.appearance}}</text></view>
+      <view class="detail-row"><text class="dlbl">深渊回眸</text><text class="dval">{{char.details.firstEncounter}}</text></view>
+      <view class="detail-row"><text class="dlbl">意识形态</text><text class="dval">{{char.details.ideology}}</text></view>
+      <view class="detail-row">
+        <text class="dlbl">特质</text>
+        <text class="dval">体格「{{char.details.traits.physique}}」面容「{{char.details.traits.face}}」言谈「{{char.details.traits.speech}}」美德「{{char.details.traits.virtue}}」缺陷「{{char.details.traits.vice}}」厄运「{{char.details.traits.misfortune}}」</text>
+      </view>
+    </view>
+
+    <!-- ===== 笔记 ===== -->
+    <view class="card">
+      <view class="notes-head">
+        <text class="card-title" style="margin-bottom:0;">笔记</text>
+        <text class="notes-toggle" bindtap="toggleNotes" wx:if="{{notesExpandable}}">{{notesExpanded ? '收起' : '展开'}}</text>
+      </view>
+      <textarea class="notes-area {{notesExpanded ? 'expanded' : ''}}" value="{{char.notes}}" bindinput="onNotesInput" placeholder="记录线索、故事…" maxlength="-1" />
+    </view>
+
+    <!-- 底部按钮 -->
+    <view class="bottom-btns">
+      <button class="btn btn-primary" style="flex:1;margin:0;" bindtap="saveChar">保存角色</button>
+      <button class="btn-subtle" style="flex:1;margin:0;" bindtap="openShop">商店</button>
+      <button class="btn-subtle" style="flex:1;margin:0;" bindtap="toggleExportDialog">导出</button>
+    </view>
+  </block>
+
+  <!-- ===== 新建角色命名弹窗 ===== -->
+  <view class="dialog-overlay {{showNameDialog ? 'active' : ''}}" bindtap="cancelNewChar" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showNameDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">新建调查员</text>
+    <view class="name-dialog-body">
+      <view class="module-tabs">
+        <view class="module-tab {{activeModule === key ? 'on' : ''}}" wx:for="{{['core','bloom']}}" wx:for-item="key" wx:key="*this" bindtap="switchModule" data-key="{{key}}">
+          <text>{{key === 'core' ? '原版' : '繁孽'}}</text>
+        </view>
+      </view>
+      <input class="name-dialog-input" value="{{newCharName}}" bindinput="onNewNameInput" placeholder="输入姓名…" maxlength="20" focus="{{showNameDialog}}" />
+      <view class="name-dialog-btns">
+        <view class="name-pick-btn male" bindtap="pickMaleName"><text>🎲 随机男名</text></view>
+        <view class="name-pick-btn female" bindtap="pickFemaleName"><text>🎲 随机女名</text></view>
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="cancelNewChar">取消</button>
+      <button class="dialog-btn confirm" bindtap="confirmNewChar">创建</button>
+    </view>
   </view>
 
-  <view class="json-export-area">
-    <text class="section-title">分享角色数据 (JSON)</text>
-    <textarea class="json-textarea" value="{{jsonOutput}}" placeholder="点击上方按钮生成角色数据..." disabled="true" auto-height></textarea>
-    <button class="copy-button" bindtap="copyJson">复制JSON</button>
+  <!-- ===== 豁免弹窗 ===== -->
+  <view class="dialog-overlay {{showCheck ? 'active' : ''}}" bindtap="closeCheck"></view>
+  <view class="check-popup {{showCheck ? 'active' : ''}}">
+    <text class="check-title">{{checkLabel}} 豁免</text>
+    <text class="check-target">d20 ≤ {{checkTarget}}</text>
+    <text class="check-roll">🎲 {{checkRoll}}</text>
+    <text class="check-result {{checkSuccess ? 'success' : 'fail'}}">{{checkSuccess ? '✅ 豁免成功' : '❌ 豁免失败'}}</text>
+    <button class="btn btn-primary" bindtap="closeCheck">确定</button>
   </view>
+
+  <!-- ===== 商店弹窗 ===== -->
+  <view class="dialog-overlay {{showShop ? 'active' : ''}}" bindtap="closeShop" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet shop-dialog {{showShop ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">🏪 装备商店</text>
+    <view class="shop-search-bar">
+      <input class="shop-search-input" value="{{shopSearch}}" bindinput="onShopSearch" placeholder="搜索装备…" />
+    </view>
+    <scroll-view class="shop-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+      <block wx:for="{{shopCats}}" wx:for-item="cat" wx:key="cat">
+        <text class="shop-cat-title">{{cat.cat}}（{{cat.count}}）</text>
+        <view class="shop-row" wx:for="{{cat.items}}" wx:for-item="s" wx:key="name">
+          <view class="shop-info">
+            <text class="shop-name">{{s.name}}</text>
+            <text class="shop-desc">
+              <text wx:if="{{s.desc}}" class="shop-tag">{{s.desc}}</text>
+              <text wx:if="{{s.bulky}}" class="shop-tag shop-tag-bulky">笨重</text>
+            </text>
+          </view>
+          <text class="shop-price">¥{{s.price}}</text>
+          <text class="shop-add" catchtap="addShopItem" data-index="{{s._idx}}">+</text>
+        </view>
+      </block>
+      <view class="shop-empty" wx:if="{{shopCats.length === 0}}">无匹配装备</view>
+    </scroll-view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeShop">关闭</button>
+    </view>
+  </view>
+
+  <!-- ===== 导出弹窗 ===== -->
+  <view class="dialog-overlay {{showExportDialog ? 'active' : ''}}" bindtap="toggleExportDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showExportDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">导出角色</text>
+    <view class="export-options">
+      <view class="export-option" bindtap="doExportClipboard">
+        <view class="export-option-text">
+          <text class="export-option-title">导出到剪贴板</text>
+          <text class="export-option-desc">复制完整角色数据（JSON），可通过「导入」按钮恢复</text>
+        </view>
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="toggleExportDialog">取消</button>
+    </view>
+  </view>
+
 </view>

@@ -1,4 +1,4 @@
-// pages/cairn-gen/cairn-gen.js — 石冢 Cairn 角色生成器 & 游玩工具
+// pages/cairn-gen/cairn-gen.js — 石冢 Cairn 冒险者工具
 const STORAGE_KEY = 'cairn_characters';
 
 // 拼音首字母映射表 — 覆盖100道法术名称中所有用字

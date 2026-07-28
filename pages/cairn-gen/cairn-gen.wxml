@@ -1,11 +1,11 @@
-<!-- pages/cairn-gen/cairn-gen.wxml — 石冢 Cairn 角色生成器 & 游玩工具 -->
+<!-- pages/cairn-gen/cairn-gen.wxml — 石冢 Cairn 冒险者工具 -->
 <view class="cairn-container theme-{{theme}}">
 
   <!-- ===== STEP 0: 角色列表 ===== -->
   <block wx:if="{{step === 0}}">
     <view class="header">
-      <text class="header-title">⛰️ 石冢角色生成器</text>
-      <text class="header-subtitle">Cairn TTRPG — Character Generator & Play Kit</text>
+      <text class="header-title">⛰️ 石冢 冒险者工具</text>
+      <text class="header-subtitle">Cairn TTRPG — Adventurer Kit</text>
     </view>
     <button class="btn btn-primary" bindtap="startNew">➕ 创建新角色</button>
     <button class="btn-import" bindtap="importCharacter">📥 从剪贴板导入角色</button>
