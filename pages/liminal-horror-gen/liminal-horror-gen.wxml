@@ -66,44 +66,38 @@
       </view>
     </view>
 
-    <!-- ===== HP / 护甲 / 稳定 / 幸运 ===== -->
-    <view class="card hp-card-row">
-      <view class="hp-block">
-        <text class="hpl">耐久 HP</text>
-        <text class="hpv">{{char.hp}} / {{char.hpMax}}</text>
+    <!-- ===== HP / 幸运 / 数值 ===== -->
+    <view class="card attr-card">
+      <view class="attr-mini hp-mini">
+        <text class="am-val">{{char.hp}}<text class="am-max">/{{char.hpMax}}</text></text>
+        <text class="am-label">耐久 HP</text>
         <view class="am-btns">
-          <text class="am-pm" bindtap="statDelta" data-field="hp" data-delta="-1">−</text>
-          <text class="am-pm" bindtap="statDelta" data-field="hp" data-delta="1">+</text>
+          <text class="am-pm" catchtap="statDelta" data-field="hp" data-delta="-1">−</text>
+          <text class="am-pm" catchtap="statDelta" data-field="hp" data-delta="1">+</text>
         </view>
       </view>
-      <view class="ag-block">
-        <view class="ag-item">
-          <text class="agl">护甲</text>
-          <input class="ag-inp" type="number" value="{{char.armor}}" bindinput="onArmorInput" />
-        </view>
-        <view class="ag-item">
-          <text class="agl">稳定</text>
-          <input class="ag-inp" type="number" value="{{char.stability}}" bindinput="onStabilityInput" />
-        </view>
-      </view>
-    </view>
-
-    <!-- 幸运 + 金钱 -->
-    <view class="card hp-card-row">
-      <view class="hp-block luck-block" bindtap="doCheck" data-attr="luck">
-        <text class="hpl">🍀 幸运</text>
-        <text class="hpv luck-v">{{char.luck}} / {{char.luckMax}}</text>
+      <view class="attr-mini luck-mini" bindtap="doCheck" data-attr="luck">
+        <text class="am-val">{{char.luck}}<text class="am-max">/{{char.luckMax}}</text></text>
+        <text class="am-label">幸运</text>
         <view class="am-btns">
           <text class="am-pm" catchtap="statDelta" data-field="luck" data-delta="-1">−</text>
           <text class="am-pm" catchtap="statDelta" data-field="luck" data-delta="1">+</text>
         </view>
       </view>
-      <view class="ag-block">
-        <view class="ag-item coins-row">
-          <text class="coin-label">¥</text>
-          <input class="coin-inp big" type="number" value="{{char.money}}" bindinput="onMoneyInput" />
+      <view class="attr-mini stat-mini">
+        <view class="stat-card">
+          <text class="stat-card-label">护甲</text>
+          <input class="stat-card-inp" type="number" value="{{char.armor}}" bindinput="onArmorInput" />
         </view>
-    </view>
+        <view class="stat-card">
+          <text class="stat-card-label">稳定</text>
+          <input class="stat-card-inp" type="number" value="{{char.stability}}" bindinput="onStabilityInput" />
+        </view>
+        <view class="stat-card">
+          <text class="stat-card-label">¥</text>
+          <input class="stat-card-inp wide" type="number" value="{{char.money}}" bindinput="onMoneyInput" />
+        </view>
+      </view>
     </view>
 
     <!-- ===== 状态 ===== -->

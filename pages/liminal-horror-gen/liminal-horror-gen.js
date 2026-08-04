@@ -205,7 +205,11 @@ Page({
       ch._time = ts ? fmtTime(ts) : '';
     });
     // 写入存储前剥离临时字段
-    const clean = list.map(ch => { const { _time, ...rest } = ch; return rest; });
+    const clean = list.map(function(ch) {
+      var copy = {};
+      for (var k in ch) { if (k !== '_time') copy[k] = ch[k]; }
+      return copy;
+    });
     wx.setStorageSync(STORAGE_KEY, clean);
     this.setData({ characters: list });
   },
@@ -488,7 +492,7 @@ Page({
     const now = Date.now();
     if (now - this._lastLongpress < 400) return;
     const d = parseInt(e.currentTarget.dataset.d);
-    const sel = { ...this.data.diceSelected };
+    const sel = Object.assign({}, this.data.diceSelected);
     sel[d] = (sel[d] || 0) + 1;
     this.setData({ diceSelected: sel, diceResult: null });
   },
@@ -496,7 +500,7 @@ Page({
     if (this.data.diceRolling) return;
     this._lastLongpress = Date.now();
     const d = parseInt(e.currentTarget.dataset.d);
-    const sel = { ...this.data.diceSelected };
+    const sel = Object.assign({}, this.data.diceSelected);
     if (sel[d]) { sel[d]--; if (sel[d] <= 0) delete sel[d]; }
     this.setData({ diceSelected: sel, diceResult: null });
   },
@@ -517,7 +521,7 @@ Page({
     });
     setTimeout(() => {
       const result = { dice, total, time: new Date().toLocaleTimeString() };
-      const history = [result, ...this.data.diceHistory].slice(0, 50);
+      const history = [result].concat(this.data.diceHistory).slice(0, 50);
       this.setData({ diceRolling: false, diceResult: result, diceHistory: history });
     }, 700);
   },
@@ -525,7 +529,10 @@ Page({
   /* ========== 商店 ========== */
   _buildShopCats(items) {
     const cats = ['武器','护甲','工具','载具','杂物'];
-    const indexed = items.map((s, i) => ({ ...s, _idx: i }));
+    const indexed = items.map(function(s, i) {
+      var copy = {}; for (var k in s) copy[k] = s[k];
+      copy._idx = i; return copy;
+    });
     return cats.map(c => {
       const catItems = indexed.filter(s => s.cat === c);
       return { cat: c, count: catItems.length, items: catItems };

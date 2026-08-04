@@ -70,6 +70,17 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .coin-inp.big { font-size:32rpx; }
 .coin-label { font-size:18rpx; color:#666; font-weight:bold; }
 
+/* ===== HP / 幸运 / 数值 卡片 ===== */
+.attr-mini.hp-mini { background:#fdf5f5; border:1px solid #f0c0c0; }
+.attr-mini.hp-mini .am-val { color:#c0392b; }
+.attr-mini.luck-mini { background:#fffdf5; border:1px solid #f0e4b0; }
+.attr-mini.luck-mini .am-val { color:#8b6914; }
+.attr-mini.stat-mini { background:#f8f7f5; border:1px solid #e5e1d9; display:flex; flex-direction:column; justify-content:center; gap:4rpx; padding:6rpx; }
+.stat-card { display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid #e5e1d9; border-radius:5rpx; padding:4rpx 8rpx; }
+.stat-card-label { font-size:20rpx; color:#888; font-weight:bold; }
+.stat-card-inp { width:60rpx; height:32rpx; background:#fafafa; border:1px solid #e5e1d9; border-radius:4rpx; text-align:center; font-size:22rpx; font-weight:bold; color:#1a1a1a; }
+.stat-card-inp.wide { width:110rpx; }
+
 /* ===== 状态 ===== */
 .cond-row { display:flex; flex-wrap:wrap; gap:8rpx; }
 .cond-chip { padding:8rpx 16rpx; background:#f6f4f0; border:1px solid #e5e1d9; border-radius:16rpx; font-size:22rpx; color:#888; }
@@ -249,6 +260,13 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 
 .theme-dark .hp-block { background:#332525; }
 .theme-dark .luck-block { background:#2d281a; border-color:#5b4a1a; }
+
+.theme-dark .attr-mini.hp-mini { background:#332525; border-color:#5b3535; }
+.theme-dark .attr-mini.luck-mini { background:#2d281a; border-color:#5b4a1a; }
+.theme-dark .attr-mini.stat-mini { background:#243044; border-color:#3a4a62; }
+.theme-dark .stat-card { background:#1d2636; border-color:#3a4a62; }
+.theme-dark .stat-card-inp { background:#243044; border-color:#3a4a62; color:#e6edf7; }
+.theme-dark .stat-card-label { color:#aab6c8; }
 
 .theme-dark .ag-item,
 .theme-dark .btn-fatigue-lg,
