@@ -44,6 +44,7 @@ page {
 .btn-secondary { background: transparent; color: #6b4c2a; border: 2px solid #6b4c2a; }
 .btn-secondary:active { background: #f5f0e8; }
 .btn-half { width: calc(50% - 10rpx); display: inline-block; font-size: 28rpx; padding: 22rpx 0; }
+.btn-third { width: calc(33.33% - 11rpx); display: inline-block; font-size: 24rpx; padding: 22rpx 0; }
 
 /* 低调小按钮 — 导入/战斗轮专用 */
 .btn-subtle {
@@ -59,6 +60,7 @@ page {
 }
 .btn-subtle:active { background: #f0e8d8; }
 .btn-subtle.btn-half { padding: 14rpx 0; text-align: center; }
+.btn-subtle.btn-third { padding: 14rpx 0; text-align: center; }
 
 .import-buttons { display: flex; gap: 16rpx; margin-bottom: 16rpx; }
 
@@ -77,7 +79,15 @@ page {
 .task-info { flex: 1; }
 .task-name { font-size: 30rpx; font-weight: bold; color: #3b2e1e; display: block; }
 .task-meta { font-size: 24rpx; color: #8b7355; margin-top: 4rpx; display: block; }
+.task-actions { display: flex; align-items: center; gap: 4rpx; flex-shrink: 0; }
+.task-copy { font-size: 24rpx; color: #6b4c2a; padding: 8rpx 12rpx; }
 .task-delete { font-size: 40rpx; color: #c4b8a8; padding: 8rpx 12rpx; }
+.task-search { margin: 16rpx 0 4rpx; }
+.task-search-input {
+  width: 100%; height: 72rpx; box-sizing: border-box;
+  background: #faf8f4; border: 2px solid #d4c5a9; border-radius: 12rpx;
+  padding: 0 24rpx; font-size: 26rpx; color: #3b2e1e;
+}
 
 /* ===== 任务内顶栏 ===== */
 .task-header-bar {
@@ -119,7 +129,39 @@ page {
 .npc-card { border-left: 4rpx solid #c4b8a8; }
 .npc-card.hidden { opacity: 0.45; }
 .char-card.hidden { opacity: 0.45; }
-.npc-card-preview { font-size: 22rpx; color: #7a6b58; line-height: 1.5; display: block; margin-top: 8rpx; word-break: break-all; overflow-wrap: break-word; }
+
+/* NPC 卡片快捷统计（HP/MP 加减） */
+.npc-card-stats { display: flex; flex-wrap: wrap; gap: 18rpx; margin-top: 10rpx; }
+.npc-card-stat { display: flex; align-items: center; gap: 8rpx; }
+.npc-card-stat-label { font-size: 20rpx; color: #8b7355; font-weight: bold; }
+.npc-card-stat-btn {
+  width: 44rpx; height: 44rpx; line-height: 40rpx;
+  text-align: center; border-radius: 8rpx; font-size: 30rpx; font-weight: bold;
+  box-sizing: border-box;
+}
+.npc-card-stat-btn.plus { border: 2rpx solid #6b4c2a; color: #6b4c2a; background: #fdfaf4; }
+.npc-card-stat-btn.minus { border: 2rpx solid #c4b8a8; color: #8b7355; background: #faf8f4; }
+.npc-card-stat-btn-active { background: #f0e8d8; }
+.npc-card-stat-val { font-size: 28rpx; font-weight: bold; color: #3b2e1e; min-width: 48rpx; text-align: center; }
+.npc-card-stat-val.zero { color: #c0392b; }
+
+/* NPC 攻击方式 */
+.npc-card-attack {
+  font-size: 22rpx; color: #6b4c2a; display: flex; align-items: center;
+  margin-top: 8rpx; font-weight: bold; flex-wrap: wrap;
+}
+.npc-card-attack:active { opacity: 0.7; }
+.npc-card-attack-hint {
+  font-size: 20rpx; color: #fff; background: #6b4c2a;
+  border-radius: 10rpx; padding: 2rpx 10rpx; margin-left: 8rpx; font-weight: normal;
+}
+.npc-attack-line {
+  font-size: 24rpx; color: #6b4c2a; font-weight: bold;
+  background: #fdfaf4; border: 1.5px solid #d4c5a9; border-radius: 8rpx;
+  padding: 10rpx 14rpx; margin-bottom: 12rpx;
+  display: flex; align-items: center; flex-wrap: wrap;
+}
+.npc-attack-line:active { background: #f0e8d8; }
 
 /* 空状态 */
 .empty-hint { text-align: center; padding: 40rpx 0; color: #c4b8a8; font-size: 26rpx; }
@@ -242,10 +284,7 @@ page {
 .npc-stat-btn.plus { border-color: #6b4c2a; color: #6b4c2a; background: #fdfaf4; }
 .npc-stat-btn.minus { border-color: #c4b8a8; color: #8b7355; }
 
-/* ===== 战斗轮排序（内联） ===== */
-.combat-bar { margin-bottom: 16rpx; }
-.combat-bar .btn-subtle { width: 100%; box-sizing: border-box; text-align: center; }
-.combat-inline { margin-top: 8rpx; }
+/* ===== 战斗轮排序 ===== */
 .combat-tie-warn {
   background: #fff3cd;
   border: 1px solid #ffc107;
@@ -255,6 +294,9 @@ page {
 }
 .combat-tie-warn text { font-size: 22rpx; color: #856404; line-height: 1.4; }
 .combat-tags { display: flex; flex-wrap: wrap; gap: 8rpx; }
+.combat-toolbar { display: flex; gap: 10rpx; margin-bottom: 10rpx; }
+.combat-hint { font-size: 20rpx; color: #8b7355; margin-bottom: 10rpx; }
+.combat-hint text { line-height: 1.5; }
 .combat-tag {
   display: flex;
   align-items: center;
@@ -267,6 +309,15 @@ page {
 .combat-tag.player { background: #e8f0fe; color: #1a56b8; border: 1.5px solid #b8d4fe; }
 .combat-tag.npc { background: #fce4ec; color: #b71c1c; border: 1.5px solid #f8bbd0; }
 .combat-tag.tie { border-style: dashed; box-shadow: 0 0 0 2px #ffc107; }
+.combat-tag.current {
+  box-shadow: 0 0 0 4px #6b4c2a;
+  transform: scale(1.05);
+}
+.combat-tag.dead {
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+.combat-tag.dead .combat-tag-idx { background: #b0a090; }
 .combat-tag-idx {
   display: inline-flex;
   align-items: center;
@@ -350,11 +401,6 @@ page {
 /* 疯狂发作面板 */
 /* ================================================================== */
 
-/* 疯狂 Toggle 栏 */
-.madness-bar { margin-bottom: 16rpx; }
-.madness-bar .btn-subtle { width: 100%; box-sizing: border-box; text-align: center; }
-.madness-inline { margin-top: 10rpx; }
-
 /* 疯狂类型选择 */
 .madness-type-row { display: flex; gap: 16rpx; margin-bottom: 20rpx; }
 .madness-type-btn {
@@ -412,10 +458,6 @@ page {
 /* ================================================================== */
 
 /* 掷骰 Toggle 栏 */
-.dice-bar { margin-bottom: 16rpx; }
-.dice-bar .btn-subtle { width: 100%; box-sizing: border-box; text-align: center; }
-.dice-inline { margin-top: 10rpx; }
-
 /* 投掷中提示 */
 .dice-rolling-hint { text-align: center; padding: 20rpx 0; font-size: 28rpx; color: #8b7355; }
 
@@ -477,6 +519,85 @@ page {
 .dl-detail { font-size: 18rpx; color: #8b7355; }
 .dl-time { font-size: 18rpx; color: #c4b8a8; margin-left: 8rpx; }
 
+/* 百分骰奖励/惩罚模式行 */
+.dice100-row { display: flex; flex-wrap: wrap; gap: 8rpx; align-items: center; margin-top: 10rpx; }
+.dice100-label { font-size: 22rpx; color: #8b7355; font-weight: bold; margin-right: 4rpx; }
+.dice100-mode {
+  padding: 6rpx 12rpx; font-size: 20rpx; color: #7a6b58;
+  background: #faf8f4; border: 1px solid #d4c5a9; border-radius: 8rpx;
+}
+.dice100-mode:active { background: #f0e8d8; }
+.dice100-mode.on { background: #6b4c2a; color: #fff; border-color: #6b4c2a; }
+
+/* D100 结果子行（奖励/惩罚详情） */
+.drh-chip-line { display: block; text-align: center; }
+.drh-chip-sub { font-size: 18rpx; color: #8b7355; margin-top: 2rpx; }
+
+/* NPC 模板库按钮（并入导入行） */
+
+/* ================================================================== */
+/* 随机生成器 */
+/* ================================================================== */
+.random-btns { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.random-btn {
+  width: calc(50% - 6rpx);
+  box-sizing: border-box;
+  background: #fff;
+  border: 2px solid #d4c5a9;
+  border-radius: 14rpx;
+  padding: 20rpx 8rpx;
+  display: flex; flex-direction: column; align-items: center; gap: 6rpx;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.random-btn:active { background: #f0e8d8; }
+.random-btn-wide { width: 100%; }
+.random-btn-icon { font-size: 36rpx; line-height: 1; }
+.random-btn-name { font-size: 24rpx; color: #3b2e1e; font-weight: bold; }
+.random-result {
+  background: #fff; border: 2px solid #d4c5a9; border-radius: 14rpx;
+  padding: 20rpx; margin-top: 14rpx; box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+.random-result-type { font-size: 20rpx; color: #8b7355; display: block; margin-bottom: 6rpx; }
+.random-result-value { font-size: 26rpx; color: #3b2e1e; line-height: 1.6; display: block; font-weight: bold; }
+.random-npc-name { color: #6b4c2a; }
+.random-npc-data {
+  margin-top: 12rpx; background: #faf8f4; border-radius: 8rpx;
+  padding: 14rpx 16rpx; font-size: 24rpx; color: #3b2e1e; line-height: 1.7;
+}
+.random-npc-actions { display: flex; gap: 10rpx; margin-top: 14rpx; }
+
+/* NPC 模板库列表 */
+.tpl-cats { display: flex; flex-wrap: wrap; gap: 10rpx; }
+.tpl-cat {
+  padding: 8rpx 18rpx;
+  font-size: 24rpx; color: #7a6b58;
+  background: #faf8f4; border: 1.5px solid #d4c5a9; border-radius: 20rpx;
+}
+.tpl-cat.on { background: #6b4c2a; color: #fff; border-color: #6b4c2a; }
+.tpl-list { height: 44vh; }
+
+/* 词汇表列表 */
+.lex-list { height: 48vh; }
+.lex-item {
+  background: #faf8f4; border: 1.5px solid #e8e0d6; border-radius: 12rpx;
+  padding: 14rpx 18rpx; margin-bottom: 10rpx;
+}
+.lex-item:active { background: #f0e8d8; }
+.lex-w { font-size: 26rpx; font-weight: bold; color: #3b2e1e; display: block; }
+.lex-d { font-size: 22rpx; color: #7a6b58; line-height: 1.5; display: block; margin-top: 4rpx; }
+.tpl-item {
+  display: flex; align-items: center; gap: 16rpx;
+  background: #faf8f4; border: 1.5px solid #e8e0d6; border-radius: 12rpx;
+  padding: 16rpx; margin-bottom: 12rpx;
+}
+.tpl-item:active { background: #f0e8d8; }
+.tpl-icon { font-size: 40rpx; flex-shrink: 0; }
+.tpl-info { flex: 1; min-width: 0; }
+.tpl-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; display: block; }
+.tpl-stats { font-size: 22rpx; color: #8b7355; font-weight: normal; }
+.tpl-desc { font-size: 22rpx; color: #7a6b58; display: block; margin-top: 4rpx; }
+.tpl-add { font-size: 40rpx; color: #6b4c2a; flex-shrink: 0; }
+
 /* ================================================================== */
 /* 守密人工具区 */
 /* ================================================================== */
@@ -499,10 +620,6 @@ page {
 /* 任务导入导出 */
 /* ================================================================== */
 
-.task-io-bar { margin-bottom: 16rpx; }
-.task-io-bar .btn-subtle { width: 100%; box-sizing: border-box; text-align: center; }
-.task-io-inline { margin-top: 10rpx; }
-
 .task-io-options { display: flex; flex-direction: column; gap: 12rpx; }
 .task-io-option {
   display: flex; align-items: center; gap: 16rpx;
@@ -514,6 +631,72 @@ page {
 .task-io-text { flex: 1; min-width: 0; }
 .task-io-title { font-size: 26rpx; font-weight: bold; color: #3b2e1e; display: block; margin-bottom: 4rpx; }
 .task-io-desc { font-size: 22rpx; color: #8b7355; line-height: 1.4; display: block; }
+
+/* 导入格式样例 */
+.io-sample-title { font-size: 24rpx; font-weight: bold; color: #3b2e1e; display: block; margin: 20rpx 0 8rpx; }
+.io-sample {
+  background: #faf8f4; border: 1.5px solid #d4c5a9; border-radius: 10rpx;
+  padding: 14rpx 16rpx; margin-bottom: 12rpx;
+  font-size: 22rpx; color: #3b2e1e; line-height: 1.7;
+}
+
+/* ===== 检定助手 ===== */
+.check-info {
+  background: #faf8f4; border: 2px solid #d4c5a9; border-radius: 14rpx;
+  padding: 20rpx; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14rpx;
+}
+.check-skill { font-size: 30rpx; font-weight: bold; color: #3b2e1e; flex: 1; }
+.check-total { font-size: 22rpx; color: #fff; background: #6b4c2a; border-radius: 16rpx; padding: 4rpx 14rpx; }
+.check-mode-row { display: flex; gap: 10rpx; margin-top: 4rpx; }
+.check-result {
+  margin-top: 18rpx; text-align: center;
+  background: #3b2e1e; border-radius: 16rpx; padding: 24rpx 20rpx;
+}
+.check-d100 { font-size: 96rpx; font-weight: bold; color: #f5f0e8; display: block; line-height: 1.1; }
+.check-level { display: inline-block; margin-top: 8rpx; font-size: 34rpx; font-weight: bold; padding: 6rpx 26rpx; border-radius: 20rpx; }
+.check-level.critical { background: #f1c40f; color: #3b2e1e; }
+.check-level.extreme { background: #2980b9; color: #fff; }
+.check-level.hard { background: #16a085; color: #fff; }
+.check-level.success { background: #27ae60; color: #fff; }
+.check-level.fail { background: #7f8c8d; color: #fff; }
+.check-level.fumble { background: #c0392b; color: #fff; }
+.check-detail { font-size: 20rpx; color: #c4b8a8; display: block; margin-top: 8rpx; }
+.check-again {
+  display: inline-block; margin-top: 16rpx; font-size: 24rpx; color: #d5a95c;
+  border: 1.5px solid #d5a95c; border-radius: 12rpx; padding: 8rpx 24rpx;
+}
+.check-again:active { background: rgba(255,255,255,0.1); }
+
+/* 检定伤害区 */
+.check-damage { margin-top: 14rpx; text-align: center; }
+.check-damage-btn {
+  display: inline-block; font-size: 28rpx; font-weight: bold; color: #fff;
+  background: #c0392b; border-radius: 14rpx; padding: 14rpx 40rpx;
+}
+.check-damage-btn:active { opacity: 0.8; }
+.check-damage-result {
+  margin-top: 12rpx; background: #faf8f4; border: 1.5px solid #d4c5a9;
+  border-radius: 12rpx; padding: 16rpx;
+}
+.cd-expr { font-size: 22rpx; color: #8b7355; display: block; }
+.cd-total { font-size: 56rpx; font-weight: bold; color: #c0392b; display: block; line-height: 1.2; }
+.cd-parts { font-size: 20rpx; color: #7a6b58; display: block; }
+
+/* ===== 守密人工具宫格 ===== */
+.tools-grid { display: flex; flex-wrap: wrap; gap: 14rpx; }
+.tool-card {
+  width: calc(33.33% - 10rpx);
+  box-sizing: border-box;
+  background: #fff;
+  border: 2px solid #d4c5a9;
+  border-radius: 14rpx;
+  padding: 22rpx 8rpx;
+  display: flex; flex-direction: column; align-items: center; gap: 8rpx;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.tool-card:active { background: #f0e8d8; }
+.tool-card-icon { font-size: 40rpx; line-height: 1; }
+.tool-card-name { font-size: 24rpx; color: #3b2e1e; font-weight: bold; }
 
 .theme-dark.keeper-container {
   background: #111827;
@@ -559,7 +742,6 @@ page {
 .theme-dark .task-meta,
 .theme-dark .task-header-count,
 .theme-dark .char-card-occ,
-.theme-dark .npc-card-preview,
 .theme-dark .empty-hint,
 .theme-dark .char-sub,
 .theme-dark .char-attr-label,
@@ -756,4 +938,177 @@ page {
 
 .theme-dark .dice-btn.sel {
   color: #111827;
+}
+
+/* ===== 新功能暗色适配：百分骰模式 / 随机生成器 / NPC 模板库 ===== */
+.theme-dark .dice100-mode {
+  background: #1a2233;
+  border-color: #3a4a62;
+  color: #aab6c8;
+}
+.theme-dark .dice100-mode:active { background: #243044; }
+.theme-dark .dice100-mode.on {
+  background: #d5a95c;
+  color: #111827;
+  border-color: #d5a95c;
+}
+.theme-dark .dice100-label,
+.theme-dark .drh-chip-sub {
+  color: #8fa0b8;
+}
+
+.theme-dark .random-result {
+  background: #243044;
+  border-color: #d5a95c;
+}
+.theme-dark .random-result-type,
+.theme-dark .tpl-stats,
+.theme-dark .tpl-desc {
+  color: #8fa0b8;
+}
+.theme-dark .random-result-value,
+.theme-dark .random-npc-data,
+.theme-dark .tpl-name {
+  color: #f4efe4;
+}
+.theme-dark .random-npc-name,
+.theme-dark .tpl-add {
+  color: #d5a95c;
+}
+.theme-dark .random-npc-data {
+  background: #1a2233;
+}
+
+.theme-dark .tpl-item {
+  background: #1a2233;
+  border-color: #2f3b50;
+}
+.theme-dark .tpl-item:active { background: #243044; }
+
+/* NPC 模板分类 tab（暗色） */
+.theme-dark .tpl-cat {
+  background: #1a2233;
+  border-color: #3a4a62;
+  color: #aab6c8;
+}
+.theme-dark .tpl-cat.on {
+  background: #d5a95c;
+  border-color: #d5a95c;
+  color: #111827;
+}
+
+/* ===== 检定助手 / 战斗轮推进 / 状态归零（暗色） ===== */
+.theme-dark .check-info {
+  background: #1a2233;
+  border-color: #3a4a62;
+}
+.theme-dark .check-skill { color: #f4efe4; }
+.theme-dark .check-total { background: #d5a95c; color: #111827; }
+.theme-dark .check-result { background: #161d2a; border: 1rpx solid #3a4a62; }
+.theme-dark .combat-hint { color: #8fa0b8; }
+.theme-dark .combat-tag.current {
+  box-shadow: 0 0 0 4px #d5a95c;
+}
+.theme-dark .npc-card-stat-val.zero { color: #ff7b72; }
+.theme-dark .npc-card-attack-hint { background: #d5a95c; color: #111827; }
+.theme-dark .npc-attack-line:active { background: #243044; }
+
+/* ===== 导入样例（暗色） ===== */
+.theme-dark .io-sample-title { color: #f4efe4; }
+.theme-dark .io-sample {
+  background: #1a2233;
+  border-color: #3a4a62;
+  color: #e6edf7;
+}
+
+/* ===== 任务搜索 / 伤害区（暗色） ===== */
+.theme-dark .task-search-input {
+  background: #1a2233;
+  border-color: #3a4a62;
+  color: #e6edf7;
+}
+.theme-dark .task-copy { color: #d5a95c; }
+.theme-dark .check-damage-result {
+  background: #1a2233;
+  border-color: #3a4a62;
+}
+.theme-dark .cd-expr { color: #8fa0b8; }
+.theme-dark .cd-total { color: #ff7b72; }
+.theme-dark .cd-parts { color: #8fa0b8; }
+
+/* ===== 卡片阵营配色 / 低血量警示 ===== */
+.player-card { background: #f5f9ff; border: 2px solid #b8d4fe; }
+.npc-card { background: #fdf9f0; border: 2px solid #e0c9a8; }
+.char-card.low { border-color: #e67e22; }
+.char-card.dead { border-color: #c0392b; background: #fdf3f1; }
+.npc-card.dead { border-color: #c0392b; background: #fdf3f1; }
+.wound-badge {
+  display: inline-block; font-size: 18rpx; color: #fff; background: #e67e22;
+  border-radius: 8rpx; padding: 2rpx 10rpx; margin-left: 8rpx;
+}
+
+/* ===== 数值变化动效 ===== */
+.npc-card-stat-val.flash { animation: statFlash 0.5s ease; }
+@keyframes statFlash {
+  0% { transform: scale(1.6); color: #e67e22; }
+  100% { transform: scale(1); }
+}
+
+/* ===== 空状态 ===== */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  background: #faf8f4; border: 2px dashed #d4c5a9; border-radius: 16rpx;
+  padding: 48rpx 32rpx; margin-top: 16rpx;
+}
+.empty-state-icon { font-size: 64rpx; margin-bottom: 12rpx; }
+.empty-state-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; margin-bottom: 8rpx; }
+.empty-state-desc { font-size: 22rpx; color: #8b7355; text-align: center; line-height: 1.6; }
+
+/* ===== 以上（暗色） ===== */
+.theme-dark .player-card { background: #16283d; border-color: #31548c; }
+.theme-dark .npc-card { background: #2a2018; border-color: #7d6a4a; }
+.theme-dark .char-card.low { border-color: #e67e22; }
+.theme-dark .char-card.dead,
+.theme-dark .npc-card.dead { border-color: #c0392b; background: #2a1818; }
+.theme-dark .wound-badge { background: #e67e22; color: #111827; }
+.theme-dark .empty-state { background: #1a2233; border-color: #3a4a62; }
+.theme-dark .empty-state-title { color: #f4efe4; }
+.theme-dark .empty-state-desc { color: #8fa0b8; }
+
+/* ===== 词汇表（暗色） ===== */
+.theme-dark .lex-item {
+  background: #1a2233;
+  border-color: #2f3b50;
+}
+.theme-dark .lex-item:active { background: #243044; }
+.theme-dark .lex-w { color: #f4efe4; }
+.theme-dark .lex-d { color: #8fa0b8; }
+
+/* ===== 守密人工具宫格（暗色） ===== */
+.theme-dark .tool-card {
+  background: #1a2233;
+  border-color: #3a4a62;
+}
+.theme-dark .tool-card:active { background: #243044; }
+.theme-dark .tool-card-name { color: #f4efe4; }
+
+/* ===== 随机生成器按钮卡片（暗色） ===== */
+.theme-dark .random-btn {
+  background: #1a2233;
+  border-color: #3a4a62;
+}
+.theme-dark .random-btn:active { background: #243044; }
+.theme-dark .random-btn-name { color: #f4efe4; }
+
+/* ===== NPC 卡片快捷统计 / 攻击（暗色） ===== */
+.theme-dark .npc-card-stat-btn.plus { border-color: #d5a95c; color: #d5a95c; background: transparent; }
+.theme-dark .npc-card-stat-btn.minus { border-color: #52627a; color: #aab6c8; background: transparent; }
+.theme-dark .npc-card-stat-btn-active { background: #2f3b50; }
+.theme-dark .npc-card-stat-val { color: #f4efe4; }
+.theme-dark .npc-card-stat-label { color: #8fa0b8; }
+.theme-dark .npc-card-attack { color: #d5a95c; }
+.theme-dark .npc-attack-line {
+  background: #1a2233;
+  border-color: #3a4a62;
+  color: #d5a95c;
 }
