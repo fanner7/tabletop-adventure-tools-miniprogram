@@ -803,7 +803,7 @@ Page({
 
   confirmNewPlayer() {
     var name = this.data.newPlayerName.trim();
-    if (!name) { wx.showToast({ title: '请输入调查员姓名', icon: 'none' }); return; }
+    if (!name) { wx.showToast({ title: '请输入调查员名称', icon: 'none' }); return; }
     var tasks = this.data.tasks;
     var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
     if (!task) return;
@@ -1603,7 +1603,7 @@ Page({
       var last = this._pick(RANDOM_LAST_WEST);
       name = first.cn + '·' + last.cn + '（' + first.en + ' ' + last.en + '）';
     }
-    this.setData({ randomResult: { type: type === 'cn' ? '中文姓名' : '西式姓名（中文译名）', value: name }, randomNpc: null });
+    this.setData({ randomResult: { type: type === 'cn' ? '中文名称' : '西式名称（中文译名）', value: name }, randomNpc: null });
   },
 
   rollRandomClue() {

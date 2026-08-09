@@ -34,7 +34,7 @@
   <block wx:if="{{step === 1 && char}}">
     <view class="play-header">
       <text class="back-btn" bindtap="backToList">← 返回</text>
-      <input class="play-name-input" value="{{char.name}}" bindinput="onNameInput" placeholder="调查员姓名…" maxlength="20" />
+      <input class="play-name-input" value="{{char.name}}" bindinput="onNameInput" placeholder="调查员名称…" maxlength="20" />
       <text class="play-save" bindtap="saveChar">💾</text>
     </view>
 
@@ -203,10 +203,10 @@
           <text>{{key === 'core' ? '原版' : '繁孽'}}</text>
         </view>
       </view>
-      <input class="name-dialog-input" value="{{newCharName}}" bindinput="onNewNameInput" placeholder="输入姓名…" maxlength="20" focus="{{showNameDialog}}" />
+      <input class="name-dialog-input" value="{{newCharName}}" bindinput="onNewNameInput" placeholder="输入调查员名称…" maxlength="20" focus="{{showNameDialog}}" />
       <view class="name-dialog-btns">
-        <view class="name-pick-btn male" bindtap="pickMaleName"><text>🎲 随机男名</text></view>
-        <view class="name-pick-btn female" bindtap="pickFemaleName"><text>🎲 随机女名</text></view>
+        <view class="name-pick-btn male" bindtap="pickMaleName"><text>🎲 随机男性名称</text></view>
+        <view class="name-pick-btn female" bindtap="pickFemaleName"><text>🎲 随机女性名称</text></view>
       </view>
     </view>
     <view class="dialog-actions">

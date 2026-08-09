@@ -306,7 +306,7 @@
         <button class="btn-roll" style="flex:2;" bindtap="nextCombatTurn">⏭ 下一个行动</button>
         <button class="btn-clear-dice" style="flex:1;" bindtap="combatReset">🔄 重置</button>
       </view>
-      <view class="combat-hint"><text>点名字 = 设为当前行动者 · 长按 = 标记死亡（跳过）</text></view>
+      <view class="combat-hint"><text>点名称 = 设为当前行动者 · 长按 = 标记死亡（跳过）</text></view>
       <view class="combat-tie-warn" wx:if="{{combatHasTies}}">
         <text>⚠ DEX 相同：{{combatTieNames}}</text>
       </view>
@@ -470,11 +470,11 @@
       <view class="random-btns">
         <view class="random-btn" bindtap="rollRandomName" data-type="cn">
           <text class="random-btn-icon">👤</text>
-          <text class="random-btn-name">中文姓名</text>
+          <text class="random-btn-name">中文名称</text>
         </view>
         <view class="random-btn" bindtap="rollRandomName" data-type="west">
           <text class="random-btn-icon">🧑</text>
-          <text class="random-btn-name">西式姓名</text>
+          <text class="random-btn-name">西式名称</text>
         </view>
         <view class="random-btn" bindtap="rollRandomClue">
           <text class="random-btn-icon">🔍</text>
@@ -681,7 +681,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">📥 导入 NPC</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:14rpx;">支持模组传统格式：第一行是名字，其余行自由排版，会自动识别 DEX / HP / MP / DB / 技能 / 攻击。可直接从 PDF 复制，或对线下材料拍照后用文字识别整理。</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:14rpx;">支持模组传统格式：第一行是名称，其余行自由排版，会自动识别 DEX / HP / MP / DB / 技能 / 攻击。可直接从 PDF 复制，或对线下材料拍照后用文字识别整理。</text>
       <view class="task-io-options">
         <view class="task-io-option" bindtap="doImportNpc">
           <text class="task-io-icon">📋</text>
@@ -728,7 +728,7 @@
           <text class="task-io-icon">✍️</text>
           <view class="task-io-text">
             <text class="task-io-title">手动新建调查员</text>
-            <text class="task-io-desc">填写姓名与重要状态值即可（均可选）</text>
+            <text class="task-io-desc">填写角色名称与重要状态值即可（均可选）</text>
           </view>
         </view>
       </view>
@@ -746,10 +746,10 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">✍️ 手动新建调查员</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:12rpx;">除姓名外均可选填，留空的项目不会展示</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:12rpx;">除角色名称外均可选填，留空的项目不会展示</text>
       <view class="form-group">
-        <text class="form-label">姓名</text>
-        <input class="form-input" placeholder="调查员姓名" value="{{newPlayerName}}" bindinput="onNewPlayerNameInput" />
+        <text class="form-label">角色名称</text>
+        <input class="form-input" placeholder="输入调查员名称" value="{{newPlayerName}}" bindinput="onNewPlayerNameInput" />
       </view>
       <view class="form-group">
         <text class="form-label">职业（可选）</text>

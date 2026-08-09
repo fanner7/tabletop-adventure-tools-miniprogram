@@ -71,11 +71,15 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .inv-actions { display:flex; gap:10rpx; margin-top:14rpx; }
 .btn-fatigue-lg { flex:1; padding:18rpx 0; background:#f6f4f0; color:#2d6a3b; border:1px solid #d5d0c8; border-radius:10rpx; font-size:22rpx; font-weight:bold; text-align:center; }
 .btn-fatigue-lg:active { background:#ebe7e0; }
-.inv-slot { display:flex; align-items:center; gap:6rpx; padding:5rpx 0; }
+.inv-slot { display:flex; align-items:center; gap:6rpx; padding:5rpx 0; transition: transform 0.15s ease; }
 .inv-idx { font-size:20rpx; color:#bbb; width:36rpx; text-align:center; flex-shrink:0; }
 .inv-input { flex:1; height:46rpx; background:#f8f7f5; border:1px solid #e5e1d9; border-radius:4rpx; padding:0 10rpx; font-size:22rpx; color:#1a1a1a; }
 .inv-del { font-size:28rpx; color:#ccc; padding:4rpx 6rpx; }
 .inv-del:active { color:#c0392b; }
+.inv-drag { width:44rpx; height:56rpx; display:flex; align-items:center; justify-content:center; color:#c9c4ba; font-size:26rpx; flex-shrink:0; border-radius:6rpx; user-select:none; }
+.inv-drag.empty { color:#e8e5de; }
+.inv-drag:active { color:#8a857c; background:#efece5; }
+.inv-slot.dragging { position: relative; z-index: 5; background:#f5f1e8; border-radius:8rpx; box-shadow:0 6rpx 18rpx rgba(0,0,0,0.16); }
 
 /* ===== 掷骰 ===== */
 .dice-row { display:flex; flex-wrap:wrap; gap:8rpx; }
@@ -125,6 +129,9 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .dialog-btn.confirm:active { background:#23552e; }
 .dialog-btn.cancel { background:#f6f4f0; color:#555; }
 .dialog-btn.cancel:active { background:#ebe7e0; }
+.dialog-btn.danger { background:#faeae6; color:#c0392b; }
+.dialog-btn.danger:active { background:#f0d8d0; }
+.profile-actions { display:flex; gap:10rpx; }
 
 /* 导出选项 */
 .export-options { padding:0 32rpx 8rpx; }
@@ -149,6 +156,7 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 
 /* ===== 底部双按钮 ===== */
 .bottom-btns { display:flex; gap:12rpx; margin-top:8rpx; }
+.bottom-tools { display:flex; gap:16rpx; margin-top:16rpx; margin-bottom:8rpx; }
 .btn-subtle { padding:24rpx 0; background:#f6f4f0; color:#555; border:1px solid #d5d0c8; border-radius:12rpx; font-size:30rpx; font-weight:bold; text-align:center; }
 .btn-subtle:active { background:#ebe7e0; }
 
@@ -156,6 +164,73 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .spell-search-bar { padding:0 16rpx 12rpx; }
 .spell-search-input { width:100%; height:64rpx; background:#f8f7f5; border:1px solid #d5d0c8; border-radius:8rpx; padding:0 16rpx; font-size:24rpx; color:#1a1a1a; box-sizing:border-box; }
 .spell-list { max-height:50vh; }
+
+/* 商店 */
+.shop-dialog { height:84vh; }
+.shop-gold { text-align:center; font-size:24rpx; color:#8a6d2f; padding:0 32rpx 14rpx; display:block; font-weight:bold; }
+.shop-tabs { display:flex; gap:12rpx; padding:0 32rpx 14rpx; }
+.shop-tab { flex:1; text-align:center; padding:12rpx 0; font-size:24rpx; color:#666; background:#f4f2ee; border-radius:10rpx; font-weight:bold; }
+.shop-tab.on { background:#3a7a4e; color:#fff; }
+.shop-list { max-height:56vh; flex:1; }
+.shop-list-inner { padding:0 32rpx 16rpx; }
+.shop-item { display:flex; align-items:center; gap:12rpx; padding:14rpx 0; border-bottom:1px solid #eee; }
+.shop-info { flex:1; min-width:0; }
+.shop-name { display:block; font-size:24rpx; color:#1a1a1a; }
+.shop-meta { display:block; font-size:20rpx; color:#999; margin-top:2rpx; }
+.shop-price { font-size:24rpx; color:#8a6d2f; font-weight:bold; flex-shrink:0; }
+.shop-buy { background:#3a7a4e; color:#fff; font-size:22rpx; padding:10rpx 22rpx; border-radius:10rpx; flex-shrink:0; }
+.shop-buy:active { background:#2e6440; }
+
+/* 伤痕表 */
+.wound-body { padding:0 32rpx 8rpx; }
+.wound-roll { display:block; font-size:30rpx; font-weight:bold; color:#8a3a2f; text-align:center; }
+.wound-desc { display:block; font-size:24rpx; color:#444; margin-top:14rpx; line-height:1.7; }
+.wound-extra { display:block; font-size:24rpx; color:#2d6a3b; margin-top:14rpx; font-weight:bold; line-height:1.6; }
+
+/* 冒险家信息 */
+.profile-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8rpx; }
+.profile-edit { font-size:24rpx; color:#999; padding:4rpx 14rpx; background:transparent; border:none; border-radius:8rpx; }
+.profile-edit:active { background:#f0efec; }
+.detail-row { display:flex; padding:8rpx 0; border-bottom:1px solid #f6f4f0; }
+.detail-row:last-child { border-bottom:none; }
+.dlbl { font-size:22rpx; color:#888; width:110rpx; flex-shrink:0; }
+.dval { font-size:22rpx; color:#1a1a1a; flex:1; line-height:1.5; }
+.wound-records { margin-top:12rpx; border-top:1px solid #f0ece4; padding-top:10rpx; }
+.wound-record { display:flex; align-items:flex-start; gap:10rpx; padding:10rpx 0; border-bottom:1px solid #f6f4f0; }
+.wound-record:last-child { border-bottom:none; }
+.wound-record-main { flex:1; min-width:0; }
+.wound-record-t { font-size:24rpx; font-weight:bold; color:#8a3a2f; }
+.wound-record-ts { font-size:18rpx; color:#aaa; font-weight:normal; margin-left:8rpx; }
+.wound-record-d { display:block; font-size:20rpx; color:#666; margin-top:4rpx; line-height:1.5; }
+.wound-record-del { font-size:26rpx; color:#ccc; padding:4rpx 8rpx; flex-shrink:0; }
+.wound-record-del:active { color:#c0392b; }
+
+/* 表单 */
+.dialog-body-padded { padding:0 32rpx; }
+.form-group { margin-bottom:18rpx; }
+.form-label { display:block; font-size:22rpx; color:#888; margin-bottom:8rpx; }
+.form-input { height:64rpx; background:#f8f7f5; border:1px solid #e5e1d9; border-radius:8rpx; padding:0 16rpx; font-size:26rpx; color:#1a1a1a; }
+.form-textarea { width:100%; min-height:180rpx; background:#f8f7f5; border:1px solid #e5e1d9; border-radius:8rpx; padding:14rpx 16rpx; font-size:26rpx; color:#1a1a1a; box-sizing:border-box; }
+
+/* 创建方式（全随机 / 自选套装） */
+/* 创建方式（全随机 / 自选套装） */
+.kit-dialog { max-height:80vh; }
+.kit-option { display:flex; align-items:center; justify-content:space-between; gap:12rpx; margin:0 32rpx 14rpx; padding:24rpx 26rpx; background:#f6f4f0; border:1px solid #d5d0c8; border-radius:16rpx; }
+.kit-option:active { background:#ebe7e0; }
+.kit-option-main { display:flex; align-items:center; gap:20rpx; flex:1; min-width:0; }
+.kit-option-emoji { font-size:48rpx; flex-shrink:0; }
+.kit-option-text { flex:1; min-width:0; }
+.kit-arrow { font-size:40rpx; color:#c9c4ba; flex-shrink:0; }
+.kit-tag { font-size:18rpx; color:#fff; background:#e0a53a; border-radius:6rpx; padding:2rpx 10rpx; margin-left:8rpx; vertical-align:middle; }
+.kit-list { max-height:56vh; }
+.kit-grid { display:flex; flex-wrap:wrap; gap:14rpx; padding:0 32rpx 8rpx; }
+.kit-card { width:calc((100% - 14rpx) / 2); box-sizing:border-box; background:#faf9f6; border:1px solid #e5e1d9; border-radius:16rpx; padding:24rpx 14rpx; display:flex; flex-direction:column; align-items:center; }
+.kit-card:active { background:#f1efe9; }
+.kit-emoji { font-size:56rpx; line-height:1.2; }
+.kit-card-name { font-size:30rpx; font-weight:bold; color:#1a1a1a; margin-top:10rpx; }
+.kit-card-items { font-size:18rpx; color:#999; margin-top:6rpx; text-align:center; line-height:1.4; }
+.kit-name { display:block; font-size:28rpx; font-weight:bold; color:#1a1a1a; }
+.kit-desc { display:block; font-size:20rpx; color:#888; margin-top:4rpx; line-height:1.5; }
 .spell-list-inner { padding:0 16rpx; }
 .spell-item { display:flex; align-items:center; gap:10rpx; padding:12rpx 0; border-bottom:1px solid #efebe3; }
 .spell-num { width:40rpx; text-align:center; font-size:22rpx; color:#aaa; flex-shrink:0; }
@@ -279,16 +354,47 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .theme-dark .btn-clear,
 .theme-dark .notes-area,
 .theme-dark .dialog-btn.cancel,
+.theme-dark .dialog-btn.danger,
 .theme-dark .spell-search-input {
   background: #243044;
   border-color: #3a4a62;
   color: #e6edf7;
 }
+.theme-dark .dialog-btn.danger { color: #e08a7a; }
 
 .theme-dark .btn-fatigue-lg,
 .theme-dark .btn-subtle {
   color: #55c878;
 }
+.theme-dark .shop-tab { background:#243044; color:#9fb0c8; }
+.theme-dark .shop-tab.on { background:#3a7a4e; color:#fff; }
+.theme-dark .shop-name { color:#e6edf7; }
+.theme-dark .shop-meta { color:#768398; }
+.theme-dark .shop-price { color:#d9b45c; }
+.theme-dark .shop-item { border-color:#2c3a50; }
+.theme-dark .shop-gold { color:#d9b45c; }
+.theme-dark .wound-roll { color:#e08a7a; }
+.theme-dark .wound-desc { color:#b9c6d8; }
+.theme-dark .wound-extra { color:#55c878; }
+.theme-dark .profile-edit { background:transparent; border-color:transparent; color:#768398; }
+.theme-dark .profile-edit:active { background:#2d3b52; }
+.theme-dark .detail-row { border-color:#2f3b50; }
+.theme-dark .dval { color:#e6edf7; }
+.theme-dark .dlbl { color:#768398; }
+.theme-dark .wound-record { border-color:#2f3b50; }
+.theme-dark .wound-record-t { color:#e08a7a; }
+.theme-dark .wound-record-ts { color:#5a6a82; }
+.theme-dark .wound-record-d { color:#9fb0c8; }
+.theme-dark .form-input,
+.theme-dark .form-textarea { background:#243044; border-color:#3a4a62; color:#e6edf7; }
+.theme-dark .form-label { color:#768398; }
+.theme-dark .kit-option,
+.theme-dark .kit-card { background:#243044; border-color:#3a4a62; }
+.theme-dark .kit-name,
+.theme-dark .kit-card-name { color:#e6edf7; }
+.theme-dark .kit-desc,
+.theme-dark .kit-card-items { color:#768398; }
+.theme-dark .kit-arrow { color:#4e5b70; }
 
 .theme-dark .btn-fatigue-lg:active,
 .theme-dark .btn-clear:active,
@@ -308,6 +414,21 @@ page { padding-top:90rpx; box-sizing:border-box; background:#e8e4db; color:#1a1a
 .theme-dark .char-item-del,
 .theme-dark .dl-clear {
   color: #768398;
+}
+
+.theme-dark .inv-drag {
+  color: #4e5b70;
+}
+.theme-dark .inv-drag.empty {
+  color: #2c3a50;
+}
+.theme-dark .inv-drag:active {
+  color: #9aa7bc;
+  background: #2d3b52;
+}
+.theme-dark .inv-slot.dragging {
+  background: #2d3b52;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.35);
 }
 
 .theme-dark .dice-result-highlight {
