@@ -44,6 +44,13 @@
             <text class="home-action-sub">从剪贴板读取</text>
           </view>
         </view>
+        <view class="home-action secondary preset" bindtap="showPresetDialog">
+          <text class="home-action-icon">📖</text>
+          <view class="home-action-copy">
+            <text class="home-action-title">预置调查员</text>
+            <text class="home-action-sub">直接选用洛氏经典角色开始游戏</text>
+          </view>
+        </view>
       </view>
     </view>
 
@@ -52,10 +59,25 @@
         <text class="saved-head-title">已保存调查员</text>
         <text class="saved-head-count">{{savedCharacters.length}}</text>
       </view>
-      <view class="saved-item {{sc.completed ? 'completed' : ''}}" wx:for="{{savedCharacters}}" wx:for-item="sc" wx:key="index" bindtap="loadCharacter" data-index="{{index}}">
+      <!-- 标签筛选 -->
+      <scroll-view scroll-x class="saved-filter" wx:if="{{tagOptions.length > 0}}">
+        <view class="saved-filter-chip {{tagFilter == '' ? 'active' : ''}}" bindtap="setTagFilter" data-tag="">全部</view>
+        <view class="saved-filter-chip {{tagFilter == item ? 'active' : ''}}" wx:for="{{tagOptions}}" wx:key="*this" bindtap="setTagFilter" data-tag="{{item}}">{{item}}</view>
+      </scroll-view>
+      <view class="saved-item {{sc.completed ? 'completed' : ''}}" wx:for="{{savedCharacters}}" wx:for-item="sc" wx:key="index" bindtap="loadCharacter" data-index="{{sc._idx}}">
         <view class="saved-avatar"><text>档</text></view>
-        <view class="saved-main"><text class="saved-name">{{sc.charInfo ? sc.charInfo.name : (sc.name || '未命名')}}</text><text class="saved-occ">{{sc.selectedOcc ? sc.selectedOcc.name : (sc.occupation || '未选择职业')}}</text><text class="saved-time" wx:if="{{sc._timeStr}}">{{sc._timeStr}}</text></view>
-        <text class="saved-delete" catchtap="deleteCharacter" data-index="{{index}}">删除</text>
+        <view class="saved-main">
+          <view class="saved-name-row">
+            <text class="saved-name">{{sc.charInfo ? sc.charInfo.name : (sc.name || '未命名')}}</text>
+            <text class="saved-tag" wx:if="{{sc.tag}}">{{sc.tag}}</text>
+          </view>
+          <text class="saved-occ">{{sc.selectedOcc ? sc.selectedOcc.name : (sc.occupation || '未选择职业')}}</text>
+          <text class="saved-time" wx:if="{{sc._timeStr}}">{{sc._timeStr}}</text>
+        </view>
+        <view class="saved-actions">
+          <text class="saved-edit" catchtap="openTagDialog" data-index="{{sc._idx}}">✎</text>
+          <text class="saved-delete" catchtap="deleteCharacter" data-index="{{sc._idx}}">删除</text>
+        </view>
       </view>
     </view>
     <view class="saved-empty" wx:if="{{savedCharacters.length === 0}}">
@@ -65,31 +87,40 @@
 
   <!-- ===== STEP 1: 属性掷骰 ===== -->
   <block wx:if="{{step == 1}}">
-    <text class="step-title">🎲 掷骰决定属性</text>
-    <text class="step-desc">点击下方按钮掷骰决定你的调查员的核心属性。每个属性可单独重掷。</text>
+    <!-- Hero 区：标题 + 掷骰进度 -->
+    <view class="attr-hero">
+      <text class="attr-hero-icon">🎲</text>
+      <text class="attr-hero-title">掷骰决定属性</text>
+      <view class="attr-hero-progress" wx:if="{{rolledCount > 0 && !allRolled}}">
+        <view class="attr-hero-bar"><view class="attr-hero-bar-fill" style="width: {{rolledCount * 100 / 9}}%"></view></view>
+        <text class="attr-hero-bar-text">已掷出 {{rolledCount}} / 9</text>
+      </view>
+    </view>
+
+    <!-- 属性网格：3 列卡片（含属性描述词条） -->
     <view class="attr-grid">
       <view wx:for="{{['str','con','dex','app','pow','siz','int','edu','luck']}}" wx:for-item="a" wx:key="a">
-        <view class="attr-block {{attrDiceRolling == a ? 'rolling' : ''}} {{rolled[a] ? 'done' : ''}}">
+        <view class="attr-card {{attrDiceRolling == a ? 'rolling' : ''}} {{rolled[a] ? 'done' : ''}}">
           <text class="attr-label">{{attrLabels[a]}}</text>
-          <text class="attr-value {{attrDiceRolling == a ? 'dice-rolling' : ''}}">{{attrValues[a] > 0 ? attrValues[a] : '-'}}</text>
-          <text class="attr-roll-result" wx:if="{{attrRolls[a]}}">({{attrRolls[a]}})</text>
+          <text class="attr-value {{attrDiceRolling == a ? 'dice-rolling' : ''}}">{{attrValues[a] > 0 ? attrValues[a] : '·'}}</text>
+          <text class="attr-roll-result" wx:if="{{attrRolls[a]}}">[{{attrRolls[a]}}]</text>
+          <text class="attr-trait" wx:if="{{attrTraits[a]}}">{{attrTraits[a]}}</text>
           <button class="attr-reroll-btn" wx:if="{{rolled[a]}}" bindtap="rerollAttr" data-attr="{{a}}">重掷</button>
         </view>
       </view>
     </view>
-    <view class="attr-desc-box" wx:if="{{attrDesc}}">
-      <text class="attr-desc-text">{{attrDesc}}</text>
-    </view>
-    <button class="btn btn-primary" bindtap="rollAllAttrs" wx:if="{{!allRolled}}">🎲 全部掷骰</button>
-    <button class="btn btn-secondary btn-small" bindtap="rollAllAttrs" wx:if="{{allRolled}}">🔄 全部重掷</button>
+
+    <!-- 操作按钮 -->
+    <button class="btn btn-primary attr-roll-all" bindtap="rollAllAttrs" wx:if="{{!allRolled}}" disabled="{{attrRolling}}">{{attrRolling ? '🎲 掷骰中…' : '🎲 全部掷骰'}}</button>
+    <button class="btn btn-secondary attr-roll-all" bindtap="rollAllAttrs" wx:if="{{allRolled}}">🔄 全部重掷</button>
   </block>
 
   <!-- ===== STEP 2: 基础信息 ===== -->
   <block wx:if="{{step == 2}}">
     <text class="step-title">✏️ 调查员信息</text>
     <text class="step-desc">填写你的调查员基本资料。</text>
-    <view class="form-group"><text class="form-label">调查员姓名</text><input class="form-input" placeholder="输入姓名" value="{{charInfo.name}}" bindinput="onCharInfoChange" data-field="name" /></view>
-    <view class="form-group"><text class="form-label">玩家姓名</text><input class="form-input" placeholder="输入你的名字" value="{{charInfo.player}}" bindinput="onCharInfoChange" data-field="player" /></view>
+    <view class="form-group"><text class="form-label">调查员名称</text><input class="form-input" placeholder="输入调查员名称" value="{{charInfo.name}}" bindinput="onCharInfoChange" data-field="name" /></view>
+    <view class="form-group"><text class="form-label">玩家名称</text><input class="form-input" placeholder="输入玩家名称（可选）" value="{{charInfo.player}}" bindinput="onCharInfoChange" data-field="player" /></view>
     <view class="form-group">
       <text class="form-label">年龄</text>
       <view class="age-row">
@@ -115,10 +146,10 @@
     </view>
 
     <view class="random-name-section">
-      <text class="random-name-label">🎲 随机姓名 · 1920s 美国常见名</text>
+      <text class="random-name-label">🎲 随机名称 · 1920s 美国常见名</text>
       <view class="random-name-btns">
-        <view class="random-name-btn" bindtap="randomMaleName"><text>♂ 抽取男性名</text></view>
-        <view class="random-name-btn" bindtap="randomFemaleName"><text>♀ 抽取女性名</text></view>
+        <view class="random-name-btn" bindtap="randomMaleName"><text>♂ 抽取男性名称</text></view>
+        <view class="random-name-btn" bindtap="randomFemaleName"><text>♀ 抽取女性名称</text></view>
       </view>
     </view>
   </block>
@@ -187,6 +218,19 @@
       </view>
       <view class="occ-info-card-skills" wx:if="{{occFixedSkills.length > 0}}">
         <text class="occ-skills-tag" wx:for="{{occFixedSkills}}" wx:for-item="sk" wx:key="name">{{sk.spec ? sk.name + '(' + sk.spec + ')' : sk.name}}</text>
+      </view>
+    </view>
+
+    <!-- 自由职业技能槽（"两项其他技能"等占位条目） -->
+    <view class="free-slot-section" wx:if="{{freeOccSlots.length > 0}}">
+      <text class="free-slot-title">📎 自由职业技能</text>
+      <text class="free-slot-sub">点击槽位从技能列表中挑选，选中的技能将获得职业技能资格，可用职业点加点</text>
+      <view class="free-slot-grid">
+        <view class="free-slot-item {{item.skill ? 'filled' : ''}}" wx:for="{{freeOccSlots}}" wx:key="index" bindtap="openFreeSlotDialog" data-index="{{index}}">
+          <text class="free-slot-hint">{{item.hint}}</text>
+          <text class="free-slot-name">{{item.skill || '＋ 点击选择…'}}</text>
+          <text class="free-slot-clear" wx:if="{{item.skill}}" catchtap="clearFreeSlotSkill" data-index="{{index}}">✕</text>
+        </view>
       </view>
     </view>
 
@@ -427,7 +471,7 @@
         <text class="export-option-icon">🎲</text>
         <view class="export-option-text">
           <text class="export-option-title">导出到骰娘</text>
-          <text class="export-option-desc">生成骰娘导入格式文本，可直接在骰娘聊天中使用</text>
+          <text class="export-option-desc">生成海豹骰 .st 导入文本（塔塔等骰娘兼容），复制后粘贴到骰娘聊天即可</text>
         </view>
       </view>
     </view>
@@ -478,6 +522,58 @@
   <view class="bottom-nav" wx:if="{{step > 0 && step < 5}}">
     <button class="btn btn-secondary" wx:if="{{step > 0}}" bindtap="prevStep">← 上一步</button>
     <button class="btn btn-primary" wx:if="{{step < 5}}" bindtap="nextStep" disabled="{{!canNext}}">下一步 →</button>
+  </view>
+
+  <!-- ===== 预置调查员选择弹窗 ===== -->
+  <view class="dialog-overlay {{showPresetDialog ? 'active' : ''}}" bindtap="closePresetDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showPresetDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">📖 选择预置调查员</text>
+    <text class="dialog-sub">洛氏经典职业 · 载入后可直接开始游戏</text>
+    <scroll-view scroll-y class="preset-list">
+      <view class="preset-item" wx:for="{{presets}}" wx:key="id" bindtap="applyPresetCharacter" data-index="{{index}}">
+        <text class="preset-emoji">{{item.emoji}}</text>
+        <view class="preset-main">
+          <view class="preset-name-row">
+            <text class="preset-name">{{item.name}}</text>
+            <text class="preset-gender">{{item.gender}}</text>
+          </view>
+          <text class="preset-occ">{{item.occ}} · {{item.age}} 岁</text>
+          <text class="preset-tag">{{item.tagline}}</text>
+        </view>
+        <text class="preset-arrow">›</text>
+      </view>
+    </scroll-view>
+    <button class="dialog-btn cancel preset-close" bindtap="closePresetDialog">关闭</button>
+  </view>
+
+  <!-- ===== 标签编辑 dialog ===== -->
+  <view class="dialog-overlay {{showTagDialog ? 'active' : ''}}" bindtap="closeTagDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showTagDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">✎ 编辑标签</text>
+    <text class="dialog-sub">给调查员分组，如「周末团-阿卡姆」「SOLO」</text>
+    <input class="form-input" placeholder="输入标签（留空清除）" value="{{tagInput}}" bindinput="onTagInput" />
+    <view class="dialog-actions">
+      <button class="dialog-btn confirm" bindtap="saveTag">保存</button>
+      <button class="dialog-btn cancel" bindtap="closeTagDialog">取消</button>
+    </view>
+  </view>
+
+  <!-- ===== 自由职业技能选择 dialog ===== -->
+  <view class="dialog-overlay {{showFreeSlotDialog ? 'active' : ''}}" bindtap="closeFreeSlotDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showFreeSlotDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">选择职业技能</text>
+    <text class="dialog-sub">选中的技能将获得职业技能资格，可用职业点加点</text>
+    <scroll-view scroll-y class="free-slot-list">
+      <view class="free-slot-option" wx:for="{{freeSlotDialogList}}" wx:key="name" bindtap="pickFreeSlotSkill" data-name="{{item.name}}">
+        <text class="free-slot-opt-name">{{item.name}}</text>
+        <text class="free-slot-opt-base">基础 {{item.base}}%</text>
+      </view>
+      <view class="free-slot-empty" wx:if="{{freeSlotDialogList.length == 0}}">没有可选的技能了</view>
+    </scroll-view>
+    <button class="dialog-btn cancel preset-close" bindtap="closeFreeSlotDialog">取消</button>
   </view>
 
   <!-- ===== 技能 dialog（底部弹出，含说明 + slider） ===== -->

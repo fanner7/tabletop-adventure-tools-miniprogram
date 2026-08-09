@@ -197,18 +197,6 @@ const OCCUPATIONS = [
   { seq:113, name:'白领工人-中高层管理人员', cr_range:'20-80', skill_formula:'教育×4', skills:[{mark:'☆',name:'取悦',group:'g0',count:2},{mark:'☆',name:'话术',group:'g0',count:2},{mark:'☆',name:'恐吓',group:'g0',count:2},{mark:'☆',name:'说服',group:'g0',count:2},{mark:'★',name:'会计'},{mark:'★',name:'外语①'},{mark:'★',name:'法律'},{mark:'★',name:'心理学'}] },
   { seq:114, name:'狂热者', cr_range:'0-30', skill_formula:'教育×2＋外貌或意志×2', skills:[{mark:'☆',name:'取悦',group:'g0',count:2},{mark:'☆',name:'话术',group:'g0',count:2},{mark:'☆',name:'恐吓',group:'g0',count:2},{mark:'☆',name:'说服',group:'g0',count:2},{mark:'★',name:'历史'},{mark:'★',name:'心理学'},{mark:'★',name:'潜行'}] },
   { seq:115, name:'饲养员', cr_range:'9-40', skill_formula:'教育×4', skills:[{mark:'★',name:'驯兽'},{mark:'★',name:'会计'},{mark:'★',name:'闪避'},{mark:'★',name:'急救'},{mark:'★',name:'博物学'},{mark:'★',name:'医学'},{mark:'★',name:'科学',spec:'制药'}] },
-  { seq:116, name:'大使', cr_range:'50-90', skill_formula:'教育×2＋外貌×2', skills:[{mark:'★',name:'取悦'},{mark:'★',name:'历史'},{mark:'★',name:'恐吓'},{mark:'★',name:'话术'},{mark:'★',name:'聆听'},{mark:'★',name:'母语'},{mark:'★',name:'说服'},{mark:'★',name:'心理学。(用一到两种外语取代前面两种技能)'}] },
-  { seq:117, name:'运动员（游泳/潜水）', cr_range:'9-20', skill_formula:'教育×2＋力量或敏捷×2', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'攀爬'},{mark:'★',name:'跳跃'},{mark:'★',name:'格斗①',spec:'斗殴'},{mark:'★',name:'外语①'},{mark:'★',name:'游泳'},{mark:'★',name:'投掷'}] },
-  { seq:118, name:'运动员（高尔夫）', cr_range:'50-70', skill_formula:'教育×2＋力量或敏捷×2', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'攀爬'},{mark:'★',name:'跳跃'},{mark:'★',name:'格斗①',spec:'斗殴'},{mark:'★',name:'骑术'},{mark:'★',name:'游泳'},{mark:'★',name:'投掷'}] },
-  { seq:119, name:'运动员（网球）', cr_range:'30-70', skill_formula:'教育×2＋力量或敏捷×2', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'跳跃'},{mark:'★',name:'格斗①',spec:'斗殴'},{mark:'★',name:'闪避'},{mark:'★',name:'心理学'},{mark:'★',name:'侦察'},{mark:'★',name:'投掷'}] },
-  { seq:120, name:'运动员（田径）', cr_range:'9-20', skill_formula:'教育×2＋力量或敏捷×2', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'攀爬'},{mark:'★',name:'跳跃'},{mark:'★',name:'格斗①',spec:'斗殴'},{mark:'★',name:'外语①'},{mark:'★',name:'闪避'},{mark:'★',name:'投掷'}] },
-  { seq:121, name:'发言人', cr_range:'50-80', skill_formula:'教育×4', skills:[{mark:'☆',name:'取悦',group:'g0',count:3},{mark:'☆',name:'话术',group:'g0',count:3},{mark:'☆',name:'恐吓',group:'g0',count:3},{mark:'☆',name:'说服',group:'g0',count:3},{mark:'★',name:'乔装'},{mark:'★',name:'闪避'},{mark:'★',name:'心理学'},{mark:'★',name:'外语①'}] },
-  { seq:122, name:'保释担保人', cr_range:'50-80', skill_formula:'教育×4', skills:[{mark:'☆',name:'取悦',group:'g0',count:2},{mark:'☆',name:'话术',group:'g0',count:2},{mark:'☆',name:'恐吓',group:'g0',count:2},{mark:'☆',name:'说服',group:'g0',count:2},{mark:'★',name:'会计'},{mark:'★',name:'法律'},{mark:'★',name:'图书馆使用'},{mark:'★',name:'心理学'}] },
-  { seq:123, name:'神职人员(天主教牧师)', cr_range:'20-70', skill_formula:'教育×4', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'会计'},{mark:'★',name:'母语'},{mark:'★',name:'外语(拉丁文)'},{mark:'★',name:'图书馆使用'},{mark:'★',name:'神秘学'},{mark:'★',name:'心理学'}] },
-  { seq:124, name:'神职人员(新教牧师)', cr_range:'9-60', skill_formula:'教育×4', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'会计'},{mark:'★',name:'历史'},{mark:'★',name:'图书馆使用'},{mark:'★',name:'聆听'},{mark:'★',name:'外语①'},{mark:'★',name:'心理学'}] },
-  { seq:125, name:'神职人员(犹太教拉比)', cr_range:'9-60', skill_formula:'教育×4', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'母语'},{mark:'★',name:'外语（希伯来语）'},{mark:'★',name:'历史'},{mark:'★',name:'图书馆使用'},{mark:'★',name:'神秘学'},{mark:'★',name:'心理学'}] },
-  { seq:126, name:'专栏作家', cr_range:'30-70', skill_formula:'教育×4', skills:[{mark:'☆',name:'取悦',group:'g0',count:1},{mark:'☆',name:'话术',group:'g0',count:1},{mark:'☆',name:'恐吓',group:'g0',count:1},{mark:'☆',name:'说服',group:'g0',count:1},{mark:'★',name:'乔装'},{mark:'★',name:'历史'},{mark:'★',name:'图书馆使用'},{mark:'★',name:'母语'},{mark:'★',name:'外语①'},{mark:'★',name:'心理学'},{mark:'★',name:'潜行'}] },
-  { seq:127, name:'社会主义者/激进主义者', cr_range:'0-30', skill_formula:'教育×2＋外貌或意志×2', skills:[{mark:'☆',name:'取悦',group:'g0',count:2},{mark:'☆',name:'话术',group:'g0',count:2},{mark:'☆',name:'恐吓',group:'g0',count:2},{mark:'☆',name:'说服',group:'g0',count:2},{mark:'★',name:'格斗①',spec:'斗殴'},{mark:'★',name:'射击①',spec:'手枪'},{mark:'★',name:'外语①'},{mark:'★',name:'心理学'}] },
 ];
 
 const WEAPONS_1920S = [
@@ -274,6 +262,215 @@ const WEAPONS_1920S = [
   { name: '火焰喷射器', skill: '喷射器', skillId: '格斗①', damage: '2D6+燃烧', range: '25码', impale: '√', attacks: '1', ammo: '至少10', malfunction: '93', rare: false },
 ];
 
+// ===================================================================
+// 预置调查员（洛氏经典职业，可直接选用开始游戏）
+// 字段与 buildCharacterData 输出一致；derived/derivedItems/
+// sortedSkillsByCat/timestamp 由加载逻辑动态生成。
+// 属性值已包含年龄修正结果，attrRolls 记录对应骰面。
+// ===================================================================
+const PRESET_CHARACTERS = [
+  {
+    id: 'campbell',
+    emoji: '🎩',
+    tagline: '南极冰原下的秘密，刻在他带回的石板拓片上',
+    data: {
+      attrValues: { str: 40, con: 60, dex: 50, app: 45, pow: 70, siz: 60, int: 85, edu: 90, luck: 55 },
+      attrRolls: { str: '1,3,5', con: '3,4,5', dex: '2,3,5', app: '1,4,5', pow: '4,5,5', siz: '3,3', int: '5,6', edu: '5,6', luck: '3,4,4' },
+      charInfo: { name: '埃德温·坎贝尔', player: '', age: '45', gender: '男', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '考古学家（原作向）'),
+      occPts: { '考古学': 89, '历史': 55, '图书馆使用': 40, '外语①': 39, '侦查': 23, '估价': 15, '机械维修': 10, '导航': 10, '科学': 39, '信用评级': 40 },
+      intPts: { '攀爬': 10, '急救': 20, '格斗①': 15, '神秘学': 25, '外语②': 29, '驾驶①': 20, '潜行': 10, '聆听': 15, '跳跃': 10, '心理学': 16 },
+      skillSpecs: { '格斗①': '斗殴', '外语①': '拉丁语', '外语②': '德语', '科学': '地质学' },
+      usedOccPoints: 360, totalOccPoints: 360, usedIntPoints: 170, totalIntPoints: 170,
+      charWeapons: [
+        { name: '.38(9mm)左轮手枪', skill: '手枪', skillId: '射击①', damage: '1D10', range: '15', impale: '√', attacks: '1(3)', ammo: '6', malfunction: '100', rare: false }
+      ],
+      charBackstory: '密斯卡托尼克大学考古学教授，曾主持美索不达米亚与南极两处发掘。1924 年，南极考察队在冰层下发现巨大的石造废墟——那些比人类文明古老千万年的墙垣上，刻满了不属于任何已知文字的符号。随行的三名同事在废墟中失踪，一人自尽。他被送回国内时，随身皮箱里多了一卷黑色石板的拓片。此后十年，他穷尽余生追索那些符号的出处：禁书室的卷宗、博物馆的未编号藏品，以及深夜打来的、操着含混口音的匿名电话。',
+      charGear: '笔记本与钢笔、怀表、双筒望远镜、考古工具包（刷子、凿子、卷尺）、南极带回的黑色石板拓片、.38 左轮手枪（6 发）',
+      charMythos: '黑色石板拓片——来源不明的符号，与已知所有文字体系均无法对应；拓片边缘有烧灼痕迹',
+      charSpells: '',
+      charCompanions: '密斯卡托尼克大学档案馆管理员马库斯·皮博迪——愿意为他调阅禁书；前学生艾达·斯托克斯，现为波士顿博物馆助理',
+      charAssets: '大学教授薪金（年收入约 $4,000）；阿卡姆旧宅一所；少量藏书',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+  {
+    id: 'morton',
+    emoji: '📰',
+    tagline: '照片冲洗出来时，总多出一些不该存在的东西',
+    data: {
+      attrValues: { str: 45, con: 50, dex: 65, app: 75, pow: 65, siz: 50, int: 75, edu: 75, luck: 60 },
+      attrRolls: { str: '1,3,5', con: '2,3,5', dex: '3,5,5', app: '4,5,6', pow: '3,5,5', siz: '1,3', int: '4,5', edu: '4,5', luck: '2,4,6' },
+      charInfo: { name: '格蕾丝·莫顿', player: '', age: '28', gender: '女', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '记者(原作向)-调查记者'),
+      occPts: { '话术': 85, '技艺①': 45, '历史': 35, '图书馆使用': 50, '心理学': 45, '信用评级': 40 },
+      intPts: { '侦查': 45, '聆听': 30, '潜行': 10, '格斗①': 10, '驾驶①': 15, '投掷': 10, '游泳': 5, '攀爬': 5, '跳跃': 5, '妙手': 15 },
+      skillSpecs: { '技艺①': '摄影', '格斗①': '斗殴' },
+      usedOccPoints: 300, totalOccPoints: 300, usedIntPoints: 150, totalIntPoints: 150,
+      charWeapons: [],
+      charBackstory: '《阿卡姆公报》调查记者。1927 年秋，她奉命追踪一名失踪的古董商，线索指向缅因州沿海的渔镇。镇上的居民对来客异常沉默，码头上晾晒的渔网散发着不属于海洋的腥气，教堂地窖里传出的合唱声让她整夜难眠。她拍下的照片在冲洗后，总会出现一些画面里并不存在的东西。她的编辑说她"想象力过于丰富"，但她知道，那些东西是真的。',
+      charGear: '记者证、莱卡相机与胶卷、速记本、便携打字机、海雾镇地图与剪报',
+      charMythos: '古董商留下的手抄笔记——提及"海底的教会"与一份名为《死灵之书》的手稿',
+      charSpells: '',
+      charCompanions: '摄影师杰克·奥康纳——在暗房里见过她照片里的"多余之物"后仍愿意同行',
+      charAssets: '《阿卡姆公报》记者薪金（年收入约 $2,500）；阿卡姆租房一间',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+  {
+    id: 'blackwood',
+    emoji: '🕵️',
+    tagline: '山谷里的呢喃像无数飞蛾振翅，他决定亲自去听',
+    data: {
+      attrValues: { str: 60, con: 65, dex: 70, app: 55, pow: 60, siz: 65, int: 70, edu: 65, luck: 70 },
+      attrRolls: { str: '2,4,6', con: '3,4,6', dex: '4,5,5', app: '2,4,5', pow: '3,4,5', siz: '2,5', int: '2,6', edu: '2,5', luck: '4,5,5' },
+      charInfo: { name: '罗兰·布莱克伍德', player: '', age: '38', gender: '男', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '私家侦探'),
+      occPts: { '侦查': 40, '心理学': 30, '话术': 40, '法律': 30, '图书馆使用': 15, '技艺①': 10, '乔装': 5, '锁匠': 19, '格斗①': 41, '射击①': 25, '信用评级': 15 },
+      intPts: { '潜行': 55, '聆听': 40, '驾驶①': 20, '急救': 10, '追踪': 10, '妙手': 5 },
+      skillSpecs: { '格斗①': '斗殴', '射击①': '手枪', '技艺①': '摄影' },
+      usedOccPoints: 270, totalOccPoints: 270, usedIntPoints: 140, totalIntPoints: 140,
+      charWeapons: [
+        { name: '.38(9mm)左轮手枪', skill: '手枪', skillId: '射击①', damage: '1D10', range: '15', impale: '√', attacks: '1(3)', ammo: '6', malfunction: '100', rare: false },
+        { name: '黄铜指虎', skill: '斗殴', skillId: '格斗①', damage: '1D3+1+DB', range: '接触', impale: '×', attacks: '1', ammo: '——', malfunction: '——', rare: false }
+      ],
+      charBackstory: '前波士顿警察，因一桩无法结案的失踪案辞职，在查尔斯街开了家侦探社。委托大多是寻人、盯梢的普通活计，直到一位佛蒙特州的农场主登门——他说自己听到了山谷里的声音：低沉的呢喃，像无数飞蛾振翅。他声称自家谷仓夜里会亮起诡异的光，而他的弟弟已经失踪了三个星期。布莱克伍德本打算把这当作疯话，直到他看见委托人手背上那三道平行的、细如发丝的伤口。',
+      freeOccSkills: ['锁匠', '格斗①', '射击①'],
+      charGear: '.38 左轮手枪（6 发）、黄铜指虎、旧警徽、记事本、手电筒、折叠刀',
+      charMythos: '农场主的信件与谷仓照片——照片一角有一团无法解释的模糊阴影，形状似带翼的人形',
+      charSpells: '',
+      charCompanions: '前搭档汤姆·哈里斯——仍在警局，偶尔给他递线索',
+      charAssets: '侦探社收入（年收入约 $3,000）；波士顿查尔斯街办公室一间',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+  {
+    id: 'winters',
+    emoji: '💉',
+    tagline: '病人的素描里，是一座不属于这个时代的黑色城市',
+    data: {
+      attrValues: { str: 40, con: 60, dex: 55, app: 60, pow: 75, siz: 50, int: 80, edu: 85, luck: 50 },
+      attrRolls: { str: '2,3,4', con: '3,4,5', dex: '2,4,5', app: '3,4,6', pow: '4,5,6', siz: '1,3', int: '4,6', edu: '3,5', luck: '2,3,5' },
+      charInfo: { name: '克拉拉·温特斯', player: '', age: '41', gender: '女', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '精神病医生（古典）'),
+      occPts: { '医学': 89, '精神分析': 73, '心理学': 50, '法律': 25, '聆听': 20, '外语①': 19, '科学': 29, '信用评级': 35 },
+      intPts: { '话术': 25, '说服': 30, '侦查': 25, '图书馆使用': 30, '急救': 20, '神秘学': 15, '催眠': 15 },
+      skillSpecs: { '外语①': '德语', '科学': '生物学' },
+      usedOccPoints: 340, totalOccPoints: 340, usedIntPoints: 160, totalIntPoints: 160,
+      charWeapons: [],
+      charBackstory: '阿卡姆圣玛丽医院精神科医生。1928 年她接诊了一位自称"纳撒尼尔"的病人——对方坚称自己在昏迷中"去过未来"，看见巨大的黑色圆锥体城市与半植物般的统治者，并反复绘制那些建筑的草图。温特斯起初诊断为妄想症，但病人描述的细节精确得令人生畏，且病情在电击治疗后毫无改善。她开始私下查阅古老的病例档案，发现五十年前也有医生记录过几乎一模一样的症状。病历室的灯，最近总在她背后无端熄灭。',
+      charGear: '医疗包（听诊器、血压计、镇静剂）、日记本、钢笔、圣玛丽医院档案室钥匙、病人绘制的圆锥体城市素描',
+      charMythos: '病人"纳撒尼尔"绘制的素描集——圆锥体城市与无面翼人；她自己的日记中记录了三次无法解释的记忆空白',
+      charSpells: '',
+      charCompanions: '护士长艾格尼丝·豪——医院里少数愿意谈论"档案室传闻"的人',
+      charAssets: '圣玛丽医院医生薪金（年收入约 $4,500）；阿卡姆住所一所',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+  {
+    id: 'cartwright',
+    emoji: '📚',
+    tagline: '禁书区的书最近总是自己换位置',
+    data: {
+      attrValues: { str: 40, con: 55, dex: 55, app: 65, pow: 65, siz: 50, int: 85, edu: 85, luck: 60 },
+      attrRolls: { str: '1,3,4', con: '3,4,4', dex: '2,4,5', app: '3,5,5', pow: '3,4,5', siz: '1,3', int: '5,6', edu: '5,6', luck: '2,4,6' },
+      charInfo: { name: '伊芙琳·卡特赖特', player: '', age: '35', gender: '女', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '图书馆管理员（原作向）'),
+      occPts: { '图书馆使用': 79, '外语①': 49, '历史': 50, '神秘学': 50, '会计': 35, '估价': 28, '侦查': 25, '考古学': 24, '母语': 0 },
+      intPts: { '攀爬': 10, '急救': 15, '格斗①': 5, '潜行': 10, '聆听': 20, '驾驶①': 10, '游泳': 5, '投掷': 5, '外语②': 29, '妙手': 10, '话术': 15, '取悦': 5, '侦查': 10, '闪避': 10, '母语': 11 },
+      skillSpecs: { '外语①': '拉丁语', '外语②': '法语', '格斗①': '斗殴', '驾驶①': '汽车' },
+      freeOccSkills: ['历史', '神秘学', '估价', '侦查', '考古学'],
+      usedOccPoints: 340, totalOccPoints: 340, usedIntPoints: 170, totalIntPoints: 170,
+      charWeapons: [],
+      charBackstory: '阿卡姆公共图书馆禁书区管理员。她比任何人都清楚哪些书"不该被借走"——1928 年深秋，一位身形怪异、头裹围巾的外乡人凭一张皱巴巴的介绍信借走了《死灵之书》的馆藏抄本，三天后归还时书页间夹着一片干枯的、不属于任何已知生物的鳞片。自那以后，禁书区的书架总是在夜里发出轻微的挪动声，而她按字母排序的索引卡，也总会出现在不该出现的位置。',
+      charGear: '索引卡盒、老花镜、钢笔、图书馆备用钥匙、一把防身的黄铜镇纸',
+      charMythos: '《死灵之书》馆藏抄本的书页夹层——一片来历不明的干枯鳞片；她自己的索引卡上多出的一些不认识的书名',
+      charSpells: '',
+      charCompanions: '图书馆门房老伯伦纳德——值夜班时听见禁书区有"翻书声"，但从不进去看',
+      charAssets: '图书馆管理员薪金（年收入约 $1,800）；阿卡姆旧公寓一间',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+  {
+    id: 'grant',
+    emoji: '🗿',
+    tagline: '那尊绿色小雕像，像章鱼，又像别的东西',
+    data: {
+      attrValues: { str: 45, con: 55, dex: 50, app: 55, pow: 75, siz: 55, int: 80, edu: 75, luck: 60 },
+      attrRolls: { str: '2,4,5', con: '3,5,5', dex: '2,4,5', app: '3,4,5', pow: '4,5,6', siz: '2,3', int: '5,5', edu: '2,5', luck: '2,4,6' },
+      charInfo: { name: '西奥多·格兰特', player: '', age: '52', gender: '男', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '古董商'),
+      occPts: { '会计': 41, '估价': 89, '驾驶①': 10, '历史': 45, '图书馆使用': 40, '导航': 5, '信用评级': 30, '话术': 40 },
+      intPts: { '侦查': 35, '聆听': 20, '心理学': 20, '神秘学': 25, '格斗①': 10, '妙手': 10, '外语①': 19, '投掷': 5, '图书馆使用': 16 },
+      skillSpecs: { '格斗①': '斗殴', '外语①': '法语', '驾驶①': '汽车' },
+      usedOccPoints: 300, totalOccPoints: 300, usedIntPoints: 160, totalIntPoints: 160,
+      charWeapons: [],
+      charBackstory: '普罗维登斯的老牌古董商，经营一间积灰的铺子，擅长从遗嘱拍卖里挑出被低估的物件。1927 年秋，一位新奥尔良的客户寄来一件包裹：约 20 厘米高的奇异小雕像，石材绿得发黑，造型似章鱼、似龙、又似某种更古老的东西。他想转手卖掉它赚一笔，却开始整夜梦见海底的巨石城市，以及那些缓慢升起的、湿漉漉的尖顶。',
+      charGear: '放大镜、鉴定工具、账本、店门钥匙、一支旧左轮（很少上膛）',
+      charMythos: '那尊绿色小雕像——底座刻着无人认识的文字，最近它似乎"挪动"过位置',
+      charSpells: '',
+      charCompanions: '杂货店老板威尔·麦卡锡——他的侄子从新奥尔良码头带来过一箱"石头鱼"，此后就失踪了',
+      charAssets: '古董店收入（年收入约 $2,000）；普罗维登斯店面一间',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+  {
+    id: 'norton',
+    emoji: '✒️',
+    tagline: '他笔下的怪物太真实了——因为模特是真的',
+    data: {
+      attrValues: { str: 50, con: 50, dex: 60, app: 65, pow: 70, siz: 55, int: 75, edu: 70, luck: 65 },
+      attrRolls: { str: '2,4,4', con: '2,4,4', dex: '3,4,5', app: '3,4,6', pow: '4,5,5', siz: '2,3', int: '4,5', edu: '2,6', luck: '3,4,6' },
+      charInfo: { name: '埃德加·诺顿', player: '', age: '29', gender: '男', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '作家（原作向）'),
+      occPts: { '技艺①': 35, '历史': 41, '图书馆使用': 60, '博物学': 10, '神秘学': 60, '外语①': 19, '心理学': 55, '母语': 0 },
+      intPts: { '侦查': 25, '聆听': 15, '乔装': 5, '话术': 15, '格斗①': 10, '攀爬': 10, '驾驶①': 10, '游泳': 5, '技艺②': 5, '技艺①': 20, '神秘学': 15, '图书馆使用': 15 },
+      skillSpecs: { '技艺①': '写作', '技艺②': '摄影', '外语①': '法语', '格斗①': '斗殴', '驾驶①': '汽车' },
+      usedOccPoints: 280, totalOccPoints: 280, usedIntPoints: 150, totalIntPoints: 150,
+      charWeapons: [],
+      charBackstory: '波士顿的地下刊物诗人与短篇作者，专写那些畸形、令人作呕却莫名真实的生物。编辑称赞他"想象力过于丰盛"，读者来信问他是不是疯了。只有他自己知道，那些面孔来自城北一条小巷尽头的阁楼——他雇的模特从不摘下面纱，报酬也只收旧银币。最近，他画中生物的姿态，开始在他夜归的路上出现。',
+      charGear: '笔记本与钢笔、莱卡相机、速写本、波士顿街区地图',
+      charMythos: '阁楼模特留下的半张素描——画中的生物长着他不记得画过的第三只眼',
+      charSpells: '',
+      charCompanions: '地下刊物编辑玛莎·柯林斯——知道他的"模特"从哪来，但从不多问',
+      charAssets: '稿费收入（年收入约 $1,200）；波士顿租房一间',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+  {
+    id: 'brooks',
+    emoji: '🎓',
+    tagline: '旧报纸里那桩未结案的失踪，她决定自己查',
+    data: {
+      attrValues: { str: 45, con: 55, dex: 60, app: 70, pow: 60, siz: 50, int: 75, edu: 70, luck: 70 },
+      attrRolls: { str: '1,3,5', con: '2,4,5', dex: '2,4,6', app: '3,5,6', pow: '3,4,5', siz: '1,3', int: '4,5', edu: '2,6', luck: '3,5,6' },
+      charInfo: { name: '玛格丽特·布鲁克斯', player: '', age: '20', gender: '女', era: '1920s' },
+      selectedOcc: OCCUPATIONS.find(o => o.name === '学生、实习生'),
+      occPts: { '外语①': 19, '图书馆使用': 70, '聆听': 40, '历史': 55, '人类学': 40, '神秘学': 36, '信用评级': 20 },
+      intPts: { '侦查': 45, '格斗①': 5, '攀爬': 10, '游泳': 5, '骑术': 5, '驾驶①': 10, '话术': 10, '技艺②': 5, '妙手': 10, '母语': 15, '神秘学': 10, '聆听': 10, '历史': 10 },
+      skillSpecs: { '外语①': '法语', '格斗①': '斗殴', '技艺②': '摄影', '驾驶①': '汽车' },
+      freeOccSkills: ['母语', '外语①', '历史', '人类学', '神秘学'],
+      usedOccPoints: 280, totalOccPoints: 280, usedIntPoints: 150, totalIntPoints: 150,
+      charWeapons: [],
+      charBackstory: '密斯卡托尼克大学二年级学生，校刊兼职撰稿。她在图书馆地下室的旧报纸堆里翻到 1928 年一桩未结案的失踪——失踪者最后一次被人看见时，手里攥着一张画着五角星与怪异符号的纸片。校方说那是"恶作剧"，但最近，档案馆那间上锁的阅览室，钥匙总是无故出现在她的口袋里。',
+      charGear: '笔记本、校刊记者证、自行车、莱卡相机、宿舍钥匙',
+      charMythos: '旧报纸剪报——1928 年失踪案的报道，边角有一枚铅笔画的五角星',
+      charSpells: '',
+      charCompanions: '室友多萝西·怀特——睡在上铺，凌晨三点听过走廊里的脚步声',
+      charAssets: '学生津贴（年收入约 $600）；大学宿舍床位',
+      tickedSkills: {}, playLog: [], diceHistory: [],
+      majorWound: false, dying: false, sessionSanLoss: 0, completed: true,
+    }
+  },
+];
+
 // ---------- 武器分类 ----------
 function getWeaponCategory(w) {
   const meleeSkills = ['斗殴', '剑', '斧', '矛', '鞭子', '绞具', '链枷', '电锯'];
@@ -334,6 +531,110 @@ function getSkillBase(name, edu, dex, specs) {
   return sk.base;
 }
 
+// ---------- 自由职业技能槽解析 ----------
+// 职业数据中的占位条目（如"两项其他技能"、"任意四项其他学术、时代"、"下面任选两项：急救、机械维修、外语"）
+// 会被解析为 N 个"自由槽"，玩家可在技能分配页从中挑选真实技能作为职业技能
+const FREE_SKILL_ALIAS = {
+  '汽车驾驶': '驾驶①', '驾驶': '驾驶①', '外语': '外语①', '外语（任一）': '外语①',
+  '语言': '外语①', '驯兽': '动物驯养', '电工': '电气维修', '打字': '技艺①', '速记': '技艺①',
+};
+const CN_NUM = { '一': 1, '两': 2, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10 };
+
+function normalizeSkillName(name) {
+  if (ALL_SKILLS.some(s => s.name === name)) return name;
+  if (FREE_SKILL_ALIAS[name]) return FREE_SKILL_ALIAS[name];
+  if (name.includes('外语')) return '外语①';
+  if (name.includes('驾驶')) return '驾驶①';
+  if (name.includes('科学')) return '科学';
+  if (name.includes('母语')) return '母语';
+  // 前缀匹配（双向）："科学（生物学；制药）"→"科学"、"图书馆"→"图书馆使用"
+  const prefix = ALL_SKILLS.find(s => name.startsWith(s.name) || s.name.startsWith(name));
+  if (prefix) return prefix.name;
+  return '';
+}
+
+// 解析占位条目 → [{ count, hint, allowed, fixed }]；
+// allowed = null 表示任意技能，数组表示限定列表；fixed = 条目中隐含的固定职业技能（无需玩家选择）；无法解析返回 []
+function parseFreeSkillSlots(occSkillName) {
+  const name = occSkillName.trim();
+  const out = [];
+  // 0) 提取前置固定技能："侦查和下面的一种个人特长：汽车驾驶" → fixed [侦查]；"潜行。※经KP允许…" → fixed [潜行]
+  let rest = name;
+  let fixedPrefix = [];
+  let mf = name.match(/^(.+?)(?:和下面|。)/);
+  if (mf) {
+    const f = normalizeSkillName(mf[1].trim());
+    if (f) {
+      fixedPrefix = [f];
+      rest = name.slice(mf[1].length);
+    }
+  }
+  // 1) 组合条目型（一条含多个固定技能，非选择型）："急救、医学、外语（拉丁文）、心理学、科学（生物学；制药）"
+  if (!/其他|任意|任选|下面|特长/.test(rest) && rest.includes('、')) {
+    const parts = rest.split(/、|；/).map(s => normalizeSkillName(s.trim())).filter(Boolean);
+    if (parts.length >= 2) {
+      out.push({ count: parts.length, hint: name, allowed: parts, fixed: fixedPrefix });
+      return out;
+    }
+  }
+  // 2) 限定列表型："下面任选两项：急救、机械维修、外语" / "下面的一种个人特长：汽车驾驶"
+  let m = rest.match(/任选(一|两|二|三|四|五|六|七|八|九|十|\d+)项[：:](.+)$/);
+  if (!m) m = rest.match(/下面的?(一|两|二|三|四|五|六|七|八|九|十|\d+)种?(?:个人特长|其他)?[：:](.+)$/);
+  if (m) {
+    const count = CN_NUM[m[1]] || parseInt(m[1], 10) || 1;
+    const list = [...new Set(m[2].split(/、|，|,|\//)
+      .map(s => normalizeSkillName(s.trim().replace(/[（(].*?[)）]/g, '')))
+      .filter(Boolean))];
+    if (list.length) out.push({ count, hint: name, allowed: list, fixed: fixedPrefix });
+    return out;
+  }
+  // 3) 特殊："※经KP允许 可以包含克苏鲁神话"
+  if (rest.includes('克苏鲁神话')) {
+    out.push({ count: 1, hint: name, allowed: ['克苏鲁神话'], fixed: fixedPrefix });
+    return out;
+  }
+  // 4) 特殊："※经KP允许 可用催眠替换其中一项"
+  if (rest.includes('催眠')) {
+    out.push({ count: 1, hint: name, allowed: ['催眠'], fixed: fixedPrefix });
+    return out;
+  }
+  // 5) 通用数字型："两项其他技能" / "任意四项其他学术、时代" / "任两种其他学术" / "三个学习的专业"
+  m = rest.match(/(一|两|二|三|四|五|六|七|八|九|十|\d+)[项种个]/);
+  if (m) {
+    const count = CN_NUM[m[1]] || parseInt(m[1], 10) || 1;
+    out.push({ count, hint: name, allowed: null, fixed: fixedPrefix });
+    return out;
+  }
+  // 6) 无数字但表达自由选择："时代特长（如计算机、锁匠、格斗、射击）" / "个人特长" / "专业书籍主题" / "时代"
+  if (/特长|个人|专业书籍主题|其他技能|时代/.test(rest)) {
+    out.push({ count: 1, hint: name, allowed: null, fixed: fixedPrefix });
+    return out;
+  }
+  // 7) 数据中被拆开的括号条目："语言（母语" / "外语）" → 视为限定单技能槽
+  if (/[（(）)]/.test(rest)) {
+    const single = normalizeSkillName(rest);
+    if (single) {
+      out.push({ count: 1, hint: name, allowed: [single], fixed: fixedPrefix });
+      return out;
+    }
+  }
+  return out;
+}
+
+// 从职业技能列表生成自由槽（hint/allowed/fixed 由占位条目解析，skill 待玩家选择）
+function buildFreeOccSlots(occSkills) {
+  const slots = [];
+  (occSkills || []).forEach(s => {
+    const parsed = parseFreeSkillSlots(s.name);
+    parsed.forEach(sp => {
+      for (let i = 0; i < sp.count; i++) {
+        slots.push({ skill: '', hint: sp.hint, allowed: sp.allowed, fixed: sp.fixed || [] });
+      }
+    });
+  });
+  return slots;
+}
+
 function roll3D6x5() {
   const rolls = [];
   for (let i = 0; i < 3; i++) rolls.push(Math.floor(Math.random() * 6) + 1);
@@ -356,63 +657,63 @@ function makeAttrDisplay(values) {
   });
 }
 
-// 属性描述文案字典
+// 属性描述文案字典（统一风格：【四字评价】具象描述，无末尾标点，由拼接函数统一加标点）
 const traits_dictionary = {
   SIZ: [
-    "【极度瘦小】如未发育的孩童般孱弱",         // 1-19
-    "【偏小单薄】身形相对娇小",                  // 20-39
-    "【中等身材】体格属于大众均值",              // 40-59
-    "【高大健壮】骨架宽大且颇具压迫感",          // 60-79
-    "【极其魁梧】宛如一尊庞大的巨塔"             // 80+
+    "【骨瘦如柴】单薄得仿佛一阵风就能吹倒",
+    "【骨架偏小】比多数同龄人矮上一截",
+    "【体格适中】与普通成年人无异",
+    "【高大健硕】肩宽背阔，自带压迫感",
+    "【庞大如塔】所到之处阴影先行"
   ],
   APP: [
-    "【容貌骇人】，带有令人不适的明显生理缺陷。",
-    "【相貌平庸】，甚至显得有些粗糙邋遢。",
-    "【长相大众】，很容易完全隐入人群之中。",
-    "【容貌出众】，举手投足间颇具个人魅力。",
-    "【惊为天人】，拥有令人无法移开视线的绝美容颜。"
+    "【面目可憎】五官扭曲，令人下意识回避",
+    "【其貌不扬】平平无奇，极易被忽略",
+    "【相貌端正】干净整洁，亲和力尚可",
+    "【俊朗出众】举手投足间自带光芒",
+    "【惊世之貌】美得令人屏息，过目难忘"
   ],
   CON: [
-    "【体质极弱】常年被病痛折磨",
-    "【健康欠佳】比常人更容易感到疲劳",
-    "【体质正常】没有明显的健康问题",
-    "【精力充沛】身体硬朗且非常耐造",
-    "【坚如钢铁】拥有几乎百病不侵的强悍体魄"
+    "【体弱多病】常年受病痛纠缠",
+    "【健康欠佳】容易疲劳，经不起折腾",
+    "【身体康健】无病无灾，精力如常",
+    "【身强体壮】耐得住劳累与伤痛",
+    "【钢筋铁骨】几乎百病不侵，生命力惊人"
   ],
   STR: [
-    "【手无缚鸡之力】连提起重物都极度困难。",
-    "【力量略逊常人】难以胜任重体力劳动。",
-    "【力量中规中矩】和普通成年人无异。",
-    "【力量远超常人】肌肉中蕴含着强大的爆发力。",
-    "【拥有天生神力】具备极具破坏性的物理力量。"
+    "【手无缚鸡之力】连提起重物都费劲",
+    "【力量偏弱】难以胜任重体力活",
+    "【力气寻常】与普通成年人无异",
+    "【力大过人】爆发力远超常人",
+    "【天生神力】徒手即可造成可观的破坏"
   ],
   DEX: [
-    "【极度笨拙】步履蹒跚，毫无协调性可言。",
-    "【肢体微僵】反应和动作总是慢人半拍。",
-    "【灵活度普通】足以应付日常的行动需求。",
-    "【身手敏捷】反应迅速且动作利落。",
-    "【动如脱兔】具备媲美杂技演员的惊人协调性。"
+    "【笨手笨脚】动作迟缓，常撞翻东西",
+    "【反应迟钝】总是慢人半拍",
+    "【身手平常】应付日常绰绰有余",
+    "【动作敏捷】反应迅速，身法利落",
+    "【动如脱兔】协调性堪比杂技演员"
   ],
   INT: [
-    "【思维极度迟缓】难以理解复杂事物",
-    "【理解能力较弱】学习新事物比较吃力",
-    "【逻辑能力正常】有着普通人的思考水平",
-    "【极其聪明机警】头脑灵活且思维敏捷",
-    "【堪称绝顶天才】能轻易洞察隐秘事物的本质"
+    "【思维迟钝】难以理解复杂事物",
+    "【头脑平平】学习新事物比较吃力",
+    "【智力正常】逻辑清晰，与常人无异",
+    "【聪慧机敏】举一反三，思维活跃",
+    "【天纵之才】轻易洞穿事物的本质"
   ],
   EDU: [
-    "【毫无常识】，宛如一张未受过教育的白纸。",
-    "【学历偏低】，仅具备最基础的生活常识。",
-    "【常识完备】，接受过标准的常规教育。",
-    "【学识广博】，受过良好的高等教育。",
-    "【知识储备惊人】，在学术领域堪称行走的百科全书。"
+    "【目不识丁】几乎未受过教育",
+    "【学识浅薄】仅具备基础常识",
+    "【受过教育】具备标准的文化素养",
+    "【博学多识】接受过良好的高等教育",
+    "【学富五车】堪称行走的百科全书"
   ],
   POW: [
-    "【内心极度脆弱】面对未知极易陷入恐慌或崩溃。",
-    "【意志略显薄弱】遭遇变故时容易动摇或优柔寡断。",
-    "【精神状态稳定】能在大多数日常危机中保持理智。",
-    "【意志十分坚定】不易被恐惧或外界暗示所动摇。",
-    "【意志坚不可摧】足以直面深渊而绝对不退缩。"
+    "【意志脆弱】面对未知极易崩溃",
+    "【意志薄弱】遇事容易动摇退缩",
+    "【心智稳定】能沉着应对多数危机",
+    "【意志坚定】不惧恐吓与外界暗示",
+    "【铁石心肠】直面深渊亦不动摇"
   ]
 };
 
@@ -424,25 +725,20 @@ function getTraitIndex(value) {
   return 4;
 }
 
-function generateAttrDesc(values) {
-  const v = (k) => values[k] || 0;
-  const idx = (k) => getTraitIndex(v(k));
-  const textSIZ = traits_dictionary.SIZ[idx('siz')];
-  const textAPP = traits_dictionary.APP[idx('app')];
-  const textCON = traits_dictionary.CON[idx('con')];
-  const textSTR = traits_dictionary.STR[idx('str')];
-  const textDEX = traits_dictionary.DEX[idx('dex')];
-  const textINT = traits_dictionary.INT[idx('int')];
-  const textEDU = traits_dictionary.EDU[idx('edu')];
-  const textPOW = traits_dictionary.POW[idx('pow')];
+// 单个属性的描述词条（幸运无词条，返回空串）
+function getTraitText(key, value) {
+  const dict = traits_dictionary[key.toUpperCase()];
+  if (!dict) return '';
+  return dict[getTraitIndex(value || 0)];
+}
 
-  const s1 = `一眼望去，你的外在属于${textSIZ}，且${textAPP}`;
-  const s2 = `身体素质上，你${textCON}；在力量表现上，你${textSTR}`;
-  const s3 = `日常行动时，你${textDEX}`;
-  const s4 = `心智方面，你${textINT}，且${textEDU}`;
-  const s5 = `至于精神防线，你${textPOW}`;
-
-  return `${s1} ${s2} ${s3} ${s4} ${s5}`;
+// 生成全部属性的词条映射
+function makeAttrTraits(values) {
+  const out = {};
+  ['str','con','dex','app','pow','siz','int','edu','luck'].forEach(k => {
+    out[k] = getTraitText(k, values[k] || 0);
+  });
+  return out;
 }
 
 function calcDB(strSiz) {
@@ -575,6 +871,12 @@ Page({
     step: 0,
     // 已保存角色列表
     savedCharacters: [],
+    tagOptions: [],
+    tagFilter: '',
+    charTag: '',
+    showTagDialog: false,
+    tagEditIdx: -1,
+    tagInput: '',
     isCompleted: false,
     savedAt: 0,
     playLuck: 50,
@@ -629,12 +931,31 @@ Page({
     // 属性掷骰
     attrLabels: { str:'力量 STR', con:'体质 CON', dex:'敏捷 DEX', app:'外貌 APP', pow:'意志 POW', siz:'体型 SIZ', int:'智力 INT', edu:'教育 EDU', luck:'幸运 LUCK' },
     attrValues: { str: 0, con: 0, dex: 0, app: 0, pow: 0, siz: 0, int: 0, edu: 0, luck: 0 },
+    attrTraits: { str: '', con: '', dex: '', app: '', pow: '', siz: '', int: '', edu: '', luck: '' },
     attrDisplay: [],
     attrRolls: { str: '', con: '', dex: '', app: '', pow: '', siz: '', int: '', edu: '', luck: '' },
     attrDiceRolling: '',
     rolled: { str: false, con: false, dex: false, app: false, pow: false, siz: false, int: false, edu: false, luck: false },
+    rolledCount: 0,
+    attrRolling: false,
     allRolled: false,
     attrDesc: '',
+    // 预置调查员
+    showPresetDialog: false,
+    presets: PRESET_CHARACTERS.map(pc => ({
+      id: pc.id,
+      emoji: pc.emoji,
+      tagline: pc.tagline,
+      name: pc.data.charInfo.name,
+      occ: pc.data.selectedOcc ? pc.data.selectedOcc.name : '',
+      age: pc.data.charInfo.age,
+      gender: pc.data.charInfo.gender,
+    })),
+    // 自由职业技能槽（“两项其他技能”等占位条目）
+    freeOccSlots: [],
+    showFreeSlotDialog: false,
+    freeSlotEditing: -1,
+    freeSlotDialogList: [],
     // 基础信息
     charInfo: { name: '', player: '', age: '25', gender: '男', era: '1920s' },
     ageModSummary: '',
@@ -727,18 +1048,53 @@ Page({
   loadSavedList() {
     try {
       const list = wx.getStorageSync('coc7_characters') || [];
-      // 为每个角色附加格式化时间
-      list.forEach(c => {
-        if (c.timestamp) {
-          const d = new Date(c.timestamp);
-          const pad = n => String(n).padStart(2, '0');
-          c._timeStr = `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-        } else {
-          c._timeStr = '';
-        }
+      const pad = n => String(n).padStart(2, '0');
+      // 附加展示字段（真实存储下标 / 格式化时间），并提取标签列表
+      const tagSet = new Set();
+      list.forEach((c, i) => {
+        c._idx = i;
+        c._timeStr = c.timestamp ? `${new Date(c.timestamp).getFullYear()}/${pad(new Date(c.timestamp).getMonth()+1)}/${pad(new Date(c.timestamp).getDate())} ${pad(new Date(c.timestamp).getHours())}:${pad(new Date(c.timestamp).getMinutes())}` : '';
+        if (c.tag) tagSet.add(c.tag);
       });
-      this.setData({ savedCharacters: list });
-    } catch (e) { this.setData({ savedCharacters: [] }); }
+      // 过滤 + 排序（最近更新在前，无时间戳排最后）
+      const filter = this.data.tagFilter || '';
+      // 标签已被清空时自动回到“全部”
+      const effectiveFilter = filter && tagSet.has(filter) ? filter : '';
+      if (effectiveFilter !== filter) this.setData({ tagFilter: '' });
+      const shown = list
+        .filter(c => !effectiveFilter || c.tag === effectiveFilter)
+        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      this.setData({ savedCharacters: shown, tagOptions: [...tagSet] });
+    } catch (e) { this.setData({ savedCharacters: [], tagOptions: [] }); }
+  },
+
+  // ---------- 标签管理 ----------
+  setTagFilter(e) {
+    this.setData({ tagFilter: e.currentTarget.dataset.tag || '' }, () => this.loadSavedList());
+  },
+  openTagDialog(e) {
+    const idx = e.currentTarget.dataset.index;
+    if (idx == null) return;
+    try {
+      const list = wx.getStorageSync('coc7_characters') || [];
+      const tag = (list[idx] && list[idx].tag) || '';
+      this.setData({ showTagDialog: true, tagEditIdx: idx, tagInput: tag });
+    } catch (err) { /* ignore */ }
+  },
+  closeTagDialog() { this.setData({ showTagDialog: false, tagEditIdx: -1 }); },
+  onTagInput(e) { this.setData({ tagInput: e.detail.value }); },
+  saveTag() {
+    const idx = this.data.tagEditIdx;
+    if (idx < 0) return;
+    try {
+      const list = wx.getStorageSync('coc7_characters') || [];
+      if (idx < list.length) {
+        list[idx].tag = this.data.tagInput.trim();
+        wx.setStorageSync('coc7_characters', list);
+      }
+    } catch (err) { /* ignore */ }
+    this.setData({ showTagDialog: false, tagEditIdx: -1 });
+    this.loadSavedList();
   },
 
   getVitalState(overrides = {}) {
@@ -863,6 +1219,7 @@ Page({
       attrDesc: this.data.attrDesc, attrDisplay: this.data.attrDisplay,
       charInfo: this.data.charInfo, selectedOcc: this.data.selectedOcc,
       occPts: this.data.occPts, intPts: this.data.intPts, skillSpecs: this.data.skillSpecs,
+      freeOccSkills: (this.data.freeOccSlots || []).map(s => s.skill).filter(Boolean),
       usedOccPoints: this.data.usedOccPoints, totalOccPoints: this.data.totalOccPoints,
       usedIntPoints: this.data.usedIntPoints, totalIntPoints: this.data.totalIntPoints,
       derived, derivedItems,
@@ -877,6 +1234,7 @@ Page({
       charBackstory: this.data.charBackstory, charGear: this.data.charGear,
       charMythos: this.data.charMythos, charSpells: this.data.charSpells, charCompanions: this.data.charCompanions,
       charAssets: this.data.charAssets,
+      tag: this.data.charTag || '',
       completed: completed !== undefined ? completed : this.data.isCompleted,
     };
   },
@@ -893,7 +1251,8 @@ Page({
         savedIndex = list.length - 1;
       }
       wx.setStorageSync('coc7_characters', list);
-      this.setData({ _loadIndex: savedIndex, savedAt: charData.timestamp, savedCharacters: list });
+      this.setData({ _loadIndex: savedIndex, savedAt: charData.timestamp });
+      this.loadSavedList();
       if (toastTitle) wx.showToast({ title: toastTitle, icon: 'success', duration: 1500 });
       return true;
     } catch (e) {
@@ -920,9 +1279,15 @@ Page({
     this.setData({
       step: 1,
       attrValues: { str: 0, con: 0, dex: 0, app: 0, pow: 0, siz: 0, int: 0, edu: 0, luck: 0 },
+      attrTraits: { str: '', con: '', dex: '', app: '', pow: '', siz: '', int: '', edu: '', luck: '' },
       attrDisplay: [],
+      charTag: '',
+      freeOccSlots: [],
+      showFreeSlotDialog: false,
       attrRolls: { str: '', con: '', dex: '', app: '', pow: '', siz: '', int: '', edu: '', luck: '' },
       rolled: { str: false, con: false, dex: false, app: false, pow: false, siz: false, int: false, edu: false, luck: false },
+      rolledCount: 0,
+      attrRolling: false,
       allRolled: false,
       charInfo: { name: '', player: '', age: '25', gender: '男', era: '1920s' },
       ageIndex: 10, genderIndex: 0, eraIndex: 0,
@@ -939,74 +1304,123 @@ Page({
     });
   },
 
+  // 载入完整角色数据（存档或预置）到角色卡 Step 5
+  applyCharData(char, loadIdx) {
+    const pSkills = this.buildPreviewSkills(char.occPts || {}, char.intPts || {}, char.attrValues, char.skillSpecs || {});
+    const attrVals = char.attrValues || { str: 0, con: 0, dex: 0, app: 0, pow: 0, siz: 0, int: 0, edu: 0, luck: 0 };
+    const charInfo = char.charInfo || { name: '', player: '', age: '25', gender: '男', era: '1920s' };
+    const d = calcDerivedFrom(attrVals, charInfo);
+    const derivedItems = makeDerivedItems(d);
+    const cm = (char.occPts && char.occPts['克苏鲁神话'] || 0) + (char.intPts && char.intPts['克苏鲁神话'] || 0);
+    const cmBase = getSkillBase('克苏鲁神话', attrVals.edu || 50, attrVals.dex || 50);
+    const maxSAN = 99 - (cmBase + cm);
+    const playSAN = char.playSAN !== undefined ? char.playSAN : d.san;
+    const sanDayStart = char.sanDayStart || playSAN;
+    // 恢复自由职业技能槽：用职业数据重新解析槽位结构，再回填已保存的选择
+    let freeSlots = [];
+    if (char.selectedOcc) {
+      freeSlots = buildFreeOccSlots((char.selectedOcc.skills || []).filter(s => s.mark === '★'));
+      const savedFree = char.freeOccSkills || [];
+      savedFree.forEach(sk => {
+        // 回填校验：跳过限定列表不允许的技能（职业数据可能已变更）；槽位不足时扩展
+        const slot = freeSlots.find(x => !x.skill && (!x.allowed || x.allowed.includes(sk)));
+        if (slot) slot.skill = sk;
+        else freeSlots.push({ skill: sk, hint: '已保存的自由技能', allowed: null, fixed: [] });
+      });
+    }
+    this.setData({
+      step: 5,
+      attrValues: attrVals,
+      attrTraits: makeAttrTraits(attrVals),
+      attrDisplay: makeAttrDisplay(attrVals),
+      attrDesc: char.attrDesc || '',
+      attrRolls: char.attrRolls || {},
+      rolled: { str: true, con: true, dex: true, app: true, pow: true, siz: true, int: true, edu: true, luck: true },
+      rolledCount: 9,
+      allRolled: true,
+      charInfo: charInfo,
+      selectedOcc: char.selectedOcc || null,
+      occPts: char.occPts || {}, intPts: char.intPts || {}, skillSpecs: char.skillSpecs || {},
+      freeOccSlots: freeSlots,
+      showFreeSlotDialog: false,
+      usedOccPoints: char.usedOccPoints || 0, totalOccPoints: char.totalOccPoints || 0,
+      usedIntPoints: char.usedIntPoints || 0, totalIntPoints: char.totalIntPoints || 0,
+      derived: d,
+      derivedItems: derivedItems,
+      sortedSkillsByCat: pSkills,
+      _loadIndex: loadIdx,
+      isCompleted: char.completed || false,
+      tickedSkills: char.tickedSkills || {},
+      charWeapons: char.charWeapons || [],
+      charBackstory: char.charBackstory || '', charGear: char.charGear || '',
+      charMythos: char.charMythos || '', charSpells: char.charSpells || '', charCompanions: char.charCompanions || '',
+      charAssets: char.charAssets || '',
+      charTag: char.tag || '',
+      playHP: char.playHP || d.hp,
+      playSAN: playSAN,
+      playMP: char.playMP || d.mp,
+      playLuck: char.playLuck || attrVals.luck || 50,
+      maxSAN: maxSAN,
+      maxMP: d.mp,
+      majorWound: char.majorWound || false, dying: char.dying || false,
+      playLog: char.playLog || [],
+      diceHistory: char.diceHistory || [],
+      sessionSanLoss: char.sessionSanLoss || 0,
+      sanDayStart: sanDayStart,
+      sanRollResult: null,
+      showSanDialog: false,
+      savedAt: char.timestamp || 0,
+    }, () => {
+      this.refreshPlayDashboard();
+      this.refreshSkillValidation();
+    });
+  },
+
   loadCharacter(e) {
     const idx = e.currentTarget.dataset.index;
+    if (idx == null) return;
     try {
       const list = wx.getStorageSync('coc7_characters') || [];
       if (idx < 0 || idx >= list.length) return;
-      const char = list[idx];
-      // 恢复并构建预览技能
-      const pSkills = this.buildPreviewSkills(char.occPts || {}, char.intPts || {}, char.attrValues);
-      const attrVals = char.attrValues || { str: 0, con: 0, dex: 0, app: 0, pow: 0, siz: 0, int: 0, edu: 0, luck: 0 };
-      const charInfo = char.charInfo || { name: '', player: '', age: '25', gender: '男', era: '1920s' };
-      const d = calcDerivedFrom(attrVals, charInfo);
-      const derivedItems = makeDerivedItems(d);
-      const cm = (char.occPts && char.occPts['克苏鲁神话'] || 0) + (char.intPts && char.intPts['克苏鲁神话'] || 0);
-      const cmBase = getSkillBase('克苏鲁神话', attrVals.edu || 50, attrVals.dex || 50);
-      const maxSAN = 99 - (cmBase + cm);
-      const playSAN = char.playSAN !== undefined ? char.playSAN : d.san;
-      const sanDayStart = char.sanDayStart || playSAN;
-      this.setData({
-        step: 5,
-        attrValues: attrVals,
-        attrDisplay: makeAttrDisplay(attrVals),
-        attrDesc: char.attrDesc || generateAttrDesc(attrVals),
-        attrRolls: char.attrRolls || {},
-        rolled: { str: true, con: true, dex: true, app: true, pow: true, siz: true, int: true, edu: true, luck: true },
-        allRolled: true,
-        charInfo: charInfo,
-        selectedOcc: char.selectedOcc || null,
-        occPts: char.occPts || {}, intPts: char.intPts || {}, skillSpecs: char.skillSpecs || {},
-        usedOccPoints: char.usedOccPoints || 0, totalOccPoints: char.totalOccPoints || 0,
-        usedIntPoints: char.usedIntPoints || 0, totalIntPoints: char.totalIntPoints || 0,
-        derived: d,
-        derivedItems: derivedItems,
-        sortedSkillsByCat: pSkills,
-        _loadIndex: idx,
-        isCompleted: char.completed || false,
-        tickedSkills: char.tickedSkills || {},
-        charWeapons: char.charWeapons || [],
-        charBackstory: char.charBackstory || '', charGear: char.charGear || '',
-        charMythos: char.charMythos || '', charSpells: char.charSpells || '', charCompanions: char.charCompanions || '',
-        charAssets: char.charAssets || '',
-        playHP: char.playHP || d.hp,
-        playSAN: playSAN,
-        playMP: char.playMP || d.mp,
-        playLuck: char.playLuck || attrVals.luck || 50,
-        maxSAN: maxSAN,
-        maxMP: d.mp,
-        majorWound: char.majorWound || false, dying: char.dying || false,
-        playLog: char.playLog || [],
-        diceHistory: char.diceHistory || [],
-        sessionSanLoss: char.sessionSanLoss || 0,
-        sanDayStart: sanDayStart,
-        sanRollResult: null,
-        showSanDialog: false,
-        savedAt: char.timestamp || 0,
-      }, () => {
-        this.refreshPlayDashboard();
-        this.refreshSkillValidation();
-      });
+      this.applyCharData(list[idx], idx);
     } catch (e) { wx.showToast({ title: '读取失败', icon: 'none' }); }
+  },
+
+  // ==================== 预置调查员 ====================
+  showPresetDialog() { this.setData({ showPresetDialog: true }); },
+  closePresetDialog() { this.setData({ showPresetDialog: false }); },
+  applyPresetCharacter(e) {
+    const idx = e.currentTarget.dataset.index;
+    const preset = PRESET_CHARACTERS[idx];
+    if (!preset) return;
+    try {
+      const p = preset.data;
+      const charData = Object.assign({}, p);
+      charData.derived = calcDerivedFrom(p.attrValues, p.charInfo);
+      charData.derivedItems = makeDerivedItems(charData.derived);
+      charData.sortedSkillsByCat = this.buildPreviewSkills(p.occPts || {}, p.intPts || {}, p.attrValues, p.skillSpecs || {});
+      charData.timestamp = Date.now();
+      charData.completed = true;
+      const list = wx.getStorageSync('coc7_characters') || [];
+      list.push(charData);
+      wx.setStorageSync('coc7_characters', list);
+      this.setData({ showPresetDialog: false });
+      this.loadSavedList();
+      this.applyCharData(charData, list.length - 1);
+      wx.showToast({ title: '✅ 已载入：' + p.charInfo.name, icon: 'none' });
+    } catch (err) {
+      wx.showToast({ title: '载入失败', icon: 'none' });
+    }
   },
 
   deleteCharacter(e) {
     const idx = e.currentTarget.dataset.index;
+    if (idx == null) return;
     const list = wx.getStorageSync('coc7_characters') || [];
     if (idx < 0 || idx >= list.length) return;
     wx.showModal({
       title: '确认删除', content: '确定要删除这个角色吗？',
-      success: (res) => { if (res.confirm) { list.splice(idx, 1); wx.setStorageSync('coc7_characters', list); this.setData({ savedCharacters: list }); } }
+      success: (res) => { if (res.confirm) { list.splice(idx, 1); wx.setStorageSync('coc7_characters', list); this.loadSavedList(); } }
     });
   },
 
@@ -1027,7 +1441,7 @@ Page({
           const list = wx.getStorageSync('coc7_characters') || [];
           list.push(charData);
           wx.setStorageSync('coc7_characters', list);
-          this.setData({ savedCharacters: list });
+          this.loadSavedList();
           wx.showToast({ title: '✅ 导入成功', icon: 'success' });
         } catch (e) {
           wx.showToast({ title: '数据解析失败，请检查剪贴板内容', icon: 'none' });
@@ -1041,18 +1455,24 @@ Page({
 
   // ==================== STEP 1：属性掷骰 ====================
   rollAllAttrs() {
+    if (this.data.attrRolling) return;
     const attrs = ['str','con','dex','app','pow','siz','int','edu','luck'];
+    let count = 0;
+    this.setData({ attrRolling: true });
     attrs.forEach((a, i) => {
       setTimeout(() => {
-        this.setData({ attrDiceRolling: a });
         const result = (a === 'siz' || a === 'int' || a === 'edu') ? roll2D6plus6x5() : roll3D6x5(); // luck also 3D6
+        count++;
         this.setData({
           attrValues: { ...this.data.attrValues, [a]: result.value },
+          attrTraits: { ...this.data.attrTraits, [a]: getTraitText(a, result.value) },
           attrRolls: { ...this.data.attrRolls, [a]: result.rolls.join(',') },
           rolled: { ...this.data.rolled, [a]: true },
-          attrDiceRolling: (i < attrs.length - 1) ? '' : '',
+          rolledCount: count,
+          // 依次高亮当前属性，最后一个掷完后清空
+          attrDiceRolling: (i < attrs.length - 1) ? a : '',
         });
-        if (i === attrs.length - 1) this.setData({ allRolled: true, attrDiceRolling: '', canNext: true, attrDisplay: makeAttrDisplay(this.data.attrValues), attrDesc: generateAttrDesc(this.data.attrValues) });
+        if (i === attrs.length - 1) this.setData({ allRolled: true, attrDiceRolling: '', attrRolling: false, canNext: true, attrDisplay: makeAttrDisplay(this.data.attrValues) });
       }, i * 300);
     });
   },
@@ -1062,14 +1482,14 @@ Page({
     this.setData({ attrDiceRolling: attr });
     setTimeout(() => {
       const newVal = { ...this.data.attrValues, [attr]: result.value };
-      this.setData({ attrValues: newVal, attrRolls: { ...this.data.attrRolls, [attr]: result.rolls.join(',') }, attrDiceRolling: '', attrDisplay: makeAttrDisplay(newVal), attrDesc: generateAttrDesc(newVal) });
+      this.setData({ attrValues: newVal, attrTraits: { ...this.data.attrTraits, [attr]: getTraitText(attr, result.value) }, attrRolls: { ...this.data.attrRolls, [attr]: result.rolls.join(',') }, attrDiceRolling: '', attrDisplay: makeAttrDisplay(newVal) });
     }, 200);
   },
 
   // ==================== STEP 2：基础信息 ====================
   onCharInfoChange(e) { this.setData({ [`charInfo.${e.currentTarget.dataset.field}`]: e.detail.value }); this.checkStep2CanNext(); },
-  randomMaleName() { const n = MALE_NAMES[Math.floor(Math.random() * MALE_NAMES.length)]; this.setData({ 'charInfo.name': n }); this.checkStep2CanNext(); },
-  randomFemaleName() { const n = FEMALE_NAMES[Math.floor(Math.random() * FEMALE_NAMES.length)]; this.setData({ 'charInfo.name': n }); this.checkStep2CanNext(); },
+  randomMaleName() { const n = MALE_NAMES[Math.floor(Math.random() * MALE_NAMES.length)]; this.setData({ 'charInfo.name': n, 'charInfo.gender': '男', genderIndex: 0 }); this.checkStep2CanNext(); },
+  randomFemaleName() { const n = FEMALE_NAMES[Math.floor(Math.random() * FEMALE_NAMES.length)]; this.setData({ 'charInfo.name': n, 'charInfo.gender': '女', genderIndex: 1 }); this.checkStep2CanNext(); },
   onAgeChange(e) {
     const idx = parseInt(e.detail.value);
     const age = 15 + idx;
@@ -1145,6 +1565,8 @@ Page({
       occFixedSkills: fixedSkills,
       occOptGroups: optGroups,
       selectedOptSkills: {},
+      freeOccSlots: buildFreeOccSlots(fixedSkills),
+      showFreeSlotDialog: false,
       // Auto-populate specs from occupation data and track required ones
       skillSpecs: this.buildInitialSpecs(fixedSkills),
       occSpecRequired: this.buildOccSpecRequired(fixedSkills),
@@ -1271,7 +1693,42 @@ Page({
     if (this.data.selectedOcc.skills.some(s => s.name === name && s.mark === '☆')) {
       return !!this.data.selectedOptSkills[name];
     }
+    // 自由职业技能槽中已选择的技能，以及条目隐含的固定技能（如巡警的“侦查”、除魅师的“潜行”）
+    if ((this.data.freeOccSlots || []).some(s => s.skill === name || (s.fixed || []).includes(name))) return true;
     return false;
+  },
+
+  // ---------- 自由职业技能槽 ----------
+  openFreeSlotDialog(e) {
+    const idx = e.currentTarget.dataset.index;
+    const slot = this.data.freeOccSlots[idx];
+    if (!slot) return;
+    const edu = this.data.attrValues.edu || 50;
+    const dex = this.data.attrValues.dex || 50;
+    const occupied = this.data.freeOccSlots.map(s => s.skill).filter(Boolean);
+    const list = ALL_SKILLS.filter(sk => {
+      if (slot.allowed && !slot.allowed.includes(sk.name)) return false;
+      if (occupied.includes(sk.name)) return false;
+      return true;
+    }).map(sk => ({ name: sk.name, base: getSkillBase(sk.name, edu, dex, this.data.skillSpecs) }));
+    this.setData({ freeSlotEditing: idx, freeSlotDialogList: list, showFreeSlotDialog: true });
+  },
+  closeFreeSlotDialog() { this.setData({ showFreeSlotDialog: false, freeSlotEditing: -1 }); },
+  pickFreeSlotSkill(e) {
+    const skillName = e.currentTarget.dataset.name;
+    const idx = this.data.freeSlotEditing;
+    if (idx < 0 || !skillName) return;
+    const slots = this.data.freeOccSlots.map((s, i) => (i === idx ? { ...s, skill: skillName } : s));
+    this.setData({ freeOccSlots: slots, showFreeSlotDialog: false, freeSlotEditing: -1 });
+    if (this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc);
+    this.refreshSkillValidation();
+  },
+  clearFreeSlotSkill(e) {
+    const idx = e.currentTarget.dataset.index;
+    const slots = this.data.freeOccSlots.map((s, i) => (i === idx ? { ...s, skill: '' } : s));
+    this.setData({ freeOccSlots: slots });
+    if (this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc);
+    this.refreshSkillValidation();
   },
 
   toggleOptSkill(e) {
@@ -1486,14 +1943,14 @@ Page({
     return calcDerivedFrom(this.data.attrValues, this.data.charInfo);
   },
 
-  buildPreviewSkills(occPts, intPts, attrVals) {
+  buildPreviewSkills(occPts, intPts, attrVals, specsOverride) {
     const edu = attrVals.edu || 50;
     const dex = attrVals.dex || 50;
-    const specs = this.data.skillSpecs || {};
+    const specs = specsOverride || this.data.skillSpecs || {};
     const groups = {};
     CAT_ORDER.forEach(c => { groups[c] = []; });
     ALL_SKILLS.forEach(sk => {
-      const base = getSkillBase(sk.name, edu, dex, this.data.skillSpecs);
+      const base = getSkillBase(sk.name, edu, dex, specs);
       const pt = (occPts[sk.name] || 0) + (intPts[sk.name] || 0);
       if (base + pt > 0) {
         const spec = specs[sk.name];
@@ -1646,6 +2103,8 @@ Page({
   },
 
   // ==================== 骰娘导入 ====================
+  // 海豹骰（Sealdice）官方 .st 格式：`.st 角色名-力量60 敏捷70 ...`，空格分隔、中文主键，
+  // 英文缩写为同义词（参考 https://docs.sealdice.com/use/coc7.html）；塔塔等骰娘兼容该格式。
   generateDiceImport() {
     const v = this.data.attrValues;
     const occPts = this.data.occPts || {};
@@ -1661,22 +2120,22 @@ Page({
       return base + (occPts[skName] || 0) + (intPts[skName] || 0);
     };
 
-    let result = '.st ' + name + '\n';
-    result += '敏捷' + v.dex + 'dex' + v.dex;
-    result += '意志' + v.pow + 'pow' + v.pow;
-    result += '体质' + v.con + 'con' + v.con;
-    result += '外貌' + v.app + 'app' + v.app;
-    result += '教育' + v.edu + 'edu' + v.edu;
-    result += '体型' + v.siz + 'siz' + v.siz;
-    result += '智力' + v.int + '智力' + v.int + 'int' + v.int;
+    const parts = [];
+    // 九项属性（含力量）+ 衍生值
+    parts.push('力量' + (v.str || 0));
+    parts.push('敏捷' + (v.dex || 0));
+    parts.push('意志' + (v.pow || 0));
+    parts.push('体质' + (v.con || 0));
+    parts.push('外貌' + (v.app || 0));
+    parts.push('教育' + (v.edu || 0));
+    parts.push('体型' + (v.siz || 0));
+    parts.push('智力' + (v.int || 0));
+    parts.push('幸运' + (v.luck || 0));
     const san = v.pow || 50;
-    const luck = v.luck || 50;
-    result += 'san' + san + 'san值' + san + '理智' + san + '理智值' + san;
-    result += '幸运' + luck + '幸运' + luck;
     const mp = Math.floor(san / 5);
-    result += 'mp' + mp + '魔法' + mp;
     const hp = Math.floor(((v.con || 50) + (v.siz || 50)) / 10);
-    result += 'hp' + hp + '生命' + hp + '\n';
+    parts.push('hp' + hp, '理智' + san, 'mp' + mp);
+
     const skillOrder = [
       '会计','人类学','估价','考古学','技艺①','技艺②','取悦','攀爬','计算机使用',
       '信用评级','克苏鲁神话','乔装','闪避','驾驶①','电气维修','电子学','话术',
@@ -1689,23 +2148,18 @@ Page({
     for (const skName of skillOrder) {
       const t = total(skName);
       if (t <= 0) continue;
-      
+
       // 专攻技能：必须有专攻名才导出，否则跳过
       const needsSpec = ['格斗①','格斗②','射击①','射击②','射击③','技艺①','技艺②','技艺③','驾驶①','科学','外语①','外语②','外语③'].includes(skName);
       const spec = specs[skName];
       if (needsSpec && !spec) continue;
-      
-      // 母语始终用技能名，专攻技能有专攻时用专攻名
-      if (skName === '母语') {
-        result += '母语' + t;
-      } else if (needsSpec && spec) {
-        result += spec + t;
-      } else {
-        result += skName + t;
-      }
+
+      // 母语始终用技能名，专攻技能有专攻时用专攻名（规则书技能名）
+      const key = (skName === '母语') ? '母语' : (needsSpec && spec) ? spec : skName;
+      parts.push(key + t);
     }
 
-    return result;
+    return '.st ' + name + '-' + parts.join(' ');
   },
 
   // ==================== 游玩模式 ====================
@@ -2272,6 +2726,7 @@ Page({
     var result = applyAgeModifiers(age, this.data.attrValues, this.data.ageModChoice, this.data.ageModAlloc);
     this.setData({
       attrValues: result.attrValues,
+      attrTraits: makeAttrTraits(result.attrValues),
       attrDisplay: makeAttrDisplay(result.attrValues),
       ageModSummary: result.summary,
       ageModDone: true,

@@ -224,6 +224,44 @@ page {
   min-width: 0;
 }
 
+/* 标签筛选栏 */
+.saved-filter { white-space: nowrap; margin-bottom: 12rpx; }
+.saved-filter-chip {
+  display: inline-block;
+  padding: 6rpx 20rpx;
+  margin-right: 12rpx;
+  border-radius: 20rpx;
+  background: #faf8f4;
+  border: 1rpx solid #d4c5a9;
+  color: #7a6b58;
+  font-size: 22rpx;
+}
+.saved-filter-chip.active { background: #6b4c2a; border-color: #6b4c2a; color: #fff; }
+.saved-filter-chip:active { opacity: 0.8; }
+
+/* 列表项：名称行 + 标签徽章 + 操作区 */
+.saved-name-row { display: flex; align-items: center; gap: 8rpx; min-width: 0; }
+.saved-tag {
+  flex-shrink: 0;
+  max-width: 220rpx;
+  font-size: 18rpx;
+  color: #6b4c2a;
+  background: #fdf5e6;
+  border: 1rpx solid #e8c8a0;
+  border-radius: 8rpx;
+  padding: 2rpx 10rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.saved-actions { display: flex; align-items: center; gap: 14rpx; flex-shrink: 0; }
+.saved-edit {
+  font-size: 26rpx;
+  color: #8b7355;
+  padding: 10rpx 8rpx;
+}
+.saved-edit:active { color: #6b4c2a; }
+
 .saved-empty {
   padding: 36rpx 0;
   text-align: center;
@@ -236,15 +274,101 @@ page {
 .card-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; margin-bottom: 16rpx; display: block; }
 
 /* ===== 属性掷骰 ===== */
-.attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; }
-.attr-block { background: #faf8f4; border-radius: 12rpx; padding: 16rpx; text-align: center; border: 2px solid transparent; transition: all 0.3s; }
-.attr-block.rolling { border-color: #8b4513; background: #fdf5e6; }
-.attr-block.done { border-color: #6b8e23; }
-.attr-label { font-size: 26rpx; color: #7a6b58; display: block; margin-bottom: 8rpx; }
-.attr-value { font-size: 44rpx; font-weight: bold; color: #3b2e1e; display: block; min-height: 52rpx; }
-.attr-roll-result { font-size: 22rpx; color: #8b7355; display: block; margin-top: 4rpx; }
-.attr-reroll-btn { font-size: 22rpx; color: #8b4513; margin-top: 8rpx; padding: 4rpx 16rpx; border: 1px solid #d4c5a9; border-radius: 8rpx; background: transparent; }
+.attr-hero {
+  background: linear-gradient(135deg, #4a3826 0%, #6b4c2a 55%, #8b6b45 100%);
+  border-radius: 16rpx;
+  padding: 28rpx 24rpx 24rpx;
+  text-align: center;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(59, 46, 30, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+.attr-hero::after {
+  content: '';
+  position: absolute;
+  right: -70rpx;
+  top: -70rpx;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+.attr-hero-icon { font-size: 48rpx; display: block; margin-bottom: 6rpx; }
+.attr-hero-title { font-size: 36rpx; font-weight: bold; color: #f8f3ea; display: block; letter-spacing: 2rpx; }
+.attr-hero-progress { margin-top: 14rpx; }
+.attr-hero-bar { height: 8rpx; background: rgba(255, 255, 255, 0.2); border-radius: 8rpx; overflow: hidden; }
+.attr-hero-bar-fill { height: 100%; background: #f0d9a8; border-radius: 8rpx; transition: width 0.3s; }
+.attr-hero-bar-text { font-size: 20rpx; color: #e8d9bf; display: block; margin-top: 6rpx; }
+
+/* 关键：minmax(0, 1fr) 防止列被内容固有宽度撑开（否则投掷后词条/按钮会把网格顶出屏幕） */
+.attr-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12rpx; margin-bottom: 16rpx; }
+.attr-card {
+  background: #faf8f4;
+  border-radius: 12rpx;
+  padding: 12rpx 8rpx 10rpx;
+  text-align: center;
+  border: 2rpx solid #e8ddd0;
+  min-height: 210rpx;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s;
+}
+.attr-card.rolling {
+  border-color: #8b4513;
+  background: #fdf5e6;
+  box-shadow: 0 0 0 4rpx rgba(139, 69, 19, 0.12);
+}
+.attr-card.done { border-color: #7a9a3d; }
+.attr-card.done::after {
+  content: '✓';
+  position: absolute;
+  top: 4rpx;
+  right: 4rpx;
+  width: 26rpx;
+  height: 26rpx;
+  line-height: 26rpx;
+  border-radius: 50%;
+  background: #7a9a3d;
+  color: #fff;
+  font-size: 16rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.15);
+}
+.attr-label { font-size: 24rpx; font-weight: bold; color: #5a4a3a; display: block; line-height: 1.2; margin-bottom: 2rpx; }
+.attr-value { font-size: 44rpx; font-weight: bold; color: #3b2e1e; display: block; line-height: 1.1; min-height: 48rpx; }
+.attr-roll-result { font-size: 18rpx; color: #8b7355; display: block; line-height: 1.2; margin-top: 2rpx; }
+.attr-trait {
+  font-size: 18rpx;
+  color: #8b7355;
+  line-height: 1.4;
+  height: 50rpx;
+  margin-top: 4rpx;
+  padding: 0 2rpx;
+  overflow: hidden;
+  word-break: break-all;
+}
+.attr-reroll-btn {
+  display: inline-block;
+  width: auto;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 16rpx;
+  color: #8b4513;
+  margin-top: 4rpx;
+  padding: 2rpx 14rpx;
+  border: 1rpx solid #d4c5a9;
+  border-radius: 20rpx;
+  background: transparent;
+  line-height: 1.5;
+}
 .attr-reroll-btn:active { background: #fdf5e6; }
+
+.attr-roll-all { margin-top: 4rpx; }
 
 /* ===== 按钮 ===== */
 .btn { width: 100%; padding: 28rpx 0; border-radius: 12rpx; font-size: 32rpx; font-weight: bold; text-align: center; border: none; margin-bottom: 16rpx; }
@@ -271,7 +395,7 @@ page {
 .form-input { width: 100%; height: 88rpx; background: #faf8f4; border: 2px solid #d4c5a9; border-radius: 12rpx; padding: 0 24rpx; font-size: 28rpx; color: #3b2e1e; box-sizing: border-box; }
 .form-input:focus { border-color: #8b7355; }
 
-/* 随机姓名 */
+/* 随机名称 */
 .random-name-section { margin-top: 24rpx; }
 .random-name-label { font-size: 24rpx; color: #8b7355; display: block; margin-bottom: 12rpx; }
 .random-name-btns { display: flex; gap: 16rpx; }
@@ -374,7 +498,7 @@ page {
 .dialog-title { font-size: 34rpx; font-weight: bold; color: #3b2e1e; display: block; text-align: center; flex-shrink: 0; }
 .dialog-sub { font-size: 24rpx; color: #7a6b58; display: block; text-align: center; margin: 8rpx 0 16rpx; flex-shrink: 0; }
 /* Dialog 可滚动内容 */
-.dialog-body { flex: 1; overflow-y: auto; padding-bottom: 8rpx; min-height: 0; }
+.dialog-body { flex: 1; overflow-y: auto; padding-bottom: 8rpx; min-height: 0; max-height: 45vh; }
 /* Dialog 技能说明区 */
 .dialog-desc-section { background: #faf8f4; border-radius: 12rpx; padding: 16rpx; margin-bottom: 16rpx; }
 .dialog-desc-label { font-size: 24rpx; color: #6b4c2a; background: #fdf5e6; padding: 4rpx 12rpx; border-radius: 8rpx; display: inline-block; margin-right: 8rpx; }
@@ -395,6 +519,86 @@ page {
 .dialog-btn.cancel { background: #f5f0e8; color: #7a6b58; }
 .dialog-btn.confirm { background: #6b4c2a; color: #fff; }
 .dialog-btn:active { opacity: 0.8; }
+
+/* ===== 预置调查员弹窗 ===== */
+.home-action.preset { grid-column: 1 / -1; }
+.preset-list { flex: 1; min-height: 0; height: 45vh; margin-top: 4rpx; }
+.preset-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 16rpx;
+  background: #faf8f4;
+  border: 1px solid #e8ddd0;
+  border-radius: 14rpx;
+  margin-bottom: 14rpx;
+}
+.preset-item:active { background: #f5ead5; }
+.preset-emoji {
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 40rpx;
+  background: #fdf5e6;
+  border-radius: 14rpx;
+  flex-shrink: 0;
+}
+.preset-main { flex: 1; min-width: 0; }
+.preset-name-row { display: flex; align-items: center; gap: 10rpx; }
+.preset-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.preset-gender { font-size: 18rpx; color: #6b4c2a; background: #fdf5e6; border-radius: 8rpx; padding: 2rpx 10rpx; flex-shrink: 0; }
+.preset-occ { font-size: 22rpx; color: #7a6b58; display: block; margin-top: 4rpx; }
+.preset-tag { font-size: 20rpx; color: #8b7355; display: block; margin-top: 4rpx; line-height: 1.4; }
+.preset-arrow { font-size: 40rpx; color: #c4b8a8; flex-shrink: 0; }
+.preset-close { margin-top: 16rpx; flex-shrink: 0; }
+
+/* ===== 自由职业技能槽 ===== */
+.free-slot-section {
+  background: #fdf8f0;
+  border: 1rpx dashed #d4c5a9;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 16rpx;
+}
+.free-slot-title { font-size: 26rpx; font-weight: bold; color: #6b4c2a; display: block; }
+.free-slot-sub { font-size: 20rpx; color: #8b7355; display: block; margin-top: 4rpx; line-height: 1.5; }
+.free-slot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin-top: 14rpx; }
+.free-slot-item {
+  background: #faf8f4;
+  border: 2rpx dashed #d4c5a9;
+  border-radius: 12rpx;
+  padding: 14rpx 16rpx;
+  position: relative;
+}
+.free-slot-item:active { background: #f5ead5; }
+.free-slot-item.filled { border-style: solid; border-color: #7a9a3d; background: #f4f8ec; }
+.free-slot-hint {
+  font-size: 18rpx;
+  color: #a08b6f;
+  display: block;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.free-slot-name { font-size: 24rpx; font-weight: bold; color: #3b2e1e; display: block; margin-top: 6rpx; }
+.free-slot-item:not(.filled) .free-slot-name { color: #8b7355; font-weight: normal; }
+.free-slot-clear { position: absolute; top: 8rpx; right: 12rpx; font-size: 22rpx; color: #c4b8a8; padding: 4rpx; }
+.free-slot-list { flex: 1; min-height: 0; height: 45vh; }
+.free-slot-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 20rpx;
+  background: #faf8f4;
+  border-radius: 10rpx;
+  margin-bottom: 10rpx;
+}
+.free-slot-option:active { background: #f5ead5; }
+.free-slot-opt-name { font-size: 26rpx; color: #3b2e1e; }
+.free-slot-opt-base { font-size: 20rpx; color: #8b7355; }
+.free-slot-empty { text-align: center; color: #a08b6f; font-size: 24rpx; padding: 40rpx 0; }
 
 /* 骰子投掷 dialog */
 .roll-bonus-row { display: flex; justify-content: center; gap: 16rpx; margin: 20rpx 0; }
@@ -488,7 +692,7 @@ page {
 /* ===== 已保存角色列表 ===== */
 .saved-list { margin-top: 20rpx; }
 .saved-item { display: flex; justify-content: space-between; align-items: center; gap: 14rpx; padding: 20rpx; background: #fff; border-radius: 12rpx; margin-bottom: 12rpx; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-.saved-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.saved-name { font-size: 28rpx; font-weight: bold; color: #3b2e1e; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .saved-occ { font-size: 24rpx; color: #8b7355; display: block; margin-top: 4rpx; }
 .saved-time { font-size: 22rpx; color: #b0a090; display: block; margin-top: 2rpx; }
 .saved-delete { color: #cd5c5c; font-size: 28rpx; padding: 8rpx 16rpx; flex-shrink: 0; }
@@ -544,19 +748,6 @@ page {
 .export-option-text { flex: 1; display: flex; flex-direction: column; gap: 4rpx; }
 .export-option-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
 .export-option-desc { font-size: 22rpx; color: #8b7355; line-height: 1.4; }
-
-.attr-desc-box {
-  background: #fdf8f0;
-  border: 1rpx solid #d4c5a9;
-  border-radius: 12rpx;
-  padding: 20rpx 24rpx;
-  margin-top: 16rpx;
-  line-height: 1.8;
-}
-.attr-desc-text {
-  font-size: 26rpx;
-  color: #5a4a3a;
-}
 
 .weapon-picker-meta { font-size:20rpx; color:#8b7355; }
 .weapon-picker-add { font-size:28rpx; color:#6b4c2a; }
@@ -627,7 +818,6 @@ page {
 .theme-dark .growth-tag,
 .theme-dark .export-option-title,
 .theme-dark .roll-total,
-.theme-dark .attr-desc-text,
 .theme-dark .dl-item {
   color: #f4efe4;
 }
@@ -668,7 +858,7 @@ page {
 }
 
 .theme-dark .card,
-.theme-dark .attr-block,
+.theme-dark .attr-card,
 .theme-dark .bottom-nav,
 .theme-dark .form-input,
 .theme-dark .form-picker,
@@ -696,7 +886,6 @@ page {
 .theme-dark .threshold-toggle,
 .theme-dark .growth-tag,
 .theme-dark .export-option,
-.theme-dark .attr-desc-box,
 .theme-dark .dice-btn,
 .theme-dark .dice-btn-clear,
 .theme-dark .roll-bonus-btn,
@@ -706,12 +895,56 @@ page {
   box-shadow: 0 8rpx 22rpx rgba(0,0,0,0.20);
 }
 
+.theme-dark .attr-hero {
+  background: linear-gradient(135deg, #243044 0%, #33445f 55%, #3f5575 100%);
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.30);
+}
+.theme-dark .attr-hero-title { color: #f4efe4; }
+.theme-dark .attr-hero-bar { background: rgba(255, 255, 255, 0.15); }
+.theme-dark .attr-hero-bar-fill { background: #d9c9ae; }
+.theme-dark .attr-hero-bar-text { color: #aab6c8; }
+.theme-dark .attr-card.done { border-color: #7d8f4a; }
+.theme-dark .attr-value { color: #f4efe4; }
+.theme-dark .attr-trait { color: #8a97ab; }
+.theme-dark .attr-reroll-btn { color: #d5a95c; border-color: #3a4a62; }
+
+.theme-dark .preset-item { background: #1d2636; border-color: #3a4a62; }
+.theme-dark .preset-item:active { background: #2d3b52; }
+.theme-dark .preset-emoji { background: #243044; }
+.theme-dark .preset-name { color: #f4efe4; }
+.theme-dark .preset-gender { color: #d5a95c; background: #243044; }
+.theme-dark .preset-occ { color: #aab6c8; }
+.theme-dark .preset-tag { color: #aab6c8; }
+.theme-dark .preset-arrow { color: #3a4a62; }
+
+.theme-dark .saved-filter-chip { background: #1d2636; border-color: #3a4a62; color: #aab6c8; }
+.theme-dark .saved-filter-chip.active { background: #6b4c2a; border-color: #6b4c2a; color: #fff; }
+.theme-dark .saved-tag { color: #d5a95c; background: #243044; border-color: #3a4a62; }
+.theme-dark .saved-edit { color: #aab6c8; }
+.theme-dark .saved-edit:active { color: #d5a95c; }
+.theme-dark .saved-delete { color: #e08a8a; }
+
+.theme-dark .free-slot-section { background: #1d2636; border-color: #3a4a62; }
+.theme-dark .free-slot-title { color: #c9b896; }
+.theme-dark .free-slot-sub { color: #aab6c8; }
+.theme-dark .free-slot-item { background: #111827; border-color: #3a4a62; }
+.theme-dark .free-slot-item:active { background: #2d3b52; }
+.theme-dark .free-slot-item.filled { border-color: #7d8f4a; background: #1c2433; }
+.theme-dark .free-slot-hint { color: #8a97ab; }
+.theme-dark .free-slot-name { color: #f4efe4; }
+.theme-dark .free-slot-item:not(.filled) .free-slot-name { color: #aab6c8; }
+.theme-dark .free-slot-clear { color: #3a4a62; }
+.theme-dark .free-slot-option { background: #1d2636; }
+.theme-dark .free-slot-option:active { background: #2d3b52; }
+.theme-dark .free-slot-opt-name { color: #f4efe4; }
+.theme-dark .free-slot-opt-base { color: #aab6c8; }
+
 .theme-dark .occ-sticky-header {
   background: #111827;
   border-bottom-color: #2f3b50;
 }
 
-.theme-dark .attr-block.rolling,
+.theme-dark .attr-card.rolling,
 .theme-dark .occ-item.selected,
 .theme-dark .skill-grid-item:active,
 .theme-dark .skill-grid-item.occ,
