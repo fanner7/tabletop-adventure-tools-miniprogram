@@ -1,8 +1,9 @@
 <!-- pages/coc-keeper/coc-keeper.wxml — COC 守密人助手 -->
-<view class="keeper-container theme-{{theme}}">
+<view class="keeper-container theme-{{theme}} layout-{{isWide ? 'wide' : 'narrow'}} {{isWide && currentTaskId ? 'desk-fixed' : ''}}"
+      style="{{isDesktopPlatform ? (isWide && currentTaskId ? 'top:' + deskTopInsetRpx + 'rpx;' : 'padding-top:' + deskTopInsetRpx + 'rpx;') : ''}}">
 
   <!-- ===== 顶部标题 ===== -->
-  <view class="keeper-header" wx:if="{{!viewingType}}">
+  <view class="keeper-header" wx:if="{{!viewingType && (!isWide || !currentTaskId)}}">
     <text class="keeper-title">🔮 COC 守密人助手</text>
     <text class="keeper-subtitle">Keeper Assistant — 任务管理与角色监看</text>
   </view>
@@ -44,9 +45,9 @@
   </block>
 
   <!-- ================================================================== -->
-  <!-- 任务详情视图 -->
+  <!-- 任务详情视图（窄条/手机布局） -->
   <!-- ================================================================== -->
-  <block wx:if="{{currentTask && !viewingType}}">
+  <block wx:if="{{currentTask && !viewingType && !isWide}}">
     <view class="task-header-bar">
       <text class="back-btn" bindtap="backToList">← 返回</text>
       <text class="task-header-name">📋 {{currentTask.name}}</text>
@@ -169,6 +170,22 @@
         <text class="tool-card-icon">📖</text>
         <text class="tool-card-name">词汇表</text>
       </view>
+      <view class="tool-card" bindtap="openClues">
+        <text class="tool-card-icon">🔍</text>
+        <text class="tool-card-name">线索表</text>
+      </view>
+      <view class="tool-card" bindtap="openNotes">
+        <text class="tool-card-icon">📝</text>
+        <text class="tool-card-name">团务笔记</text>
+      </view>
+      <view class="tool-card" bindtap="openRules">
+        <text class="tool-card-icon">📚</text>
+        <text class="tool-card-name">规则速查</text>
+      </view>
+      <view class="tool-card" bindtap="openAi">
+        <text class="tool-card-icon">🤖</text>
+        <text class="tool-card-name">AI 备团</text>
+      </view>
       <view class="tool-card" bindtap="openExportTask">
         <text class="tool-card-icon">📤</text>
         <text class="tool-card-name">导入导出</text>
@@ -177,9 +194,531 @@
   </block>
 
   <!-- ================================================================== -->
-  <!-- 调查员详情视图（swiper） -->
+  <!-- 任务详情视图（桌面全屏布局：模块化自由面板工作台） -->
   <!-- ================================================================== -->
-  <block wx:if="{{viewingType === 'player' && viewingData}}">
+  <block wx:if="{{currentTask && !viewingType && isWide}}">
+    <view class="desk-dash">
+      <view class="desk-topbar">
+        <text class="back-btn" bindtap="backToList">← 返回</text>
+        <text class="desk-task-name">📋 {{currentTask.name}}</text>
+        <text class="desk-task-meta">{{currentTask.players.length}} 调查员 · {{currentTask.npcs.length}} NPC</text>
+        <text class="desk-top-tip">⠿ 拖拽排序 · 点标题折叠/展开</text>
+      </view>
+      <view class="desk-grid {{deskReady ? 'ready' : ''}}" style="height:{{deskGridH}}px;">
+
+        <!-- ===== 调查员模块 ===== -->
+        <view class="desk-panel {{deskDragId === 'players' ? 'dragging' : ''}}" id="desk-panel-players"
+              style="left:{{deskModLeft.players}}px;top:{{deskModTop.players}}px;width:{{deskModW}}px;{{deskDragId === 'players' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+          <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="players">
+            <text class="desk-panel-chevron">{{deskToolCollapsed.players ? '▸' : '▾'}}</text>
+            <text class="desk-panel-title">👤 调查员 ({{currentTask.players.length}})</text>
+            <view class="desk-mod-actions">
+              <text class="desk-mod-act" catchtap="openImportPlayerDialog">📥 导入</text>
+            </view>
+            <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="players">⠿</text>
+          </view>
+          <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.players}}">
+            <view class="card-grid" wx:if="{{currentTask.players.length > 0}}">
+              <view class="char-card player-card {{p.visible === false ? 'hidden' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2) ? 'low' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'dead' : ''}}"
+                    wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi"
+                    bindtap="viewPlayer" data-index="{{pi}}">
+                <view class="char-card-header">
+                  <text class="char-card-name">{{p.charInfo.name || '未命名'}}</text>
+                  <view class="char-card-actions">
+                    <text class="char-card-visible {{p.visible === false ? 'off' : ''}}" catchtap="togglePlayerVisible" data-index="{{pi}}">{{p.visible === false ? '🙈' : '👁'}}</text>
+                    <text class="char-card-delete" catchtap="deletePlayer" data-index="{{pi}}">✕</text>
+                  </view>
+                </view>
+                <text class="char-card-occ">{{p.selectedOcc ? p.selectedOcc.name : '未知职业'}}<text class="wound-badge" wx:if="{{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2)}}">重伤</text></text>
+                <view class="npc-card-stats">
+                  <view class="npc-card-stat" wx:if="{{p.derived.hp !== undefined}}">
+                    <text class="npc-card-stat-label">HP</text>
+                    <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="hp" data-delta="-1">−</view>
+                    <text class="npc-card-stat-val {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-hp' ? 'flash' : ''}}">{{p.playHP !== undefined ? p.playHP : p.derived.hp}}</text>
+                    <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="hp" data-delta="1">+</view>
+                  </view>
+                  <view class="npc-card-stat" wx:if="{{p.derived.san !== undefined}}">
+                    <text class="npc-card-stat-label">SAN</text>
+                    <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="san" data-delta="-1">−</view>
+                    <text class="npc-card-stat-val {{(p.playSAN !== undefined ? p.playSAN : p.derived.san) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-san' ? 'flash' : ''}}">{{p.playSAN !== undefined ? p.playSAN : p.derived.san}}</text>
+                    <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="san" data-delta="1">+</view>
+                  </view>
+                  <view class="npc-card-stat" wx:if="{{p.derived.mp !== undefined}}">
+                    <text class="npc-card-stat-label">MP</text>
+                    <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="mp" data-delta="-1">−</view>
+                    <text class="npc-card-stat-val {{(p.playMP !== undefined ? p.playMP : p.derived.mp) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-mp' ? 'flash' : ''}}">{{p.playMP !== undefined ? p.playMP : p.derived.mp}}</text>
+                    <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="mp" data-delta="1">+</view>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class="empty-state" wx:if="{{currentTask.players.length === 0}}">
+              <text class="empty-state-icon">👤</text>
+              <text class="empty-state-title">还没有调查员</text>
+              <text class="empty-state-desc">点击标题栏「📥 导入」粘贴角色卡，或手动新建</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- ===== NPC 模块 ===== -->
+        <view class="desk-panel {{deskDragId === 'npcs' ? 'dragging' : ''}}" id="desk-panel-npcs"
+              style="left:{{deskModLeft.npcs}}px;top:{{deskModTop.npcs}}px;width:{{deskModW}}px;{{deskDragId === 'npcs' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+          <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="npcs">
+            <text class="desk-panel-chevron">{{deskToolCollapsed.npcs ? '▸' : '▾'}}</text>
+            <text class="desk-panel-title">👺 NPC ({{currentTask.npcs.length}})</text>
+            <view class="desk-mod-actions">
+              <text class="desk-mod-act" catchtap="openImportNpcDialog">📥 导入</text>
+              <text class="desk-mod-act" catchtap="openNpcTemplates">🧟 模板库</text>
+            </view>
+            <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="npcs">⠿</text>
+          </view>
+          <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.npcs}}">
+            <view class="card-grid" wx:if="{{currentTask.npcs.length > 0}}">
+              <view class="char-card npc-card {{n.visible === false ? 'hidden' : ''}} {{n.hp !== null && n.hp !== undefined && n.hp <= 0 ? 'dead' : ''}}" wx:for="{{currentTask.npcs}}" wx:for-item="n" wx:for-index="ni" wx:key="id"
+                    bindtap="viewNPC" data-index="{{ni}}">
+                <view class="char-card-header">
+                  <text class="char-card-name">{{n.name}}</text>
+                  <view class="char-card-actions">
+                    <text class="char-card-visible {{n.visible === false ? 'off' : ''}}" catchtap="toggleNpcVisible" data-index="{{ni}}">{{n.visible === false ? '🙈' : '👁'}}</text>
+                    <text class="char-card-edit" catchtap="editNPC" data-index="{{ni}}">✎</text>
+                    <text class="char-card-delete" catchtap="deleteNPC" data-index="{{ni}}">✕</text>
+                  </view>
+                </view>
+                <text class="char-card-occ">NPC<text wx:if="{{n.dex !== null}}"> · DEX {{n.dex}}</text><text wx:if="{{n.db}}"> · DB {{n.db}}</text><text wx:if="{{n.armor && n.armor !== '0'}}"> · 🛡️ {{n.armor}}</text></text>
+
+                <view class="npc-card-stats" wx:if="{{(n.hp !== null && n.hp !== undefined) || (n.mp !== null && n.mp !== undefined)}}">
+                  <view class="npc-card-stat" wx:if="{{n.hp !== null && n.hp !== undefined}}">
+                    <text class="npc-card-stat-label">HP</text>
+                    <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="hp" data-delta="-1">−</view>
+                    <text class="npc-card-stat-val {{n.hp <= 0 ? 'zero' : ''}} {{flashKey === 'n' + ni + '-hp' ? 'flash' : ''}}">{{n.hp}}</text>
+                    <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="hp" data-delta="1">+</view>
+                  </view>
+                  <view class="npc-card-stat" wx:if="{{n.mp !== null && n.mp !== undefined}}">
+                    <text class="npc-card-stat-label">MP</text>
+                    <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="mp" data-delta="-1">−</view>
+                    <text class="npc-card-stat-val {{n.mp <= 0 ? 'zero' : ''}} {{flashKey === 'n' + ni + '-mp' ? 'flash' : ''}}">{{n.mp}}</text>
+                    <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="mp" data-delta="1">+</view>
+                  </view>
+                </view>
+
+                <view class="npc-card-attack" wx:if="{{n.attack}}" catchtap="openAttackCheck" data-attack="{{n.attack}}" data-index="{{ni}}">⚔️ {{n.attackDisplay || n.attack}} <text class="npc-card-attack-hint">检定 ›</text></view>
+              </view>
+            </view>
+            <view class="empty-state" wx:if="{{currentTask.npcs.length === 0}}">
+              <text class="empty-state-icon">👺</text>
+              <text class="empty-state-title">还没有 NPC</text>
+              <text class="empty-state-desc">点击标题栏「📥 导入」粘贴模组数据，或用「🧟 模板库」一键添加</text>
+            </view>
+          </view>
+        </view>
+
+
+            <!-- 掷骰 -->
+            <view class="desk-panel {{deskDragId === 'dice' ? 'dragging' : ''}}" id="desk-panel-dice"
+                  style="left:{{deskModLeft.dice}}px;top:{{deskModTop.dice}}px;width:{{deskModW}}px;{{deskDragId === 'dice' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="dice">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.dice ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">🎲 掷骰</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="dice">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.dice}}">
+                <view class="dice-rolling-hint" wx:if="{{diceRolling}}"><text>投掷中…</text></view>
+                <view class="dice-result-highlight" wx:if="{{diceResult}}">
+                  <text class="drh-total">{{diceResult.total}}</text>
+                  <view class="drh-dice">
+                    <text class="drh-chip" wx:for="{{diceResult.dice}}" wx:for-item="r" wx:key="index">
+                      <block wx:if="{{r.sides === 100 && r.mode && r.mode !== 'normal'}}">
+                        <text class="drh-chip-line">d100 → {{r.result}} {{r.mode === 'bonus1' || r.mode === 'bonus2' ? '🎁' : '😈'}}</text>
+                        <text class="drh-chip-line drh-chip-sub">十位 {{r.tensStr}} 取 {{r.chosen}} · 个位 {{r.ones}}</text>
+                      </block>
+                      <block wx:else>d{{r.sides}} → {{r.result}}</block>
+                    </text>
+                  </view>
+                </view>
+                <view class="dice-row">
+                  <view class="dice-btn-wrap" wx:for="{{[4,6,8,10,12,20,100]}}" wx:for-item="d" wx:key="d">
+                    <text class="dice-btn {{diceSelected[d] ? 'sel' : ''}}" bindtap="selectDice" bindlongpress="deselectDice" data-d="{{d}}">d{{d}}</text>
+                    <text class="dice-badge" wx:if="{{diceSelected[d]}}">{{diceSelected[d]}}</text>
+                  </view>
+                </view>
+                <view class="dice100-row" wx:if="{{diceSelected[100]}}">
+                  <text class="dice100-label">百分骰</text>
+                  <view class="dice100-mode {{dice100Mode === 'normal' ? 'on' : ''}}" bindtap="setDice100Mode" data-mode="normal">普通</view>
+                  <view class="dice100-mode {{dice100Mode === 'bonus1' ? 'on' : ''}}" bindtap="setDice100Mode" data-mode="bonus1">🎁奖励×1</view>
+                  <view class="dice100-mode {{dice100Mode === 'bonus2' ? 'on' : ''}}" bindtap="setDice100Mode" data-mode="bonus2">🎁奖励×2</view>
+                  <view class="dice100-mode {{dice100Mode === 'penalty1' ? 'on' : ''}}" bindtap="setDice100Mode" data-mode="penalty1">😈惩罚×1</view>
+                  <view class="dice100-mode {{dice100Mode === 'penalty2' ? 'on' : ''}}" bindtap="setDice100Mode" data-mode="penalty2">😈惩罚×2</view>
+                </view>
+                <view class="dice-actions">
+                  <button class="btn-roll {{diceRolling ? 'rolling' : ''}}" bindtap="rollSelected" disabled="{{diceRolling}}">{{diceRolling ? '...' : '投掷'}}</button>
+                  <button class="btn-clear-dice" bindtap="clearDice">清除</button>
+                </view>
+                <view class="dice-log" wx:if="{{diceHistory.length > 0}}">
+                  <view class="dl-head">
+                    <text class="dl-title">历史</text>
+                    <text class="dl-clear" bindtap="clearDiceHistory">清空</text>
+                  </view>
+                  <text class="dl-item" wx:for="{{diceHistory}}" wx:for-item="h" wx:key="index">{{h.total}} <text class="dl-detail" wx:for="{{h.dice}}" wx:for-item="r" wx:key="idx">d{{r.sides}}({{r.result}}{{r.mode && r.mode !== 'normal' ? (r.mode === 'bonus1' || r.mode === 'bonus2' ? '🎁' : '😈') : ''}}) </text><text class="dl-time">{{h.time}}</text></text>
+                </view>
+              </view>
+            </view>
+
+            <!-- 战斗轮 -->
+            <view class="desk-panel {{deskDragId === 'combat' ? 'dragging' : ''}}" id="desk-panel-combat"
+                  style="left:{{deskModLeft.combat}}px;top:{{deskModTop.combat}}px;width:{{deskModW}}px;{{deskDragId === 'combat' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="combat">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.combat ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">⚔️ 战斗轮</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="combat">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.combat}}">
+                <view class="combat-toolbar">
+                  <button class="btn-roll" style="flex:2;" bindtap="nextCombatTurn">⏭ 下一个行动</button>
+                  <button class="btn-clear-dice" style="flex:1;" bindtap="combatReset">🔄 重置</button>
+                  <button class="btn-clear-dice" style="flex:1;" bindtap="refreshCombat">↻ 刷新</button>
+                </view>
+                <view class="combat-round-row">
+                  <text>第 {{combatRound}} 轮</text>
+                  <view class="cc-btn" bindtap="nextCombatRound">下一轮 →</view>
+                </view>
+                <view class="combat-current-row" wx:if="{{combatOrder[combatCurrent]}}">
+                  <text class="cc-name">当前：{{combatOrder[combatCurrent].name}}<text class="cc-hp" wx:if="{{combatOrder[combatCurrent].hpText}}"> · HP {{combatOrder[combatCurrent].hpText}}</text></text>
+                  <view class="cc-btns">
+                    <view class="cc-btn minus" bindtap="adjustCombatHp" data-delta="-1">−1</view>
+                    <view class="cc-btn plus" bindtap="adjustCombatHp" data-delta="1">+1</view>
+                  </view>
+                </view>
+                <view class="combat-dmg-row">
+                  <input class="combat-dmg-input" type="number" value="{{combatDmgNum}}" bindinput="onCombatDmgInput" placeholder="玩家报出的伤害数值" />
+                  <button class="btn-roll" style="flex:1;" bindtap="applyCombatDamage">💥 扣除</button>
+                </view>
+                <view class="combat-hint"><text>点名称 = 设为当前行动者 · 长按 = 标记死亡（跳过）</text></view>
+                <view class="combat-tie-warn" wx:if="{{combatHasTies}}">
+                  <text>⚠ DEX 相同：{{combatTieNames}}</text>
+                </view>
+                <view class="combat-tags">
+                  <view class="combat-tag {{item.type}} {{item.tie ? 'tie' : ''}} {{combatCurrent === index ? 'current' : ''}} {{item.dead ? 'dead' : ''}}"
+                        wx:for="{{combatOrder}}" wx:for-item="item" wx:key="key"
+                        bindtap="tapCombatTag" bindlongpress="toggleCombatDead" data-index="{{index}}">
+                    <text class="combat-tag-idx">{{index + 1}}</text>
+                    <text class="combat-tag-name">{{item.name}}</text>
+                    <text class="combat-tag-dex">DEX{{item.dex}}</text>
+                    <text class="combat-tag-hp" wx:if="{{item.hpText}}">HP{{item.hpText}}</text>
+                  </view>
+                </view>
+                <view class="empty-hint" wx:if="{{combatOrder.length === 0}}">
+                  <text>任务中暂无可见角色</text>
+                </view>
+              </view>
+            </view>
+
+            <!-- 疯狂发作 -->
+            <view class="desk-panel {{deskDragId === 'madness' ? 'dragging' : ''}}" id="desk-panel-madness"
+                  style="left:{{deskModLeft.madness}}px;top:{{deskModTop.madness}}px;width:{{deskModW}}px;{{deskDragId === 'madness' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="madness">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.madness ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">🎭 疯狂发作</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="madness">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.madness}}">
+                <view class="madness-type-row">
+                  <view class="madness-type-btn {{madnessType === 'immediate' ? 'on' : ''}}" bindtap="switchMadnessType" data-type="immediate">
+                    <text>⚡ 即时症状</text>
+                  </view>
+                  <view class="madness-type-btn {{madnessType === 'summary' ? 'on' : ''}}" bindtap="switchMadnessType" data-type="summary">
+                    <text>🌙 总结症状</text>
+                  </view>
+                </view>
+                <button class="btn-subtle madness-roll-btn" bindtap="doMadnessRoll" disabled="{{madnessRolling}}">
+                  <text wx:if="{{!madnessRolling}}">🎲 抽取疯狂</text>
+                  <text wx:else>🎲 掷骰中…</text>
+                </button>
+                <view class="madness-steps" wx:if="{{showMadnessSteps}}">
+                  <view class="mstep {{madnessStep >= 1 ? 'done' : ''}}">
+                    <text class="mstep-num">{{madnessStep >= 1 ? '✓' : '①'}}</text>
+                    <view class="mstep-body">
+                      <text class="mstep-title">掷 1D10 查症状</text>
+                      <text class="mstep-result" wx:if="{{madnessSteps.length >= 1}}">
+                        1D10 = <text class="mstep-dice">{{madnessSteps[0].value}}</text> → {{madnessSteps[0].detail}}
+                      </text>
+                    </view>
+                  </view>
+                  <view class="mstep {{madnessStep >= 2 ? 'done' : ''}}"
+                        wx:if="{{madnessSteps.length >= 1 && (madnessSteps[0].detail === '恐惧症' || madnessSteps[0].detail === '躁狂症')}}">
+                    <text class="mstep-num">{{madnessStep >= 2 ? '✓' : '②'}}</text>
+                    <view class="mstep-body">
+                      <text class="mstep-title">掷 1D100 查{{madnessSteps[0].detail}}表</text>
+                      <text class="mstep-result" wx:if="{{madnessSteps.length >= 2}}">
+                        1D100 = <text class="mstep-dice">{{madnessSteps[1].value}}</text> → {{madnessSteps[1].detail}}
+                      </text>
+                    </view>
+                  </view>
+                  <view class="mstep done"
+                        wx:if="{{madnessSteps.length >= 2 && madnessSteps[madnessSteps.length-1].label.indexOf('持续时间') === 0}}">
+                    <text class="mstep-num">✓</text>
+                    <view class="mstep-body">
+                      <text class="mstep-title">掷 1D10 确定持续时间</text>
+                      <text class="mstep-result">
+                        1D10 = <text class="mstep-dice">{{madnessSteps[madnessSteps.length-1].value}}</text> → {{madnessSteps[madnessSteps.length-1].detail}}
+                      </text>
+                    </view>
+                  </view>
+                </view>
+                <view class="madness-result" wx:if="{{madnessResult}}">
+                  <view class="madness-result-header">
+                    <text class="madness-result-title">📋 结果</text>
+                    <text class="madness-result-type">{{madnessType === 'immediate' ? '即时症状' : '总结症状'}}</text>
+                  </view>
+                  <view class="madness-result-parts">
+                    <view class="madness-result-part" wx:for="{{madnessResultParts}}" wx:for-item="p" wx:key="label">
+                      <text class="madness-result-label">{{p.label}}</text>
+                      <text class="madness-result-value">{{p.value}}</text>
+                    </view>
+                  </view>
+                  <button class="btn-subtle" style="margin-top:8px;" bindtap="doMadnessRoll">🔄 再抽一次</button>
+                </view>
+              </view>
+            </view>
+
+            <!-- 随机生成 -->
+            <view class="desk-panel {{deskDragId === 'random' ? 'dragging' : ''}}" id="desk-panel-random"
+                  style="left:{{deskModLeft.random}}px;top:{{deskModTop.random}}px;width:{{deskModW}}px;{{deskDragId === 'random' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="random">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.random ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">🎲 随机生成</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="random">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.random}}">
+                <view class="random-btns">
+                  <view class="random-btn" bindtap="rollRandomName" data-type="cn">
+                    <text class="random-btn-icon">👤</text>
+                    <text class="random-btn-name">中文名称</text>
+                  </view>
+                  <view class="random-btn" bindtap="rollRandomName" data-type="west">
+                    <text class="random-btn-icon">🧑</text>
+                    <text class="random-btn-name">西式名称</text>
+                  </view>
+                  <view class="random-btn" bindtap="rollRandomClue">
+                    <text class="random-btn-icon">🔍</text>
+                    <text class="random-btn-name">随机线索</text>
+                  </view>
+                  <view class="random-btn" bindtap="rollRandomItem">
+                    <text class="random-btn-icon">🎒</text>
+                    <text class="random-btn-name">随身物品</text>
+                  </view>
+                  <view class="random-btn" bindtap="rollRandomNpc">
+                    <text class="random-btn-icon">🤖</text>
+                    <text class="random-btn-name">随机 NPC</text>
+                  </view>
+                  <view class="random-btn" bindtap="rollRandomEncounter">
+                    <text class="random-btn-icon">⚔️</text>
+                    <text class="random-btn-name">随机遭遇</text>
+                  </view>
+                </view>
+                <view class="random-result" wx:if="{{randomResult}}">
+                  <text class="random-result-type">{{randomResult.type}}</text>
+                  <text class="random-result-value">{{randomResult.value}}</text>
+                  <button class="btn-subtle" style="margin-top:8px;" bindtap="copyRandomResult">📋 复制</button>
+                </view>
+                <view class="random-result" wx:if="{{randomNpc}}">
+                  <text class="random-result-type">🤖 随机 NPC</text>
+                  <text class="random-result-value random-npc-name">{{randomNpc.name}} · {{randomNpc.job}}</text>
+                  <view class="random-npc-data"><text style="white-space:pre-wrap;word-break:break-all;">{{randomNpc.data}}</text></view>
+                  <view class="random-npc-actions">
+                    <button class="btn-subtle btn-half" bindtap="copyRandomNpc">📋 复制</button>
+                    <button class="btn btn-primary btn-half" bindtap="importRandomNpc">📥 导入任务</button>
+                  </view>
+                </view>
+              </view>
+            </view>
+
+            <!-- 词汇表 -->
+            <view class="desk-panel {{deskDragId === 'lexicon' ? 'dragging' : ''}}" id="desk-panel-lexicon"
+                  style="left:{{deskModLeft.lexicon}}px;top:{{deskModTop.lexicon}}px;width:{{deskModW}}px;{{deskDragId === 'lexicon' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="lexicon">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.lexicon ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">📖 词汇表</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="lexicon">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.lexicon}}">
+                <text class="dialog-hint" style="display:block;margin-bottom:8px;">点击条目复制（含例句）</text>
+                <view class="tpl-cats">
+                  <view class="tpl-cat {{lexiconCat === c.id ? 'on' : ''}}" wx:for="{{lexiconCats}}" wx:for-item="c" wx:key="id"
+                        bindtap="switchLexiconCat" data-id="{{c.id}}">{{c.icon}} {{c.name}}</view>
+                </view>
+                <view class="lex-list desk-lex-list">
+                  <view class="lex-item" wx:for="{{lexiconByCat[lexiconCat].items}}" wx:for-item="it" wx:key="w"
+                        bindtap="copyLexiconItem" data-w="{{it.w}}" data-d="{{it.d}}">
+                    <text class="lex-w">{{it.w}}</text>
+                    <text class="lex-d" wx:if="{{it.d}}">{{it.d}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+
+            <!-- 导入导出 -->
+            <view class="desk-panel {{deskDragId === 'export' ? 'dragging' : ''}}" id="desk-panel-export"
+                  style="left:{{deskModLeft.export}}px;top:{{deskModTop.export}}px;width:{{deskModW}}px;{{deskDragId === 'export' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="export">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.export ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">📤 导入导出</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="export">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.export}}">
+                <view class="task-io-options">
+                  <view class="task-io-option" bindtap="exportTask">
+                    <text class="task-io-icon">📤</text>
+                    <view class="task-io-text">
+                      <text class="task-io-title">导出任务</text>
+                      <text class="task-io-desc">复制完整任务数据（JSON）到剪贴板</text>
+                    </view>
+                  </view>
+                  <view class="task-io-option" bindtap="importTask">
+                    <text class="task-io-icon">📥</text>
+                    <view class="task-io-text">
+                      <text class="task-io-title">导入任务</text>
+                      <text class="task-io-desc">从剪贴板读取任务数据（JSON）</text>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+
+            <!-- 线索表 -->
+            <view class="desk-panel {{deskDragId === 'clues' ? 'dragging' : ''}}" id="desk-panel-clues"
+                  style="left:{{deskModLeft.clues}}px;top:{{deskModTop.clues}}px;width:{{deskModW}}px;{{deskDragId === 'clues' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="clues">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.clues ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">🔍 线索表</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="clues">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.clues}}">
+                <view class="clue-add-row">
+                  <input class="form-input clue-input" placeholder="线索内容…" value="{{clueInput}}" bindinput="onClueInput" />
+                </view>
+                <view class="clue-add-row">
+                  <input class="form-input clue-input" placeholder="出处/备注(可选)" value="{{clueSource}}" bindinput="onClueSourceInput" />
+                  <input class="form-input clue-input" placeholder="地点·场所级(可选)" value="{{clueLocInput}}" bindinput="onClueLocInput" />
+                  <button class="desk-topbtn" bindtap="addClue">＋ 添加</button>
+                </view>
+                <view class="clue-search-row">
+                  <input class="clue-search-input" placeholder="🔍 搜索线索…" value="{{clueSearch}}" bindinput="onClueSearchInput" />
+                </view>
+                <view class="clue-tags" wx:if="{{clueLocs.length > 0 || clueBackupCount > 0}}">
+                  <view class="tpl-cat {{clueLocFilter === '' ? 'on' : ''}}" bindtap="onClueLocTap" data-loc="">全部</view>
+                  <view class="tpl-cat {{clueLocFilter === t.loc ? 'on' : ''}}" wx:for="{{clueLocs}}" wx:for-item="t" wx:key="loc"
+                        bindtap="onClueLocTap" data-loc="{{t.loc}}">📍 {{t.loc}} {{t.count}}</view>
+                  <view class="tpl-cat {{clueLocFilter === '__backup__' ? 'on' : ''}}" wx:if="{{clueBackupCount > 0}}"
+                        bindtap="onClueLocTap" data-loc="__backup__">🎲 备用 {{clueBackupCount}}</view>
+                </view>
+                <view class="clue-list">
+                  <view class="clue-item {{c.given ? 'given' : ''}}" wx:for="{{clueFiltered}}" wx:for-item="c" wx:key="id">
+                    <text class="clue-text">{{c.text}}</text>
+                    <text class="clue-source" wx:if="{{c.source}}">{{c.isBackup ? '🎲' : '📎'}} {{c.source}}</text>
+                    <view class="clue-loc-row" wx:if="{{c.location}}">
+                      <text class="clue-item-loc" catchtap="openClueLocEdit" data-id="{{c.id}}">📍 {{c.location}}</text>
+                    </view>
+                    <view class="clue-actions">
+                      <text class="clue-given {{c.given ? '' : 'off'}}" catchtap="toggleClueGiven" data-id="{{c.id}}">{{c.given ? '✓ 已给' : '○ 未给'}}</text>
+                      <text class="clue-addloc" wx:if="{{!c.location}}" catchtap="openClueLocEdit" data-id="{{c.id}}">＋地点</text>
+                      <text class="char-card-delete" catchtap="deleteClue" data-id="{{c.id}}">✕</text>
+                    </view>
+                  </view>
+                  <view class="empty-hint" wx:if="{{clueFiltered.length === 0}}"><text>{{currentTask.clues.length > 0 ? '没有匹配的线索' : '还没有线索，先录入一条吧'}}</text></view>
+                </view>
+              </view>
+            </view>
+
+            <!-- 团务笔记 -->
+            <view class="desk-panel {{deskDragId === 'notes' ? 'dragging' : ''}}" id="desk-panel-notes"
+                  style="left:{{deskModLeft.notes}}px;top:{{deskModTop.notes}}px;width:{{deskModW}}px;{{deskDragId === 'notes' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="notes">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.notes ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">📝 团务笔记</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="notes">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.notes}}">
+                <button class="desk-topbtn" style="margin-bottom:8px;" bindtap="addNote">＋ 新建笔记</button>
+                <view class="note-item" wx:for="{{currentTask.notes}}" wx:for-item="nt" wx:key="id" bindtap="openNoteEdit" data-id="{{nt.id}}">
+                  <text class="note-title">{{nt.title || '未命名笔记'}}</text>
+                  <text class="note-preview">{{nt.content}}</text>
+                </view>
+                <view class="empty-hint" wx:if="{{!currentTask.notes || currentTask.notes.length === 0}}"><text>还没有笔记，点击「新建笔记」开始记录</text></view>
+                <view class="note-actions" wx:if="{{currentTask.notes && currentTask.notes.length > 0}}">
+                  <button class="desk-topbtn" bindtap="exportNotes">📋 导出全部笔记</button>
+                </view>
+              </view>
+            </view>
+
+            <!-- 规则速查 -->
+            <view class="desk-panel {{deskDragId === 'rules' ? 'dragging' : ''}}" id="desk-panel-rules"
+                  style="left:{{deskModLeft.rules}}px;top:{{deskModTop.rules}}px;width:{{deskModW}}px;{{deskDragId === 'rules' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="rules">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.rules ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">📚 规则速查</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="rules">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.rules}}">
+                <view class="tpl-cats">
+                  <view class="tpl-cat {{rulesCat === s.id ? 'on' : ''}}" wx:for="{{rulesSections}}" wx:for-item="s" wx:key="id"
+                        bindtap="switchRulesCat" data-id="{{s.id}}">{{s.icon}} {{s.name}}</view>
+                </view>
+                <view class="rule-table" wx:if="{{rulesTable.length > 0}}">
+                  <view class="rule-cell" wx:for="{{rulesTable}}" wx:for-item="row" wx:key="index">
+                    <text class="rule-cell-name">{{row[0]}}</text>
+                    <text class="rule-cell-val">{{row[1]}}</text>
+                  </view>
+                </view>
+                <view class="rules-list">
+                  <view class="rule-item" wx:for="{{rulesItems}}" wx:for-item="it" wx:key="w">
+                    <text class="rule-w">{{it.w}}</text>
+                    <text class="rule-d">{{it.d}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+
+            <!-- AI 备团 -->
+            <view class="desk-panel {{deskDragId === 'ai' ? 'dragging' : ''}}" id="desk-panel-ai"
+                  style="left:{{deskModLeft.ai}}px;top:{{deskModTop.ai}}px;width:{{deskModW}}px;{{deskDragId === 'ai' ? 'transform:translate(' + deskDragX + 'px,' + deskDragY + 'px);' : ''}}">
+              <view class="desk-panel-head" bindtap="toggleToolPanel" data-id="ai">
+                <text class="desk-panel-chevron">{{deskToolCollapsed.ai ? '▸' : '▾'}}</text>
+                <text class="desk-panel-title">🤖 AI 备团</text>
+                <text class="desk-panel-grip" catchtouchstart="onToolDragStart" catchtouchmove="onToolDragMove" catchtouchend="onToolDragEnd" data-id="ai">⠿</text>
+              </view>
+              <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.ai}}">
+                <text class="dialog-hint" style="display:block;margin-bottom:8px;">本工具不内置 AI：把提示词与格式样例复制给任意 AI（附上你的模组文本），再把 AI 输出粘贴回来一键导入。</text>
+                <view class="ai-copy-row">
+                  <text class="desk-mod-act" bindtap="copyAiAll">📋 一键复制全部</text>
+                </view>
+                <view class="ai-copy-row">
+                  <text class="desk-mod-act" bindtap="copyAiPrompt" data-type="npc">NPC 提示词</text>
+                  <text class="desk-mod-act" bindtap="copyAiPrompt" data-type="clue">线索提示词</text>
+                  <text class="desk-mod-act" bindtap="copyAiPrompt" data-type="note">笔记提示词</text>
+                </view>
+                <view class="ai-copy-row">
+                  <text class="desk-mod-act" bindtap="copyAiSample" data-type="npc">NPC 样例</text>
+                  <text class="desk-mod-act" bindtap="copyAiSample" data-type="clue">线索样例</text>
+                  <text class="desk-mod-act" bindtap="copyAiSample" data-type="note">笔记样例</text>
+                </view>
+                <textarea class="form-textarea ai-paste" placeholder="把 AI 生成的 NPC / 线索 / 笔记粘贴到这里…" value="{{aiImportText}}" bindinput="onAiImportTextInput" maxlength="-1" />
+                <view class="ai-import-row">
+                  <button class="desk-topbtn" bindtap="importAiNpcs">📥 导入为 NPC</button>
+                  <button class="desk-topbtn" bindtap="importAiClues">📥 导入为线索</button>
+                  <button class="desk-topbtn" bindtap="importAiNotes">📥 导入为笔记</button>
+                </view>
+                <text class="dialog-hint" style="display:block;margin-top:8px;">格式：NPC 按「---」或空行分块；线索每行一条（内容｜地点｜出处，地点写场所级、房间等写出处，备用线索出处写「备用线索」）；笔记按「## 标题」分块（块内可空行）。</text>
+              </view>
+            </view>
+
+    </view>
+  </view>
+  </block>
+
+  <!-- ================================================================== -->
+  <!-- 调查员详情视图（窄条：swiper） -->
+  <!-- ================================================================== -->
+  <block wx:if="{{viewingType === 'player' && viewingData && !isWide}}">
     <view class="task-header-bar">
       <text class="back-btn" bindtap="closeDetail">← 返回任务</text>
       <text class="task-header-name">{{viewingData.charInfo.name || '未命名'}}</text>
@@ -251,6 +790,91 @@
   </block>
 
   <!-- ================================================================== -->
+  <!-- 调查员详情视图（桌面全屏：左侧列表 + 右侧角色卡） -->
+  <!-- ================================================================== -->
+  <block wx:if="{{viewingType === 'player' && viewingData && isWide}}">
+    <view class="desk-dash desk-dash-detail">
+      <view class="desk-topbar">
+        <text class="back-btn" bindtap="closeDetail">← 返回任务</text>
+        <text class="desk-task-name">{{viewingData.charInfo.name || '未命名'}}</text>
+        <text class="desk-task-meta">{{viewingData.selectedOcc ? viewingData.selectedOcc.name : ''}}</text>
+        <text class="desk-task-meta" style="margin-left:auto;">{{viewingIndex + 1}}/{{currentTask.players.length}}</text>
+      </view>
+      <view class="desk-player">
+        <scroll-view class="desk-player-list" scroll-y enhanced show-scrollbar="{{false}}">
+          <view class="desk-player-item {{viewingIndex === pi ? 'on' : ''}}"
+                wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi"
+                bindtap="viewPlayer" data-index="{{pi}}">
+            <text class="desk-player-name">{{p.charInfo.name || '未命名'}}</text>
+            <text class="desk-player-hp">HP {{p.playHP !== undefined ? p.playHP : p.derived.hp}}/{{p.derived.hp}} · SAN {{p.playSAN !== undefined ? p.playSAN : p.derived.san}}</text>
+          </view>
+        </scroll-view>
+        <scroll-view class="desk-player-sheet" scroll-y enhanced show-scrollbar="{{false}}" scroll-top="{{detailScrollTop}}" scroll-with-animation="{{false}}">
+          <block wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi">
+            <view class="char-sheet desk-sheet" wx:if="{{pi === viewingIndex}}">
+              <view class="char-header">
+                <text class="char-name">{{p.charInfo.name || '未命名'}}</text>
+                <text class="char-sub">{{p.selectedOcc ? p.selectedOcc.name + ' | ' + p.charInfo.era : p.charInfo.era}}</text>
+              </view>
+              <text class="char-section-title">📊 属性</text>
+              <view class="char-attr-row">
+                <view class="char-attr" wx:for="{{p.attrDisplay}}" wx:for-item="a" wx:key="index">
+                  <text class="char-attr-label">{{a.label}}</text>
+                  <text class="char-attr-value">{{a.value}}</text>
+                </view>
+              </view>
+              <text class="char-section-title">❤️ 状态</text>
+              <view class="char-deriv-row">
+                <view class="char-deriv"><text class="char-deriv-label">生命 HP</text><text class="char-deriv-value">{{p.playHP !== undefined ? p.playHP : p.derived.hp}}/{{p.derived.hp}}</text></view>
+                <view class="char-deriv"><text class="char-deriv-label">理智 SAN</text><text class="char-deriv-value">{{p.playSAN !== undefined ? p.playSAN : p.derived.san}}</text></view>
+                <view class="char-deriv"><text class="char-deriv-label">幸运 LUCK</text><text class="char-deriv-value">{{p.playLuck !== undefined ? p.playLuck : (p.attrValues.luck || 50)}}</text></view>
+                <view class="char-deriv"><text class="char-deriv-label">魔法 MP</text><text class="char-deriv-value">{{p.playMP !== undefined ? p.playMP : p.derived.mp}}</text></view>
+                <view class="char-deriv"><text class="char-deriv-label">重伤</text><text class="char-deriv-value">{{p.majorWound ? '☑ 是' : '☐ 否'}}</text></view>
+                <view wx:for="{{p.derivedItems}}" wx:for-item="d" wx:key="index" wx:if="{{d.l !== '生命 HP' && d.l !== '理智 SAN' && d.l !== '魔法 MP'}}">
+                  <view class="char-deriv"><text class="char-deriv-label">{{d.l}}</text><text class="char-deriv-value">{{d.v}}</text></view>
+                </view>
+              </view>
+              <text class="char-section-title">🎯 技能</text>
+              <view wx:if="{{p.sortedSkillsByCat}}">
+                <view wx:for="{{p.sortedSkillsByCat}}" wx:for-item="group" wx:key="cat">
+                  <text class="skill-cat-title">{{group.catName}}</text>
+                  <view class="skill-grid review">
+                    <view class="skill-grid-item" wx:for="{{group.skills}}" wx:for-item="sk" wx:key="name"
+                          bindtap="openSkillCheck" data-skill="{{sk.displayName || sk.name}}" data-total="{{sk.total}}">
+                      <view class="skill-grid-top"><text class="skill-grid-name">{{sk.displayName || sk.name}}</text><text class="skill-grid-val">{{sk.total}}%</text></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              <view wx:if="{{!p.sortedSkillsByCat && p.occPts}}" class="empty-hint"><text>此角色数据不含预计算技能分组，请重新导出</text></view>
+              <text class="char-section-title">⚔️ 武器</text>
+              <view class="weapon-table" wx:if="{{p.charWeapons && p.charWeapons.length > 0}}">
+                <view class="weapon-row weapon-header">
+                  <text class="weapon-cell w-name">武器</text><text class="weapon-cell w-skill">技能</text><text class="weapon-cell w-dmg">伤害</text>
+                  <text class="weapon-cell w-range">射程</text><text class="weapon-cell w-impale">贯穿</text><text class="weapon-cell w-attacks">次数</text>
+                  <text class="weapon-cell w-ammo">弹药</text><text class="weapon-cell w-malfunc">故障</text>
+                </view>
+                <view class="weapon-row" wx:for="{{p.charWeapons}}" wx:for-item="w" wx:key="_id">
+                  <text class="weapon-cell w-name">{{w.name}}</text><text class="weapon-cell w-skill">{{w.skill}}</text><text class="weapon-cell w-dmg">{{w.damage}}</text>
+                  <text class="weapon-cell w-range">{{w.range}}</text><text class="weapon-cell w-impale">{{w.impale || '——'}}</text><text class="weapon-cell w-attacks">{{w.attacks || '——'}}</text>
+                  <text class="weapon-cell w-ammo">{{w.ammo || '——'}}</text><text class="weapon-cell w-malfunc">{{w.malfunction || '——'}}</text>
+                </view>
+              </view>
+              <view class="weapon-empty" wx:if="{{!p.charWeapons || p.charWeapons.length === 0}}"><text class="weapon-empty-text">暂无武器</text></view>
+              <block wx:if="{{p.charBackstory}}"><text class="char-section-title">📖 背景故事</text><view class="char-text-block"><text>{{p.charBackstory}}</text></view></block>
+              <block wx:if="{{p.charGear}}"><text class="char-section-title">🎒 随身物品</text><view class="char-text-block"><text>{{p.charGear}}</text></view></block>
+              <block wx:if="{{p.charMythos}}"><text class="char-section-title">📓 神话相关</text><view class="char-text-block"><text>{{p.charMythos}}</text></view></block>
+              <block wx:if="{{p.charSpells}}"><text class="char-section-title">🔮 法术</text><view class="char-text-block"><text>{{p.charSpells}}</text></view></block>
+              <block wx:if="{{p.charCompanions}}"><text class="char-section-title">👥 调查员伙伴</text><view class="char-text-block"><text>{{p.charCompanions}}</text></view></block>
+              <block wx:if="{{p.charAssets}}"><text class="char-section-title">💰 资产</text><view class="char-text-block"><text>{{p.charAssets}}</text></view></block>
+            </view>
+          </block>
+        </scroll-view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ================================================================== -->
   <!-- NPC 详情视图（swiper） -->
   <!-- ================================================================== -->
   <!-- NPC 详情 Dialog -->
@@ -260,7 +884,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">{{npcDetail.name}}</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:12rpx;">NPC<text wx:if="{{npcDetail.dex !== null}}"> · DEX {{npcDetail.dex}}</text><text wx:if="{{npcDetail.db}}"> · DB {{npcDetail.db}}</text><text wx:if="{{npcDetail.armor && npcDetail.armor !== '0'}}"> · 🛡️ {{npcDetail.armor}}</text></text>
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">NPC<text wx:if="{{npcDetail.dex !== null}}"> · DEX {{npcDetail.dex}}</text><text wx:if="{{npcDetail.db}}"> · DB {{npcDetail.db}}</text><text wx:if="{{npcDetail.armor && npcDetail.armor !== '0'}}"> · 🛡️ {{npcDetail.armor}}</text></text>
 
       <!-- HP / MP 调节 -->
       <view class="npc-stat-bar" wx:if="{{npcDetail.hp !== null && npcDetail.hp !== undefined || npcDetail.mp !== null && npcDetail.mp !== undefined}}">
@@ -301,10 +925,25 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">⚔️ 战斗轮</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:12rpx;">按 DEX 从高到低排列（已隐藏的角色不参与）</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">按 DEX 从高到低排列（已隐藏的角色不参与）</text>
       <view class="combat-toolbar">
         <button class="btn-roll" style="flex:2;" bindtap="nextCombatTurn">⏭ 下一个行动</button>
         <button class="btn-clear-dice" style="flex:1;" bindtap="combatReset">🔄 重置</button>
+      </view>
+      <view class="combat-round-row">
+        <text>第 {{combatRound}} 轮</text>
+        <view class="cc-btn" bindtap="nextCombatRound">下一轮 →</view>
+      </view>
+      <view class="combat-current-row" wx:if="{{combatOrder[combatCurrent]}}">
+        <text class="cc-name">当前：{{combatOrder[combatCurrent].name}}<text class="cc-hp" wx:if="{{combatOrder[combatCurrent].hpText}}"> · HP {{combatOrder[combatCurrent].hpText}}</text></text>
+        <view class="cc-btns">
+          <view class="cc-btn minus" bindtap="adjustCombatHp" data-delta="-1">−1</view>
+          <view class="cc-btn plus" bindtap="adjustCombatHp" data-delta="1">+1</view>
+        </view>
+      </view>
+      <view class="combat-dmg-row">
+        <input class="combat-dmg-input" type="number" value="{{combatDmgNum}}" bindinput="onCombatDmgInput" placeholder="玩家报出的伤害数值" />
+        <button class="btn-roll" style="flex:1;" bindtap="applyCombatDamage">💥 扣除</button>
       </view>
       <view class="combat-hint"><text>点名称 = 设为当前行动者 · 长按 = 标记死亡（跳过）</text></view>
       <view class="combat-tie-warn" wx:if="{{combatHasTies}}">
@@ -317,6 +956,7 @@
           <text class="combat-tag-idx">{{index + 1}}</text>
           <text class="combat-tag-name">{{item.name}}</text>
           <text class="combat-tag-dex">DEX{{item.dex}}</text>
+          <text class="combat-tag-hp" wx:if="{{item.hpText}}">HP{{item.hpText}}</text>
         </view>
       </view>
       <view class="empty-hint" wx:if="{{combatOrder.length === 0}}">
@@ -399,7 +1039,7 @@
             <text class="madness-result-value">{{p.value}}</text>
           </view>
         </view>
-        <button class="btn-subtle" style="margin-top:12rpx;" bindtap="doMadnessRoll">🔄 再抽一次</button>
+        <button class="btn-subtle" style="margin-top:8px;" bindtap="doMadnessRoll">🔄 再抽一次</button>
       </view>
     </view>
     <view class="dialog-actions">
@@ -496,7 +1136,7 @@
       <view class="random-result" wx:if="{{randomResult}}">
         <text class="random-result-type">{{randomResult.type}}</text>
         <text class="random-result-value">{{randomResult.value}}</text>
-        <button class="btn-subtle" style="margin-top:12rpx;" bindtap="copyRandomResult">📋 复制</button>
+        <button class="btn-subtle" style="margin-top:8px;" bindtap="copyRandomResult">📋 复制</button>
       </view>
       <view class="random-result" wx:if="{{randomNpc}}">
         <text class="random-result-type">🤖 随机 NPC</text>
@@ -560,7 +1200,7 @@
         <view class="dice100-mode {{checkMode === 'bonus' ? 'on' : ''}}" bindtap="setCheckMode" data-mode="bonus">🎁 奖励</view>
         <view class="dice100-mode {{checkMode === 'penalty' ? 'on' : ''}}" bindtap="setCheckMode" data-mode="penalty">😈 惩罚</view>
       </view>
-      <button class="btn-roll" style="width:100%;box-sizing:border-box;margin-top:16rpx;" bindtap="doCheckRoll" disabled="{{checkRolling}}">{{checkRolling ? '…掷骰中…' : '🎲 掷骰判定'}}</button>
+      <button class="btn-roll" style="width:100%;box-sizing:border-box;margin-top:10px;" bindtap="doCheckRoll" disabled="{{checkRolling}}">{{checkRolling ? '…掷骰中…' : '🎲 掷骰判定'}}</button>
       <view class="check-result" wx:if="{{checkDice}}">
         <text class="check-d100">{{checkDice.result}}</text>
         <text class="check-level {{checkLevel.cls}}">{{checkLevel.text}}</text>
@@ -655,7 +1295,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">📖 克苏鲁词汇表</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:12rpx;">备团 / 现场氛围描述用，点击条目复制（含例句）</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">备团 / 现场氛围描述用，点击条目复制（含例句）</text>
       <view class="tpl-cats">
         <view class="tpl-cat {{lexiconCat === c.id ? 'on' : ''}}" wx:for="{{lexiconCats}}" wx:for-item="c" wx:key="id"
               bindtap="switchLexiconCat" data-id="{{c.id}}">{{c.icon}} {{c.name}}</view>
@@ -674,6 +1314,185 @@
   </view>
 
   <!-- ================================================================== -->
+  <!-- 线索表 Dialog -->
+  <!-- ================================================================== -->
+  <view class="dialog-overlay {{showCluesDialog ? 'active' : ''}}" bindtap="closeClues" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showCluesDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">🔍 线索表</text>
+    <view class="dialog-body-padded">
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">备团时录入线索（可带地点与出处备注），带团时标记「已给」；支持按地点筛选与搜索，备用线索可单独查看</text>
+      <view class="clue-add-row">
+        <input class="form-input clue-input" placeholder="线索内容…" value="{{clueInput}}" bindinput="onClueInput" />
+      </view>
+      <view class="clue-add-row">
+        <input class="form-input clue-input" placeholder="地点·场所级（可选）" value="{{clueLocInput}}" bindinput="onClueLocInput" />
+        <input class="form-input clue-input" placeholder="出处/备注（可选）" value="{{clueSource}}" bindinput="onClueSourceInput" />
+      </view>
+      <view class="clue-add-row">
+        <button class="btn-subtle" style="flex:1;" bindtap="addClue">＋ 添加</button>
+      </view>
+      <view class="clue-search-row">
+        <input class="clue-search-input" placeholder="🔍 搜索线索…" value="{{clueSearch}}" bindinput="onClueSearchInput" />
+      </view>
+      <view class="clue-tags" wx:if="{{clueLocs.length > 0 || clueBackupCount > 0}}">
+        <view class="tpl-cat {{clueLocFilter === '' ? 'on' : ''}}" bindtap="onClueLocTap" data-loc="">全部</view>
+        <view class="tpl-cat {{clueLocFilter === t.loc ? 'on' : ''}}" wx:for="{{clueLocs}}" wx:for-item="t" wx:key="loc"
+              bindtap="onClueLocTap" data-loc="{{t.loc}}">📍 {{t.loc}} {{t.count}}</view>
+        <view class="tpl-cat {{clueLocFilter === '__backup__' ? 'on' : ''}}" wx:if="{{clueBackupCount > 0}}"
+              bindtap="onClueLocTap" data-loc="__backup__">🎲 备用 {{clueBackupCount}}</view>
+      </view>
+      <view class="clue-item {{c.given ? 'given' : ''}}" wx:for="{{clueFiltered}}" wx:for-item="c" wx:key="id">
+        <text class="clue-text">{{c.text}}</text>
+        <text class="clue-source" wx:if="{{c.source}}">{{c.isBackup ? '🎲' : '📎'}} {{c.source}}</text>
+        <view class="clue-loc-row" wx:if="{{c.location}}">
+          <text class="clue-item-loc" catchtap="openClueLocEdit" data-id="{{c.id}}">📍 {{c.location}}</text>
+        </view>
+        <view class="clue-actions">
+          <text class="clue-given {{c.given ? '' : 'off'}}" catchtap="toggleClueGiven" data-id="{{c.id}}">{{c.given ? '✓ 已给' : '○ 未给'}}</text>
+          <text class="clue-addloc" wx:if="{{!c.location}}" catchtap="openClueLocEdit" data-id="{{c.id}}">＋地点</text>
+          <text class="char-card-delete" catchtap="deleteClue" data-id="{{c.id}}">✕</text>
+        </view>
+      </view>
+      <view class="empty-hint" wx:if="{{clueFiltered.length === 0}}"><text>{{currentTask.clues.length > 0 ? '没有匹配的线索' : '还没有线索，先录入一条吧'}}</text></view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeClues">关闭</button>
+    </view>
+  </view>
+
+  <!-- ================================================================== -->
+  <!-- 线索地点编辑 Dialog -->
+  <!-- ================================================================== -->
+  <view class="dialog-overlay {{showClueLocEdit ? 'active' : ''}}" bindtap="closeClueLocEdit" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showClueLocEdit ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">📍 设置线索地点</text>
+    <view class="dialog-body-padded">
+      <view class="form-group">
+        <text class="form-label">地点（留空 = 移除地点）</text>
+        <input class="form-input" placeholder="如：科比特老房子 / 中央图书馆（场所级，房间等写出处）" value="{{clueLocEditValue}}" bindinput="onClueLocEditInput" />
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeClueLocEdit">取消</button>
+      <button class="dialog-btn confirm" bindtap="saveClueLoc">保存</button>
+    </view>
+  </view>
+
+  <!-- ================================================================== -->
+  <!-- 团务笔记 Dialog -->
+  <!-- ================================================================== -->
+  <view class="dialog-overlay {{showNotesDialog ? 'active' : ''}}" bindtap="closeNotes" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showNotesDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">📝 团务笔记</text>
+    <view class="dialog-body-padded">
+      <button class="btn-subtle" style="width:100%;box-sizing:border-box;text-align:center;margin-bottom:10rpx;" bindtap="addNote">＋ 新建笔记</button>
+      <view class="note-item" wx:for="{{currentTask.notes}}" wx:for-item="nt" wx:key="id" bindtap="openNoteEdit" data-id="{{nt.id}}">
+        <text class="note-title">{{nt.title || '未命名笔记'}}</text>
+        <text class="note-preview">{{nt.content}}</text>
+      </view>
+      <view class="empty-hint" wx:if="{{!currentTask.notes || currentTask.notes.length === 0}}"><text>还没有笔记，点击「新建笔记」开始记录</text></view>
+      <view class="note-actions" wx:if="{{currentTask.notes && currentTask.notes.length > 0}}">
+        <button class="btn-subtle" style="width:100%;box-sizing:border-box;text-align:center;" bindtap="exportNotes">📋 导出全部笔记</button>
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeNotes">关闭</button>
+    </view>
+  </view>
+
+  <!-- ================================================================== -->
+  <!-- 笔记编辑 Dialog -->
+  <!-- ================================================================== -->
+  <view class="dialog-overlay {{showNoteEdit ? 'active' : ''}}" bindtap="closeNoteEdit" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showNoteEdit ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">{{editNoteId === null ? '＋ 新建笔记' : '✎ 编辑笔记'}}</text>
+    <view class="dialog-body-padded">
+      <view class="form-group">
+        <text class="form-label">标题</text>
+        <input class="form-input" placeholder="笔记标题（如：洋馆·阁楼）" value="{{noteTitle}}" bindinput="onNoteTitleInput" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">内容</text>
+        <textarea class="form-textarea" placeholder="场景描述、NPC 话术、剧情分支…" value="{{noteContent}}" bindinput="onNoteContentInput" auto-height maxlength="-1" />
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeNoteEdit">取消</button>
+      <button class="dialog-btn cancel" bindtap="deleteNote" wx:if="{{editNoteId !== null}}">删除</button>
+      <button class="dialog-btn confirm" bindtap="saveNote">保存</button>
+    </view>
+  </view>
+
+  <!-- ================================================================== -->
+  <!-- 规则速查 Dialog -->
+  <!-- ================================================================== -->
+  <view class="dialog-overlay {{showRulesDialog ? 'active' : ''}}" bindtap="closeRules" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showRulesDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">📚 规则速查</text>
+    <view class="dialog-body-padded">
+      <view class="tpl-cats">
+        <view class="tpl-cat {{rulesCat === s.id ? 'on' : ''}}" wx:for="{{rulesSections}}" wx:for-item="s" wx:key="id"
+              bindtap="switchRulesCat" data-id="{{s.id}}">{{s.icon}} {{s.name}}</view>
+      </view>
+      <view class="rule-table" wx:if="{{rulesTable.length > 0}}">
+        <view class="rule-cell" wx:for="{{rulesTable}}" wx:for-item="row" wx:key="index">
+          <text class="rule-cell-name">{{row[0]}}</text>
+          <text class="rule-cell-val">{{row[1]}}</text>
+        </view>
+      </view>
+      <view class="rules-list">
+        <view class="rule-item" wx:for="{{rulesItems}}" wx:for-item="it" wx:key="w">
+          <text class="rule-w">{{it.w}}</text>
+          <text class="rule-d">{{it.d}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeRules">关闭</button>
+    </view>
+  </view>
+
+  <!-- ================================================================== -->
+  <!-- AI 备团 Dialog -->
+  <!-- ================================================================== -->
+  <view class="dialog-overlay {{showAiDialog ? 'active' : ''}}" bindtap="closeAi" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showAiDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">🤖 AI 备团</text>
+    <view class="dialog-body-padded">
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">本工具不内置 AI：把提示词与格式样例复制给任意 AI（附上你的模组文本），再把 AI 输出粘贴回来一键导入。</text>
+      <view class="ai-copy-row">
+        <view class="tpl-cat" bindtap="copyAiAll">📋 一键复制全部</view>
+      </view>
+      <view class="ai-copy-row">
+        <view class="tpl-cat" bindtap="copyAiPrompt" data-type="npc">NPC 提示词</view>
+        <view class="tpl-cat" bindtap="copyAiPrompt" data-type="clue">线索提示词</view>
+        <view class="tpl-cat" bindtap="copyAiPrompt" data-type="note">笔记提示词</view>
+      </view>
+      <view class="ai-copy-row">
+        <view class="tpl-cat" bindtap="copyAiSample" data-type="npc">NPC 样例</view>
+        <view class="tpl-cat" bindtap="copyAiSample" data-type="clue">线索样例</view>
+        <view class="tpl-cat" bindtap="copyAiSample" data-type="note">笔记样例</view>
+      </view>
+      <textarea class="form-textarea ai-paste" placeholder="把 AI 生成的 NPC / 线索 / 笔记粘贴到这里…" value="{{aiImportText}}" bindinput="onAiImportTextInput" maxlength="-1" />
+      <view class="ai-import-row">
+        <button class="btn-subtle" bindtap="importAiNpcs">📥 导入为 NPC</button>
+        <button class="btn-subtle" bindtap="importAiClues">📥 导入为线索</button>
+        <button class="btn-subtle" bindtap="importAiNotes">📥 导入为笔记</button>
+      </view>
+      <text class="dialog-hint" style="display:block;margin-top:10rpx;">格式：NPC 按「---」或空行分块；线索每行一条（内容｜地点｜出处，地点写场所级、房间等写出处，备用线索出处写「备用线索」）；笔记按「## 标题」分块（块内可空行）。</text>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeAi">关闭</button>
+    </view>
+  </view>
+
+  <!-- ================================================================== -->
   <!-- 导入 NPC Dialog -->
   <!-- ================================================================== -->
   <view class="dialog-overlay {{showImportNpcDialog ? 'active' : ''}}" bindtap="closeImportNpcDialog" catchtouchmove="preventTouchMove"></view>
@@ -681,7 +1500,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">📥 导入 NPC</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:14rpx;">支持模组传统格式：第一行是名称，其余行自由排版，会自动识别 DEX / HP / MP / DB / 技能 / 攻击。可直接从 PDF 复制，或对线下材料拍照后用文字识别整理。</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">支持模组传统格式：第一行是名称，其余行自由排版，会自动识别 DEX / HP / MP / DB / 技能 / 攻击。可直接从 PDF 复制，或对线下材料拍照后用文字识别整理。</text>
       <view class="task-io-options">
         <view class="task-io-option" bindtap="doImportNpc">
           <text class="task-io-icon">📋</text>
@@ -715,7 +1534,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">📥 导入调查员</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:14rpx;">推荐方式：在「🐙 COC 调查员工具」中创建/加载角色卡，点导出后复制，再回到这里粘贴导入（完整属性、技能、武器）。</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">推荐方式：在「🐙 COC 调查员工具」中创建/加载角色卡，点导出后复制，再回到这里粘贴导入（完整属性、技能、武器）。</text>
       <view class="task-io-options">
         <view class="task-io-option" bindtap="doImportPlayer">
           <text class="task-io-icon">📋</text>
@@ -746,7 +1565,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">✍️ 手动新建调查员</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:12rpx;">除角色名称外均可选填，留空的项目不会展示</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">除角色名称外均可选填，留空的项目不会展示</text>
       <view class="form-group">
         <text class="form-label">角色名称</text>
         <input class="form-input" placeholder="输入调查员名称" value="{{newPlayerName}}" bindinput="onNewPlayerNameInput" />
@@ -794,7 +1613,7 @@
         <view class="tpl-cat {{tplCat === c.id ? 'on' : ''}}" wx:for="{{npcTemplateCats}}" wx:for-item="c" wx:key="id"
               bindtap="switchTplCat" data-id="{{c.id}}">{{c.icon}} {{c.name}}</view>
       </view>
-      <text class="dialog-hint" style="display:block;margin:12rpx 0;">点击模板一键添加到当前任务（当前分类 {{npcTemplatesByCat[tplCat].length}} 个），数值为常见参考值，可在编辑中调整</text>
+      <text class="dialog-hint" style="display:block;margin:8px 0;">点击模板一键添加到当前任务（当前分类 {{npcTemplatesByCat[tplCat].length}} 个），数值为常见参考值，可在编辑中调整</text>
       <scroll-view scroll-y class="tpl-list">
         <view class="tpl-item" wx:for="{{npcTemplatesByCat[tplCat]}}" wx:for-item="t" wx:key="id"
               bindtap="addNpcFromTemplate" data-id="{{t.id}}">
@@ -810,6 +1629,19 @@
     <view class="dialog-actions">
       <button class="dialog-btn cancel" bindtap="closeNpcTemplates">关闭</button>
     </view>
+  </view>
+
+  <!-- ================================================================== -->
+  <!-- 桌面端布局模式切换栏（仅桌面平台显示） -->
+  <!-- ================================================================== -->
+  <view class="desk-modebar" wx:if="{{isDesktopPlatform}}">
+    <text class="desk-mode-hint">{{isWide ? '🖥 全屏' : '📱 窄条'}} · {{winWidth}}×{{winHeight}}{{vpW ? ' · VP ' + vpW + '×' + vpH : ''}}{{statusBarH ? ' · 栏' + statusBarH : ''}}{{deskTopInsetRpx > 0 ? ' · 顶' + deskTopInsetRpx + 'rpx' : ''}}</text>
+    <view class="desk-mode-btn {{layoutMode === 'auto' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="auto">自动</view>
+    <view class="desk-mode-btn {{layoutMode === 'wide' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="wide">🖥 全屏</view>
+    <view class="desk-mode-btn {{layoutMode === 'narrow' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="narrow">📱 窄条</view>
+    <view class="desk-mode-btn" bindtap="adjustTopInset" data-delta="1">顶+</view>
+    <view class="desk-mode-btn" bindtap="adjustTopInset" data-delta="-1" wx:if="{{deskTopInsetRpx > 0}}">顶−</view>
+    <view class="desk-mode-btn" bindtap="resetDeskLayout" wx:if="{{isWide}}">↺ 重置</view>
   </view>
 
 </view>

@@ -16,6 +16,7 @@
     "navigationBarTitleText": "桌面冒险工具集",
     "navigationBarBackgroundColor": "#ffffff"
   },
+  "resizable": true,
   "darkmode": true,
   "style": "v2",
   "componentFramework": "glass-easel",
