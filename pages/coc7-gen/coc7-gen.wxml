@@ -491,8 +491,8 @@
       <textarea class="char-textarea" placeholder="信用评级对应的现金与资产…" value="{{charAssets}}" bindinput="onCharFieldChange" data-field="assets" auto-height maxlength="-1" />
     </view>
 
-    <!-- 分享卡片离屏 canvas（仅 step 5 时存在） -->
-    <canvas type="2d" id="shareCanvas" class="share-canvas"></canvas>
+    <!-- 分享卡片离屏 canvas（仅生成时挂载，避免原生组件干扰游玩模式输入框） -->
+    <canvas type="2d" id="shareCanvas" class="share-canvas" wx:if="{{shareCanvasOn}}"></canvas>
 
     <view class="saved-info" wx:if="{{savedAt > 0 && !playMode}}">💾 已保存</view>
 

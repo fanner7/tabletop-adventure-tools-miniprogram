@@ -520,6 +520,8 @@ Page({
     rulesCatIndex: 0,
     rulesItems: [],
     rulesTable: [],
+    // 分享卡片 canvas（仅生成时挂载）
+    shareCanvasOn: false,
     // 武器
     charWeapons: [],           // 角色已装备武器 [{name, skill, damage, range, ammo, ...}]
     showWeaponPicker: false,   // 武器选择 dialog
@@ -2678,24 +2680,33 @@ Page({
 
   // ==================== 分享卡片（canvas 生成角色卡图片） ====================
   generateShareCard() {
+    if (this.data.shareCanvasOn) return;
     wx.showLoading({ title: '生成中…' });
-    const q = wx.createSelectorQuery();
-    q.select('#shareCanvas').fields({ node: true, size: true }).exec((res) => {
-      if (!res || !res[0] || !res[0].node) {
-        wx.hideLoading();
-        wx.showToast({ title: '当前环境不支持生成', icon: 'none' });
-        return;
-      }
-      try {
-        this._drawShareCard(res[0].node);
-      } catch (err) {
-        wx.hideLoading();
-        wx.showToast({ title: '生成失败', icon: 'none' });
-      }
+    // 先挂载 canvas，等渲染完成后取节点绘制，结束后立即卸载
+    this.setData({ shareCanvasOn: true }, () => {
+      setTimeout(() => {
+        const q = wx.createSelectorQuery();
+        q.select('#shareCanvas').fields({ node: true, size: true }).exec((res) => {
+          const done = () => { this.setData({ shareCanvasOn: false }); };
+          if (!res || !res[0] || !res[0].node) {
+            wx.hideLoading();
+            done();
+            wx.showToast({ title: '当前环境不支持生成', icon: 'none' });
+            return;
+          }
+          try {
+            this._drawShareCard(res[0].node, done);
+          } catch (err) {
+            wx.hideLoading();
+            done();
+            wx.showToast({ title: '生成失败', icon: 'none' });
+          }
+        });
+      }, 150);
     });
   },
 
-  _drawShareCard(canvas) {
+  _drawShareCard(canvas, done) {
     const d = this.data;
     const W = 750;
     const M = 48;
@@ -2854,10 +2865,12 @@ Page({
       canvas,
       success: (res) => {
         wx.hideLoading();
+        if (done) done();
         wx.previewImage({ urls: [res.tempFilePath] });
       },
       fail: () => {
         wx.hideLoading();
+        if (done) done();
         wx.showToast({ title: '图片生成失败', icon: 'none' });
       },
     });
