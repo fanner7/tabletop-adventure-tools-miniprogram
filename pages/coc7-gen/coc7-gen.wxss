@@ -585,7 +585,12 @@ page {
 .free-slot-name { font-size: 24rpx; font-weight: bold; color: #3b2e1e; display: block; margin-top: 6rpx; }
 .free-slot-item:not(.filled) .free-slot-name { color: #8b7355; font-weight: normal; }
 .free-slot-clear { position: absolute; top: 8rpx; right: 12rpx; font-size: 22rpx; color: #c4b8a8; padding: 4rpx; }
-.free-slot-list { height: 45vh; overflow-y: auto; flex: none; }
+.free-slot-list { height: 48vh; overflow-y: auto; flex: none; }
+.free-slot-group:first-child .free-slot-cat { margin-top: 0; }
+.free-slot-cat {
+  display: block; font-size: 24rpx; font-weight: bold; color: #6b4c2a;
+  padding: 8rpx 4rpx; border-bottom: 1px solid #d4c5a9; margin: 14rpx 0 12rpx;
+}
 .free-slot-option {
   display: flex;
   align-items: center;
@@ -596,8 +601,13 @@ page {
   margin-bottom: 10rpx;
 }
 .free-slot-option:active { background: #f5ead5; }
+.free-slot-opt-left { display: flex; align-items: center; gap: 10rpx; min-width: 0; }
 .free-slot-opt-name { font-size: 26rpx; color: #3b2e1e; }
-.free-slot-opt-base { font-size: 20rpx; color: #8b7355; }
+.free-slot-occ-tag {
+  flex-shrink: 0; font-size: 18rpx; color: #8b7355;
+  border: 1px solid #d4c5a9; border-radius: 6rpx; padding: 2rpx 8rpx;
+}
+.free-slot-opt-base { font-size: 20rpx; color: #8b7355; flex-shrink: 0; margin-left: 12rpx; }
 .free-slot-empty { text-align: center; color: #a08b6f; font-size: 24rpx; padding: 40rpx 0; }
 
 /* 骰子投掷 dialog */
@@ -938,6 +948,8 @@ page {
 .theme-dark .free-slot-option:active { background: #2d3b52; }
 .theme-dark .free-slot-opt-name { color: #f4efe4; }
 .theme-dark .free-slot-opt-base { color: #aab6c8; }
+.theme-dark .free-slot-cat { color: #d5a95c; border-color: #3a4a62; }
+.theme-dark .free-slot-occ-tag { color: #aab6c8; border-color: #3a4a62; }
 
 .theme-dark .occ-sticky-header {
   background: #111827;

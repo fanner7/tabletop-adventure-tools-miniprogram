@@ -708,11 +708,17 @@
     <text class="dialog-title">选择职业技能</text>
     <text class="dialog-sub">选中的技能将获得职业技能资格，可用职业点加点</text>
     <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="free-slot-list">
-      <view class="free-slot-option" wx:for="{{freeSlotDialogList}}" wx:key="name" bindtap="pickFreeSlotSkill" data-name="{{item.name}}">
-        <text class="free-slot-opt-name">{{item.name}}</text>
-        <text class="free-slot-opt-base">基础 {{item.base}}%</text>
+      <view class="free-slot-group" wx:for="{{freeSlotDialogGroups}}" wx:for-item="group" wx:key="cat">
+        <text class="free-slot-cat">{{group.catName}} · {{group.skills.length}}</text>
+        <view class="free-slot-option" wx:for="{{group.skills}}" wx:for-item="item" wx:key="name" bindtap="pickFreeSlotSkill" data-name="{{item.name}}">
+          <view class="free-slot-opt-left">
+            <text class="free-slot-opt-name">{{item.name}}</text>
+            <text class="free-slot-occ-tag" wx:if="{{item.isOcc}}">本职</text>
+          </view>
+          <text class="free-slot-opt-base">基础 {{item.base}}%</text>
+        </view>
       </view>
-      <view class="free-slot-empty" wx:if="{{freeSlotDialogList.length == 0}}">没有可选的技能了</view>
+      <view class="free-slot-empty" wx:if="{{freeSlotDialogGroups.length == 0}}">没有可选的技能了</view>
     </scroll-view>
     <button class="dialog-btn cancel preset-close" bindtap="closeFreeSlotDialog">取消</button>
   </view>

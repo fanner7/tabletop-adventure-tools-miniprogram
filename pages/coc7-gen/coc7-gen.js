@@ -456,7 +456,7 @@ Page({
     freeOccSlots: [],
     showFreeSlotDialog: false,
     freeSlotEditing: -1,
-    freeSlotDialogList: [],
+    freeSlotDialogGroups: [],
     // 基础信息
     charInfo: { name: '', player: '', age: '25', gender: '男', era: '1920s' },
     ageModSummary: '',
@@ -1478,12 +1478,19 @@ Page({
     const edu = this.data.attrValues.edu || 50;
     const dex = this.data.attrValues.dex || 50;
     const occupied = this.data.freeOccSlots.map(s => s.skill).filter(Boolean);
-    const list = ALL_SKILLS.filter(sk => {
-      if (slot.allowed && !slot.allowed.includes(sk.name)) return false;
-      if (occupied.includes(sk.name)) return false;
-      return true;
-    }).map(sk => ({ name: sk.name, base: getSkillBase(sk.name, edu, dex, this.data.skillSpecs) }));
-    this.setData({ freeSlotEditing: idx, freeSlotDialogList: list, showFreeSlotDialog: true });
+    // 按分类分组展示，便于浏览与对照（与技能页同序）
+    const groups = CAT_ORDER.map(cat => {
+      const skills = ALL_SKILLS.filter(sk => sk.cat === cat)
+        .filter(sk => !slot.allowed || slot.allowed.includes(sk.name))
+        .filter(sk => !occupied.includes(sk.name))
+        .map(sk => ({
+          name: sk.name,
+          base: getSkillBase(sk.name, edu, dex, this.data.skillSpecs),
+          isOcc: this.isOccSkill(sk.name),  // 已是本职（★固定/已选☆/槽位隐含）——对照用
+        }));
+      return { cat, catName: CAT_LABELS[cat].label, skills };
+    }).filter(g => g.skills.length > 0);
+    this.setData({ freeSlotEditing: idx, freeSlotDialogGroups: groups, showFreeSlotDialog: true });
   },
   closeFreeSlotDialog() { this.setData({ showFreeSlotDialog: false, freeSlotEditing: -1 }); },
   pickFreeSlotSkill(e) {
