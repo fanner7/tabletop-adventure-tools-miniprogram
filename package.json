@@ -1,0 +1,9 @@
+{
+  "name": "tabletop-adventure-tools-miniprogram",
+  "version": "1.0.0",
+  "private": true,
+  "description": "桌面冒险工具集 — 微信小程序 TTRPG 工具（原生框架，无 npm 依赖）",
+  "scripts": {
+    "test": "node tools/test/run.js"
+  }
+}
