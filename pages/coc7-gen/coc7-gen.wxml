@@ -331,7 +331,7 @@
 
       <text class="char-section-title">❤️ 状态</text>
       <view class="char-deriv-row">
-        <view class="char-deriv">
+        <view class="char-deriv vital">
           <text class="char-deriv-label">生命 HP</text>
           <view wx:if="{{playMode}}" class="stat-edit-row">
             <text class="stat-pm" bindtap="adjustStat" data-field="hp" data-delta="-1">−</text>
@@ -342,7 +342,7 @@
           </view>
           <text class="char-deriv-value" wx:if="{{!playMode}}">{{playHP}}/{{derived.hp}}</text>
         </view>
-        <view class="char-deriv">
+        <view class="char-deriv vital">
           <text class="char-deriv-label">理智 SAN</text>
           <view wx:if="{{playMode}}" class="stat-edit-row">
             <text class="stat-pm" bindtap="adjustStat" data-field="san" data-delta="-1">−</text>
@@ -353,7 +353,7 @@
           </view>
           <text class="char-deriv-value" wx:if="{{!playMode}}">{{playSAN}}/{{maxSAN}}</text>
         </view>
-        <view class="char-deriv">
+        <view class="char-deriv vital">
           <text class="char-deriv-label">幸运 LUCK</text>
           <view wx:if="{{playMode}}" class="stat-edit-row">
             <text class="stat-pm" bindtap="adjustStat" data-field="luck" data-delta="-1">−</text>
@@ -362,7 +362,7 @@
           </view>
           <text class="char-deriv-value" wx:if="{{!playMode}}">{{playLuck}}</text>
         </view>
-        <view class="char-deriv">
+        <view class="char-deriv vital">
           <text class="char-deriv-label">魔法 MP</text>
           <view wx:if="{{playMode}}" class="stat-edit-row">
             <text class="stat-pm" bindtap="adjustStat" data-field="mp" data-delta="-1">−</text>

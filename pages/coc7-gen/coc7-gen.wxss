@@ -624,11 +624,28 @@ page {
 
 /* 游玩模式 */
 .play-hp .char-deriv-value, .play-san .char-deriv-value { color: #3b2e1e; }
-.play-stat-input { width: 80rpx; height: 48rpx; background: #fff; border: 1px solid #d4c5a9; border-radius: 6rpx; text-align: center; font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
-.stat-edit-row { display: flex; align-items: center; justify-content: center; gap: 4rpx; margin-top: 4rpx; }
-.stat-input { width: 70rpx; }
-.stat-sep { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
-.stat-max { font-size: 28rpx; font-weight: bold; color: #7a6b58; }
+.play-stat-input { width: 80rpx; height: 48rpx; background: #fff; border: 1px solid #d4c5a9; border-radius: 6rpx; text-align: center; font-size: 28rpx; font-weight: bold; color: #3b2e1e; flex-shrink: 0; }
+.stat-edit-row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4rpx; margin-top: 4rpx; }
+.stat-input { width: 70rpx; flex-shrink: 0; }
+.stat-sep { font-size: 28rpx; font-weight: bold; color: #3b2e1e; flex-shrink: 0; }
+.stat-max { font-size: 28rpx; font-weight: bold; color: #7a6b58; flex-shrink: 0; }
+
+/* 游玩模式：HP/SAN/LUCK/MP 四个状态格两列排布，保证 − 输入框 ＋ / 最大值 一行放得下 */
+.play-sheet .char-deriv.vital {
+  flex: 1 1 calc(50% - 6rpx);
+  min-width: calc(50% - 6rpx);
+  max-width: calc(50% - 6rpx);
+  box-sizing: border-box;
+}
+
+/* PC 宽窗口（容器 600px 上限、rpx 随窗口放大）：状态格改单列，避免输入行被挤压 */
+@media (min-width: 600px) {
+  .play-sheet .char-deriv.vital {
+    flex: 1 1 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
 
 /* ===== STEP 5: 角色卡预览 ===== */
 .char-sheet { background: #fff; border-radius: 16rpx; padding: 24rpx; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
