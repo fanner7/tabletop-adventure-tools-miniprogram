@@ -1357,12 +1357,13 @@ Page({
 
     // 信用评级：根据职业CR范围自动用兴趣点加到最低值
     let crAutoPts = 0;
+    let crMid = 0, crBase = 0;   // 函数级声明：crAutoNote 在块外引用，不能声明在 if 块内
     if (occ.cr_range) {
       const m = occ.cr_range.match(/(\d+)-(\d+)/);
       if (m) {
         const crLo = parseInt(m[1]), crHi = parseInt(m[2]);
-        const crMid = Math.round((crLo + crHi) / 2);
-        const crBase = getSkillBase('信用评级', edu, dex); // 0
+        crMid = Math.round((crLo + crHi) / 2);
+        crBase = getSkillBase('信用评级', edu, dex); // 0
         crAutoPts = Math.max(0, crMid - crBase);
         crAutoPts = Math.min(crAutoPts, intPoints);
       }
