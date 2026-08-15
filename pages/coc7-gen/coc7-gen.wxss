@@ -22,7 +22,7 @@ page {
 .header-subtitle { font-size: 24rpx; color: #7a6b58; display: block; margin-top: 8rpx; }
 
 /* ===== 步骤进度条 ===== */
-.step-indicator { display: flex; justify-content: center; align-items: center; gap: 8rpx; padding: 20rpx 0; margin-bottom: 16rpx; }
+.step-indicator { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8rpx; padding: 20rpx 0; margin-bottom: 16rpx; }
 .step-dot { width: 20rpx; height: 20rpx; border-radius: 50%; background-color: #d4c5a9; transition: background-color 0.3s; flex-shrink: 0; }
 .step-dot.active { background-color: #6b4c2a; width: 28rpx; height: 28rpx; }
 .step-dot.done { background-color: #8b7355; }
@@ -522,7 +522,7 @@ page {
 
 /* ===== 预置调查员弹窗 ===== */
 .home-action.preset { grid-column: 1 / -1; }
-.preset-list { flex: 1; min-height: 0; height: 45vh; margin-top: 4rpx; }
+.preset-list { height: 45vh; overflow-y: auto; flex: none; margin-top: 4rpx; }
 .preset-item {
   display: flex;
   align-items: center;
@@ -585,7 +585,7 @@ page {
 .free-slot-name { font-size: 24rpx; font-weight: bold; color: #3b2e1e; display: block; margin-top: 6rpx; }
 .free-slot-item:not(.filled) .free-slot-name { color: #8b7355; font-weight: normal; }
 .free-slot-clear { position: absolute; top: 8rpx; right: 12rpx; font-size: 22rpx; color: #c4b8a8; padding: 4rpx; }
-.free-slot-list { flex: 1; min-height: 0; height: 45vh; }
+.free-slot-list { height: 45vh; overflow-y: auto; flex: none; }
 .free-slot-option {
   display: flex;
   align-items: center;
@@ -1167,4 +1167,217 @@ page {
 
 .theme-dark .home-action.primary .home-action-icon {
   background: rgba(17,24,39,0.14);
+}
+
+/* ================================================================== */
+/* ============ 游玩模式横幅 / SAN 结算 / 状态 ±1 按钮 ================ */
+/* ================================================================== */
+.play-banner-top { display: flex; align-items: baseline; gap: 12rpx; flex-wrap: wrap; }
+.play-banner-actions { display: flex; align-items: center; gap: 12rpx; margin-top: 8rpx; flex-wrap: wrap; }
+.banner-btn {
+  font-size: 22rpx; color: #6b4c2a; background: #faf8f4;
+  border: 1.5px solid #d4c5a9; border-radius: 8rpx; padding: 6rpx 14rpx;
+}
+.banner-btn:active { background: #f0e8d8; }
+.san-day-line { font-size: 20rpx; color: #8b7355; margin-top: 8rpx; }
+.san-day-warn { color: #c0392b; font-weight: bold; }
+
+.stat-pm {
+  width: 40rpx; height: 40rpx; line-height: 36rpx; text-align: center;
+  background: #faf8f4; border: 1.5px solid #d4c5a9; border-radius: 8rpx;
+  font-size: 26rpx; font-weight: bold; color: #6b4c2a; flex-shrink: 0;
+  box-sizing: border-box;
+}
+.stat-pm:active { background: #f0e8d8; }
+
+.san-presets { display: flex; flex-wrap: wrap; gap: 8rpx; margin-bottom: 14rpx; }
+.san-preset {
+  font-size: 22rpx; color: #7a6b58; background: #faf8f4;
+  border: 1.5px solid #d4c5a9; border-radius: 8rpx; padding: 6rpx 14rpx;
+}
+.san-preset.on { background: #6b4c2a; color: #fff; border-color: #6b4c2a; }
+.san-formula-input { margin-bottom: 6rpx; }
+.san-roll-btn { margin: 12rpx 0; width: 100%; box-sizing: border-box; }
+.san-result {
+  background: #faf8f4; border: 1.5px solid #d4c5a9; border-radius: 10rpx;
+  padding: 14rpx 16rpx; margin-top: 6rpx;
+}
+.san-result-line { display: block; font-size: 24rpx; color: #3b2e1e; margin-bottom: 6rpx; line-height: 1.5; }
+.san-warn { display: block; font-size: 22rpx; color: #c0392b; font-weight: bold; margin-top: 6rpx; line-height: 1.5; }
+
+/* 暗色 */
+.theme-dark .banner-btn,
+.theme-dark .stat-pm,
+.theme-dark .san-preset,
+.theme-dark .san-result { background: #1d2636; border-color: #3a4a62; color: #d5a95c; }
+.theme-dark .banner-btn:active,
+.theme-dark .stat-pm:active { background: #2d3b52; }
+.theme-dark .san-preset.on { background: #d5a95c; border-color: #d5a95c; color: #111827; }
+.theme-dark .san-result-line { color: #f4efe4; }
+.theme-dark .san-warn { color: #ff7b72; }
+.theme-dark .san-day-line { color: #8fa0b8; }
+.theme-dark .san-day-warn { color: #ff7b72; }
+
+/* ================================================================== */
+/* ============ 列表搜索 / 复制 / 技能快捷加减 ======================== */
+/* ================================================================== */
+.saved-search {
+  width: 100%; height: 64rpx; box-sizing: border-box;
+  background: #faf8f4; border: 1.5px solid #d4c5a9; border-radius: 8rpx;
+  padding: 0 16rpx; font-size: 24rpx; color: #3b2e1e;
+  margin-bottom: 12rpx;
+}
+.saved-copy {
+  font-size: 22rpx; color: #6b4c2a; padding: 8rpx 10rpx;
+}
+.saved-copy:active { color: #5a3e22; }
+.skill-quick { display: flex; gap: 8rpx; margin-top: 8rpx; }
+.skill-qbtn {
+  flex: 1; text-align: center; font-size: 22rpx; font-weight: bold;
+  color: #8b7355; background: #faf8f4; border: 1.5px solid #e8e0d6;
+  border-radius: 8rpx; padding: 6rpx 0;
+}
+.skill-qbtn.plus { color: #6b4c2a; border-color: #d4c5a9; }
+.skill-qbtn:active { background: #f0e8d8; }
+
+.theme-dark .saved-search { background: #1d2636; border-color: #3a4a62; color: #e6edf7; }
+.theme-dark .saved-copy { color: #d5a95c; }
+.theme-dark .skill-qbtn { background: #1a2233; border-color: #2f3b50; color: #aab6c8; }
+.theme-dark .skill-qbtn.plus { color: #d5a95c; border-color: #3a4a62; }
+.theme-dark .skill-qbtn:active { background: #2d3b52; }
+
+/* ================================================================== */
+/* ============ 步骤指示器可跳转 + 规则入口 ============================ */
+/* ================================================================== */
+.step-item { display: flex; align-items: center; }
+.step-item.clickable { cursor: pointer; }
+.step-item.clickable .step-label { text-decoration: underline dotted #8b7355; text-underline-offset: 4rpx; }
+.step-item.clickable:active .step-label { color: #3b2e1e; }
+.step-label.done { color: #6b4c2a; }
+.rules-chip {
+  margin-left: 16rpx; padding: 6rpx 18rpx; border-radius: 20rpx;
+  font-size: 22rpx; color: #6b4c2a; background: #faf8f4; border: 1.5px solid #d4c5a9;
+  flex-shrink: 0;
+}
+.rules-chip:active { background: #f0e8d8; }
+.theme-dark .step-item.clickable .step-label { text-decoration-color: #8fa0b8; }
+.theme-dark .step-item.clickable:active .step-label { color: #f4efe4; }
+.theme-dark .rules-chip { color: #d5a95c; background: #1d2636; border-color: #3a4a62; }
+.theme-dark .rules-chip:active { background: #2d3b52; }
+
+/* ================================================================== */
+/* ============ 草稿继续卡片（首页） ================================== */
+/* ================================================================== */
+.draft-card {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #fdfaf3; border: 2px dashed #c9a45c; border-radius: 16rpx;
+  padding: 24rpx 28rpx; margin-bottom: 20rpx;
+}
+.draft-main { display: flex; align-items: center; flex: 1; min-width: 0; }
+.draft-icon { font-size: 44rpx; margin-right: 20rpx; }
+.draft-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.draft-title { font-size: 30rpx; font-weight: bold; color: #3b2e1e; }
+.draft-sub { font-size: 24rpx; color: #7a6b58; margin-top: 6rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.draft-discard { font-size: 28rpx; color: #a08c70; padding: 12rpx 16rpx; flex-shrink: 0; }
+.draft-discard:active { color: #c0392b; }
+.theme-dark .draft-card { background: #1d2636; border-color: #d5a95c; }
+.theme-dark .draft-title { color: #f4efe4; }
+.theme-dark .draft-sub { color: #8fa0b8; }
+.theme-dark .draft-discard { color: #8fa0b8; }
+.theme-dark .draft-discard:active { color: #ff7b72; }
+
+/* ================================================================== */
+/* ============ 轻量使用提示 / 校验条 / CR 说明 ======================== */
+/* ================================================================== */
+.step-hint {
+  display: block; font-size: 22rpx; color: #a08c70;
+  margin-top: 8rpx; line-height: 1.5;
+}
+/* 属性页提示在深色 hero 内，改用浅色 */
+.attr-hero .step-hint { color: rgba(248, 243, 234, 0.72); margin-top: 12rpx; }
+.validation-bar { display: flex; flex-wrap: wrap; gap: 10rpx; margin: 4rpx 0 20rpx; }
+.validation-chip {
+  font-size: 20rpx; color: #9a6a1f; background: #fdf3dc;
+  border: 1px solid #ecd9a8; border-radius: 999rpx; padding: 6rpx 16rpx; line-height: 1.5;
+}
+.cr-auto-note {
+  display: block; font-size: 20rpx; color: #7a6b58; margin-top: 12rpx;
+  background: #f7f2e7; border-radius: 8rpx; padding: 10rpx 14rpx; line-height: 1.5;
+}
+.theme-dark .step-hint { color: #8fa0b8; }
+.theme-dark .validation-chip { color: #e3b96b; background: #2c2a17; border-color: #4a4020; }
+.theme-dark .cr-auto-note { color: #8fa0b8; background: #1a2233; }
+
+/* ================================================================== */
+/* ============ Step 1 建卡法切换 / 点数购买入口 ======================= */
+/* ================================================================== */
+.roll-mode-row { display: flex; gap: 16rpx; margin: 4rpx 0 20rpx; justify-content: center; }
+.roll-mode-chip {
+  font-size: 24rpx; color: #8b7355; background: #faf8f4;
+  border: 1.5px solid #d4c5a9; border-radius: 999rpx; padding: 12rpx 26rpx;
+}
+.roll-mode-chip.active { color: #fff; background: #6b4c2a; border-color: #6b4c2a; font-weight: bold; }
+.roll-mode-chip:active { opacity: 0.85; }
+.point-buy-btn { margin-top: 16rpx; }
+.theme-dark .roll-mode-chip { color: #aab6c8; background: #1d2636; border-color: #3a4a62; }
+.theme-dark .roll-mode-chip.active { color: #111827; background: #d5a95c; border-color: #d5a95c; }
+
+/* ================================================================== */
+/* ============ 点数购买 dialog ====================================== */
+/* ================================================================== */
+.point-buy-body { flex: 1; min-height: 0; max-height: 55vh; overflow-y: auto; padding-bottom: 8rpx; }
+.pb-row { display: flex; align-items: center; justify-content: space-between; padding: 14rpx 8rpx; border-bottom: 1px solid #f0e8d8; }
+.pb-label { font-size: 26rpx; color: #3b2e1e; flex: 1; }
+.pb-input {
+  width: 180rpx; height: 64rpx; text-align: center; font-size: 28rpx; color: #3b2e1e;
+  background: #faf8f4; border: 1.5px solid #d4c5a9; border-radius: 10rpx;
+}
+.pb-luck { display: flex; align-items: center; padding: 18rpx 8rpx; gap: 16rpx; }
+.pb-luck .pb-label { flex: 1; }
+.pb-luck-val { font-size: 32rpx; font-weight: bold; color: #6b4c2a; }
+.pb-luck-reroll { font-size: 24rpx; color: #8b7355; border: 1.5px solid #d4c5a9; border-radius: 999rpx; padding: 8rpx 20rpx; }
+.pb-luck-reroll:active { background: #f0e8d8; }
+.pb-remaining { display: block; text-align: center; font-size: 28rpx; color: #c0392b; font-weight: bold; padding: 16rpx 0 4rpx; }
+.pb-remaining.ok { color: #1e8e3e; }
+.theme-dark .pb-row { border-bottom-color: #2f3b50; }
+.theme-dark .pb-label { color: #f4efe4; }
+.theme-dark .pb-input { background: #1d2636; border-color: #3a4a62; color: #e6edf7; }
+.theme-dark .pb-luck-val { color: #d5a95c; }
+.theme-dark .pb-luck-reroll { color: #aab6c8; border-color: #3a4a62; }
+.theme-dark .pb-luck-reroll:active { background: #2d3b52; }
+.theme-dark .pb-remaining { color: #ff7b72; }
+.theme-dark .pb-remaining.ok { color: #6dd58c; }
+
+/* ================================================================== */
+/* ============ 规则速查 dialog ====================================== */
+/* ================================================================== */
+.rules-cat-row { display: flex; gap: 12rpx; white-space: nowrap; margin: 4rpx 0 16rpx; flex-shrink: 0; }
+.rules-cat {
+  font-size: 24rpx; color: #8b7355; background: #faf8f4;
+  border: 1.5px solid #d4c5a9; border-radius: 999rpx; padding: 10rpx 24rpx; flex-shrink: 0;
+}
+.rules-cat.active { color: #fff; background: #6b4c2a; border-color: #6b4c2a; font-weight: bold; }
+.rules-list { flex: 1; min-height: 0; max-height: 48vh; overflow-y: auto; padding-bottom: 8rpx; }
+.rules-item { padding: 14rpx 6rpx; border-bottom: 1px solid #f0e8d8; }
+.rules-w { display: block; font-size: 26rpx; font-weight: bold; color: #3b2e1e; }
+.rules-d { display: block; font-size: 24rpx; color: #7a6b58; margin-top: 6rpx; line-height: 1.55; }
+.rules-table { margin-top: 12rpx; border-top: 2px solid #d4c5a9; }
+.rules-table-row { display: flex; padding: 12rpx 6rpx; border-bottom: 1px solid #f0e8d8; }
+.rules-table-w { width: 40%; font-size: 24rpx; color: #3b2e1e; font-weight: bold; }
+.rules-table-d { flex: 1; font-size: 24rpx; color: #7a6b58; }
+.rules-close { margin-top: 12rpx; }
+.theme-dark .rules-cat { color: #aab6c8; background: #1d2636; border-color: #3a4a62; }
+.theme-dark .rules-cat.active { color: #111827; background: #d5a95c; border-color: #d5a95c; }
+.theme-dark .rules-item, .theme-dark .rules-table-row { border-bottom-color: #2f3b50; }
+.theme-dark .rules-w, .theme-dark .rules-table-w { color: #f4efe4; }
+.theme-dark .rules-d, .theme-dark .rules-table-d { color: #8fa0b8; }
+.theme-dark .rules-table { border-top-color: #3a4a62; }
+
+/* ================================================================== */
+/* ============ 分享卡片离屏 canvas =================================== */
+/* ================================================================== */
+.share-canvas {
+  position: fixed; left: -9999px; top: 0;
+  width: 375px; height: 500px;
+  pointer-events: none;
 }

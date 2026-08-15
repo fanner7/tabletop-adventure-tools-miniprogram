@@ -6,13 +6,15 @@
     <text class="header-subtitle">Call of Cthulhu 7th Edition — Character Generator</text>
   </view>
 
-  <!-- ===== 步骤进度条 ===== -->
+  <!-- ===== 步骤进度条（已完成步骤可点击跳转） ===== -->
   <view class="step-indicator" wx:if="{{step > 0 && step < 6 && !playMode}}">
-    <view wx:for="{{['属性','信息','职业','技能','完成']}}" wx:for-item="s" wx:for-index="i" wx:key="i" style="display:flex;align-items:center;">
+    <view wx:for="{{['属性','信息','职业','技能','完成']}}" wx:for-item="s" wx:for-index="i" wx:key="i"
+          class="step-item {{i+1 <= maxStep ? 'clickable' : ''}}" bindtap="goToStep" data-step="{{i+1}}">
       <view class="step-dot {{i+1 < step ? 'done' : ''}} {{i+1 == step ? 'active' : ''}}"></view>
-      <text class="step-label {{i+1 == step ? 'active' : ''}}">{{s}}</text>
+      <text class="step-label {{i+1 == step ? 'active' : ''}} {{i+1 < step ? 'done' : ''}}">{{s}}</text>
       <view class="step-connector {{i+1 < step ? 'done' : ''}}" wx:if="{{i < 4}}"></view>
     </view>
+    <view class="rules-chip" bindtap="openRules">📖 规则</view>
   </view>
 
   <!-- ===== STEP 0: 选择模式 ===== -->
@@ -30,6 +32,16 @@
       </view>
 
       <view class="home-actions">
+        <view class="draft-card" wx:if="{{draftInfo}}">
+          <view class="draft-main" bindtap="continueDraft">
+            <text class="draft-icon">📝</text>
+            <view class="draft-copy">
+              <text class="draft-title">继续上次未完成</text>
+              <text class="draft-sub">{{draftInfo.name}} · 第 {{draftInfo.step}} 步「{{draftInfo.stepName}}」</text>
+            </view>
+          </view>
+          <text class="draft-discard" catchtap="discardDraft">✕</text>
+        </view>
         <view class="home-action primary" bindtap="startNewCharacter">
           <text class="home-action-icon">＋</text>
           <view class="home-action-copy">
@@ -59,6 +71,8 @@
         <text class="saved-head-title">已保存调查员</text>
         <text class="saved-head-count">{{savedCharacters.length}}</text>
       </view>
+      <!-- 名称搜索 -->
+      <input class="saved-search" placeholder="🔍 搜索调查员…" value="{{charSearch}}" bindinput="onCharSearch" />
       <!-- 标签筛选 -->
       <scroll-view scroll-x class="saved-filter" wx:if="{{tagOptions.length > 0}}">
         <view class="saved-filter-chip {{tagFilter == '' ? 'active' : ''}}" bindtap="setTagFilter" data-tag="">全部</view>
@@ -75,6 +89,7 @@
           <text class="saved-time" wx:if="{{sc._timeStr}}">{{sc._timeStr}}</text>
         </view>
         <view class="saved-actions">
+          <text class="saved-copy" catchtap="duplicateCharacter" data-index="{{sc._idx}}">复制</text>
           <text class="saved-edit" catchtap="openTagDialog" data-index="{{sc._idx}}">✎</text>
           <text class="saved-delete" catchtap="deleteCharacter" data-index="{{sc._idx}}">删除</text>
         </view>
@@ -91,6 +106,7 @@
     <view class="attr-hero">
       <text class="attr-hero-icon">🎲</text>
       <text class="attr-hero-title">掷骰决定属性</text>
+      <text class="step-hint">{{stepHints[1]}}</text>
       <view class="attr-hero-progress" wx:if="{{rolledCount > 0 && !allRolled}}">
         <view class="attr-hero-bar"><view class="attr-hero-bar-fill" style="width: {{rolledCount * 100 / 9}}%"></view></view>
         <text class="attr-hero-bar-text">已掷出 {{rolledCount}} / 9</text>
@@ -110,15 +126,23 @@
       </view>
     </view>
 
+    <!-- 建卡法切换（可选规则） -->
+    <view class="roll-mode-row">
+      <view class="roll-mode-chip {{attrRollMode == 'std' ? 'active' : ''}}" bindtap="setAttrRollMode" data-mode="std">🎲 标准 3D6</view>
+      <view class="roll-mode-chip {{attrRollMode == 'hero' ? 'active' : ''}}" bindtap="setAttrRollMode" data-mode="hero">🦸 英雄 4D6 舍最低</view>
+    </view>
+
     <!-- 操作按钮 -->
     <button class="btn btn-primary attr-roll-all" bindtap="rollAllAttrs" wx:if="{{!allRolled}}" disabled="{{attrRolling}}">{{attrRolling ? '🎲 掷骰中…' : '🎲 全部掷骰'}}</button>
     <button class="btn btn-secondary attr-roll-all" bindtap="rollAllAttrs" wx:if="{{allRolled}}">🔄 全部重掷</button>
+    <button class="btn btn-secondary attr-roll-all point-buy-btn" bindtap="openPointBuy">🛠 点数购买（8 项共 460 点）</button>
   </block>
 
   <!-- ===== STEP 2: 基础信息 ===== -->
   <block wx:if="{{step == 2}}">
     <text class="step-title">✏️ 调查员信息</text>
     <text class="step-desc">填写你的调查员基本资料。</text>
+    <text class="step-hint">{{stepHints[2]}}</text>
     <view class="form-group"><text class="form-label">调查员名称</text><input class="form-input" placeholder="输入调查员名称" value="{{charInfo.name}}" bindinput="onCharInfoChange" data-field="name" /></view>
     <view class="form-group"><text class="form-label">玩家名称</text><input class="form-input" placeholder="输入玩家名称（可选）" value="{{charInfo.player}}" bindinput="onCharInfoChange" data-field="player" /></view>
     <view class="form-group">
@@ -138,7 +162,9 @@
     </view>
     <view class="form-group">
       <text class="form-label">时代背景</text>
-      <view class="form-picker"><text>1920s</text></view>
+      <picker mode="selector" range="{{eras}}" value="{{eraIndex}}" bindchange="onEraChange">
+        <view class="form-picker"><text>{{charInfo.era || '1920s'}}</text><text class="form-picker-arrow">▼</text></view>
+      </picker>
     </view>
     <view class="age-mod-box" wx:if="{{ageModSummary}}">
       <text class="age-mod-title">📋 年龄修正结果</text>
@@ -158,6 +184,7 @@
   <block wx:if="{{step == 3}}">
     <text class="step-title">💼 选择职业</text>
     <text class="step-desc">选择一个职业来决定你的职业技能与资源。点击可选技能切换是否纳入本职。</text>
+    <text class="step-hint">{{stepHints[3]}}</text>
 
     <!-- 悬浮头部：搜索 + 已选职业详情（始终可见） -->
     <view class="occ-sticky-header">
@@ -201,6 +228,7 @@
   <!-- ===== STEP 4: 技能分配（分类网格 + dialog slider） ===== -->
   <block wx:if="{{step == 4}}">
     <text class="step-title">📊 分配技能点</text>
+    <text class="step-hint">{{stepHints[4]}}</text>
     <view class="override-toggle" bindtap="toggleOverride" wx:if="{{overrideLimits || true}}">
       <text class="override-toggle-text">{{overrideLimits ? '🔒 恢复限制' : '🔓 解除限制'}}</text>
     </view>
@@ -216,6 +244,7 @@
           <text class="occ-info-stat">⭐CR {{selectedOcc.cr_range}}</text>
         </view>
       </view>
+      <text class="cr-auto-note" wx:if="{{crAutoNote}}">{{crAutoNote}}</text>
       <view class="occ-info-card-skills" wx:if="{{occFixedSkills.length > 0}}">
         <text class="occ-skills-tag" wx:for="{{occFixedSkills}}" wx:for-item="sk" wx:key="name">{{sk.spec ? sk.name + '(' + sk.spec + ')' : sk.name}}</text>
       </view>
@@ -242,6 +271,11 @@
       <view class="skill-points-bar-bg"><view class="skill-points-bar-fill {{usedIntPoints > totalIntPoints ? 'over' : ''}}" style="width:{{totalIntPoints > 0 ? (usedIntPoints/totalIntPoints*100) : 0}}%"></view></view>
     </view>
 
+    <!-- 常驻校验条：点数/专攻/信用评级问题即时可见 -->
+    <view class="validation-bar" wx:if="{{skillValidation.warnings.length > 0}}">
+      <text class="validation-chip" wx:for="{{skillValidation.warnings}}" wx:for-item="w" wx:key="*this">⚠ {{w}}</text>
+    </view>
+
     <!-- 按分类分组的 4 列（每行 2 项）技能网格 -->
     <view wx:for="{{skillGroups}}" wx:for-item="group" wx:key="cat">
       <text class="skill-cat-title">{{group.catName}}</text>
@@ -252,6 +286,10 @@
             <text class="skill-grid-val">{{skill.total}}%</text>
           </view>
           <text class="skill-grid-base">基础 {{skill.base}}% <text wx:if="{{skill.total > skill.base}}">+{{skill.total - skill.base}}</text></text>
+          <view class="skill-quick">
+            <text class="skill-qbtn" catchtap="quickSkillAdjust" data-name="{{skill.name}}" data-delta="-5">−5</text>
+            <text class="skill-qbtn plus" catchtap="quickSkillAdjust" data-name="{{skill.name}}" data-delta="5">＋5</text>
+          </view>
         </view>
       </view>
     </view>
@@ -261,13 +299,23 @@
   <block wx:if="{{step == 5}}">
     <text class="step-title" wx:if="{{!playMode}}">📜 调查员角色卡</text>
     <text class="step-desc" wx:if="{{!playMode}}">你的调查员已创建完成！可保存到本地或重新编辑。</text>
+    <text class="step-hint" wx:if="{{!playMode}}">{{stepHints[5]}}</text>
 
     <view class="play-banner" wx:if="{{playMode}}">
-      <text class="play-banner-text">🎮 游玩模式</text>
-      <text class="play-banner-sub">点击属性或技能进行检定</text>
-      <view class="threshold-toggle" bindtap="toggleThresholds">
-        <text class="threshold-toggle-icon">{{showThresholds ? '📊' : '📋'}}</text>
-        <text class="threshold-toggle-text">{{showThresholds ? '隐藏阈值' : '显示阈值'}}</text>
+      <view class="play-banner-top">
+        <text class="play-banner-text">🎮 游玩模式</text>
+        <text class="play-banner-sub">点击属性或技能进行检定</text>
+      </view>
+      <view class="play-banner-actions">
+        <view class="banner-btn" bindtap="openSanDialog">🎲 SAN 结算</view>
+        <view class="banner-btn" bindtap="resetSanDay">↺ 重置当日</view>
+        <view class="threshold-toggle" bindtap="toggleThresholds">
+          <text class="threshold-toggle-icon">{{showThresholds ? '📊' : '📋'}}</text>
+          <text class="threshold-toggle-text">{{showThresholds ? '隐藏阈值' : '显示阈值'}}</text>
+        </view>
+      </view>
+      <view class="san-day-line">
+        <text>当日累计 SAN 损失：{{sessionSanLoss}} / 不定疯狂阈值 {{sanDailyLimit}}<text wx:if="{{sessionSanLoss >= sanDailyLimit}}" class="san-day-warn">（已达标 ⚠）</text></text>
       </view>
     </view>
 
@@ -286,7 +334,9 @@
         <view class="char-deriv">
           <text class="char-deriv-label">生命 HP</text>
           <view wx:if="{{playMode}}" class="stat-edit-row">
+            <text class="stat-pm" bindtap="adjustStat" data-field="hp" data-delta="-1">−</text>
             <input class="play-stat-input stat-input" type="number" value="{{playHP}}" bindinput="onHPChange" />
+            <text class="stat-pm" bindtap="adjustStat" data-field="hp" data-delta="1">＋</text>
             <text class="stat-sep">/</text>
             <text class="stat-max">{{derived.hp}}</text>
           </view>
@@ -295,7 +345,9 @@
         <view class="char-deriv">
           <text class="char-deriv-label">理智 SAN</text>
           <view wx:if="{{playMode}}" class="stat-edit-row">
+            <text class="stat-pm" bindtap="adjustStat" data-field="san" data-delta="-1">−</text>
             <input class="play-stat-input stat-input" type="number" value="{{playSAN}}" bindinput="onSANChange" />
+            <text class="stat-pm" bindtap="adjustStat" data-field="san" data-delta="1">＋</text>
             <text class="stat-sep">/</text>
             <text class="stat-max">{{maxSAN}}</text>
           </view>
@@ -303,13 +355,19 @@
         </view>
         <view class="char-deriv">
           <text class="char-deriv-label">幸运 LUCK</text>
-          <input class="play-stat-input" wx:if="{{playMode}}" type="number" value="{{playLuck}}" bindinput="onLuckChange" />
+          <view wx:if="{{playMode}}" class="stat-edit-row">
+            <text class="stat-pm" bindtap="adjustStat" data-field="luck" data-delta="-1">−</text>
+            <input class="play-stat-input" type="number" value="{{playLuck}}" bindinput="onLuckChange" />
+            <text class="stat-pm" bindtap="adjustStat" data-field="luck" data-delta="1">＋</text>
+          </view>
           <text class="char-deriv-value" wx:if="{{!playMode}}">{{playLuck}}</text>
         </view>
         <view class="char-deriv">
           <text class="char-deriv-label">魔法 MP</text>
           <view wx:if="{{playMode}}" class="stat-edit-row">
+            <text class="stat-pm" bindtap="adjustStat" data-field="mp" data-delta="-1">−</text>
             <input class="play-stat-input stat-input" type="number" value="{{playMP}}" bindinput="onMPChange" />
+            <text class="stat-pm" bindtap="adjustStat" data-field="mp" data-delta="1">＋</text>
             <text class="stat-sep">/</text>
             <text class="stat-max">{{maxMP}}</text>
           </view>
@@ -433,6 +491,9 @@
       <textarea class="char-textarea" placeholder="信用评级对应的现金与资产…" value="{{charAssets}}" bindinput="onCharFieldChange" data-field="assets" auto-height maxlength="-1" />
     </view>
 
+    <!-- 分享卡片离屏 canvas（仅 step 5 时存在） -->
+    <canvas type="2d" id="shareCanvas" class="share-canvas"></canvas>
+
     <view class="saved-info" wx:if="{{savedAt > 0 && !playMode}}">💾 已保存</view>
 
     <view class="action-buttons" wx:if="{{!playMode}}">
@@ -440,6 +501,9 @@
       <view class="btn-row">
         <button class="btn btn-secondary" bindtap="toggleExportDialog">📤 导出</button>
         <button class="btn btn-secondary" bindtap="togglePlayMode">🎮 游玩模式</button>
+      </view>
+      <view class="btn-row">
+        <button class="btn btn-secondary" bindtap="generateShareCard">🖼 分享卡片</button>
       </view>
       <view class="btn-row">
         <button class="btn btn-secondary" bindtap="goToStep" data-step="4">✏️ 编辑</button>
@@ -453,6 +517,54 @@
       </view>
     </view>
   </block>
+
+<!-- ===== 规则速查 dialog ===== -->
+  <view class="dialog-overlay {{showRules ? 'active' : ''}}" bindtap="closeRules" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet rules-dialog {{showRules ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">📖 规则速查</text>
+    <text class="dialog-sub">建卡与游戏常用规则 · 内容同守密人帷幕</text>
+    <scroll-view scroll-x enhanced show-scrollbar="{{false}}" class="rules-cat-row">
+      <view class="rules-cat {{rulesCat == item.id ? 'active' : ''}}" wx:for="{{rulesSections}}" wx:for-item="item" wx:key="id" bindtap="switchRulesCat" data-index="{{index}}">{{item.icon}} {{item.name}}</view>
+    </scroll-view>
+    <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="rules-list">
+      <view class="rules-item" wx:for="{{rulesItems}}" wx:for-item="item" wx:key="w">
+        <text class="rules-w">{{item.w}}</text>
+        <text class="rules-d">{{item.d}}</text>
+      </view>
+      <view class="rules-table" wx:if="{{rulesTable.length > 0}}">
+        <view class="rules-table-row" wx:for="{{rulesTable}}" wx:for-item="row" wx:key="index">
+          <text class="rules-table-w">{{row[0]}}</text>
+          <text class="rules-table-d">{{row[1]}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <button class="dialog-btn cancel rules-close" bindtap="closeRules">关闭</button>
+  </view>
+
+<!-- ===== 点数购买 dialog ===== -->
+  <view class="dialog-overlay {{showPointBuy ? 'active' : ''}}" bindtap="closePointBuy" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showPointBuy ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">🛠 点数购买属性</text>
+    <text class="dialog-sub">官方可选规则：8 项属性共分配 460 点，每项 40-90</text>
+    <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="point-buy-body">
+      <view class="pb-row" wx:for="{{['str','con','dex','app','pow','siz','int','edu']}}" wx:for-item="k" wx:key="*this">
+        <text class="pb-label">{{attrLabels[k]}}</text>
+        <input class="pb-input" type="number" value="{{pointBuy[k]}}" bindinput="onPointBuyInput" data-field="{{k}}" />
+      </view>
+      <view class="pb-luck">
+        <text class="pb-label">幸运 LUCK（3D6×5 掷骰）</text>
+        <text class="pb-luck-val">{{pointBuyLuck}}</text>
+        <text class="pb-luck-reroll" bindtap="rerollPointBuyLuck">↻ 重掷</text>
+      </view>
+      <text class="pb-remaining {{pointBuyRemaining == 0 ? 'ok' : ''}}">剩余点数：{{pointBuyRemaining}}{{pointBuyRemaining == 0 ? ' ✓' : ''}}</text>
+    </scroll-view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closePointBuy">取消</button>
+      <button class="dialog-btn confirm" bindtap="confirmPointBuy">应用购点</button>
+    </view>
+  </view>
 
 <!-- ===== 导出选择 dialog ===== -->
   <view class="dialog-overlay {{showExportDialog ? 'active' : ''}}" bindtap="toggleExportDialog" catchtouchmove="preventTouchMove"></view>
@@ -472,6 +584,13 @@
         <view class="export-option-text">
           <text class="export-option-title">导出到骰娘</text>
           <text class="export-option-desc">生成海豹骰 .st 导入文本（塔塔等骰娘兼容），复制后粘贴到骰娘聊天即可</text>
+        </view>
+      </view>
+      <view class="export-option" bindtap="doExportText">
+        <text class="export-option-icon">📄</text>
+        <view class="export-option-text">
+          <text class="export-option-title">导出文本角色卡</text>
+          <text class="export-option-desc">生成可读文本（属性/技能/武器/背景），适合贴群聊或打印</text>
         </view>
       </view>
     </view>
@@ -518,6 +637,28 @@
     </view>
   </view>
 
+  <!-- ===== SAN 结算 dialog ===== -->
+  <view class="dialog-overlay {{showSanDialog ? 'active' : ''}}" bindtap="closeSanDialog" catchtouchmove="preventTouchMove"></view>
+  <view class="dialog-sheet {{showSanDialog ? 'active' : ''}}">
+    <view class="dialog-handle"></view>
+    <text class="dialog-title">🎲 SAN 结算</text>
+    <text class="dialog-sub">当前 SAN {{playSAN}} / {{maxSAN}} · 当日累计损失 {{sessionSanLoss}}（不定疯狂阈值 {{sanDailyLimit}}）</text>
+    <view class="san-presets">
+      <view class="san-preset {{sanFormula === f ? 'on' : ''}}" wx:for="{{sanFormulaPresets}}" wx:for-item="f" wx:key="*this" bindtap="setSanFormula" data-formula="{{f}}">{{f}}</view>
+    </view>
+    <input class="form-input san-formula-input" placeholder="自定义损失公式，如 1D6/1D20" value="{{sanFormula}}" bindinput="onSanFormulaInput" />
+    <button class="dialog-btn confirm san-roll-btn" bindtap="rollSanCheck">🎲 掷 SAN 检定</button>
+    <view class="san-result" wx:if="{{sanRollResult}}">
+      <text class="san-result-line">检定：投 {{sanRollResult.roll}} / {{sanRollResult.oldSAN}} → {{sanRollResult.levelLabel}}</text>
+      <text class="san-result-line">损失：{{sanRollResult.lossDetail}} = {{sanRollResult.loss}}（SAN {{sanRollResult.oldSAN}} → {{sanRollResult.newSAN}}）</text>
+      <text class="san-warn" wx:if="{{sanRollResult.tempInsanity}}">⚠ 单次损失 ≥ 最大理智的 1/5 —— 临时疯狂！</text>
+      <text class="san-warn" wx:if="{{sanRollResult.indefiniteRisk}}">⚠ 当日累计损失已达阈值 —— 不定疯狂风险！</text>
+    </view>
+    <view class="dialog-actions">
+      <button class="dialog-btn cancel" bindtap="closeSanDialog">关闭</button>
+    </view>
+  </view>
+
   <!-- ===== 底部导航栏 ===== -->
   <view class="bottom-nav" wx:if="{{step > 0 && step < 5}}">
     <button class="btn btn-secondary" wx:if="{{step > 0}}" bindtap="prevStep">← 上一步</button>
@@ -530,7 +671,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">📖 选择预置调查员</text>
     <text class="dialog-sub">洛氏经典职业 · 载入后可直接开始游戏</text>
-    <scroll-view scroll-y class="preset-list">
+    <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="preset-list">
       <view class="preset-item" wx:for="{{presets}}" wx:key="id" bindtap="applyPresetCharacter" data-index="{{index}}">
         <text class="preset-emoji">{{item.emoji}}</text>
         <view class="preset-main">
@@ -566,7 +707,7 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">选择职业技能</text>
     <text class="dialog-sub">选中的技能将获得职业技能资格，可用职业点加点</text>
-    <scroll-view scroll-y class="free-slot-list">
+    <scroll-view scroll-y enhanced show-scrollbar="{{false}}" class="free-slot-list">
       <view class="free-slot-option" wx:for="{{freeSlotDialogList}}" wx:key="name" bindtap="pickFreeSlotSkill" data-name="{{item.name}}">
         <text class="free-slot-opt-name">{{item.name}}</text>
         <text class="free-slot-opt-base">基础 {{item.base}}%</text>
