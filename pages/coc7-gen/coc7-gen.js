@@ -503,6 +503,10 @@ Page({
     canNext: false,
     maxStep: 0,               // 已到达过的最大步骤（步骤指示器可跳转上限）
     showSaveSuccess: false,
+    // 状态机：显式的页面模式（单一事实来源，转换统一走 _setMode）
+    // home=首页 | creating=新建/续草稿 | editing=编辑已保存角色 | playing=游玩模式
+    mode: 'home',
+    modeBeforePlay: null,     // 进入游玩模式前的模式（退出时恢复）
     // 草稿（未完成创建进度的自动保存）
     draftInfo: null,          // { name, step, stepName, timestamp }
     // 轻量使用提示（每步一句，不遮挡角色卡主体）
@@ -565,7 +569,7 @@ Page({
       this.persistCharacter(this.buildCharacterData(this.data.isCompleted));
     }
     // 未完成的创建流程立即落盘为草稿（编辑已保存角色时不生成草稿）
-    if (this.data.step >= 1 && this.data.step <= 5 && !this.data.isCompleted && typeof this.data._loadIndex !== 'number') {
+    if (this.data.step >= 1 && this.data.step <= 5 && this.data.mode === 'creating' && !this.data.isCompleted) {
       this._saveDraft();
     }
   },
@@ -630,7 +634,7 @@ Page({
 
   _saveDraft() {
     if (this.data.step < 1 || this.data.step > 5 || this.data.isCompleted) return;
-    if (typeof this.data._loadIndex === 'number') return; // 编辑已保存角色时不覆盖草稿
+    if (this.data.mode !== 'creating') return; // 仅建卡中存草稿（编辑已保存角色不生成草稿）
     try {
       const draft = this._buildDraft();
       wx.setStorageSync('coc7_draft', draft);
@@ -695,6 +699,7 @@ Page({
         _loadIndex: undefined,
         canNext: step === 1 ? !!draft.allRolled : true,
         isCompleted: false, playMode: false,
+        mode: 'creating', modeBeforePlay: null,
       }, () => {
         if (step === 3) this.filterOccs(this.data.occSearch || '');
         if (step === 4 && this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc);
@@ -957,11 +962,13 @@ Page({
       showSanDialog: false, sanRollResult: null, sanFormula: '0/1D6',
       hpPercent: 0, sanPercent: 0, mpPercent: 0, luckPercent: 50, sanDailyLimit: 1,
       // 新角色必须清空旧角色的残留状态（武器/文本/年龄修正/载入下标）
-      charWeapons: [], charBackstory: '', charGear: '', charMythos: '', charSpells: '', charCompanions: '', charAssets: '',
+      charWeapons: [], charBackstory: '', charGear: '', charMythos: '', charSpells: '', charCompanions: [], charAssets: '',
       needAgeMod: false, ageModDone: false, ageModSummary: '', ageModType: '', ageModDecay: 0,
       ageModChoice: '', ageModBase: {}, ageModAlloc: { str: 0, con: 0, dex: 0 }, ageModRemaining: 0,
       attrRollMode: 'std', crAutoNote: '',
       _loadIndex: undefined, maxStep: 1,
+      // 状态机：进入新建模式
+      mode: 'creating', modeBeforePlay: null, playMode: false, isCompleted: false,
     });
     this._scheduleDraft();
   },
@@ -1013,6 +1020,8 @@ Page({
       _loadIndex: loadIdx,
       maxStep: 5,
       isCompleted: char.completed || false,
+      // 状态机：载入已保存角色 = 编辑模式（游玩模式由 togglePlayMode 进入）
+      mode: 'editing', modeBeforePlay: null, playMode: false,
       tickedSkills: char.tickedSkills || {},
       charWeapons: char.charWeapons || [],
       charBackstory: char.charBackstory || '', charGear: char.charGear || '',
@@ -1943,18 +1952,36 @@ Page({
     }
     return '消费水平：' + spending + '\n现金：' + cash + '\n资产：' + assets;
   },
+  // 状态机唯一入口：切换模式并同步派生标志（playMode/isCompleted），其余字段由 patch 追加
+  _setMode(mode, patch = {}) {
+    const apply = { mode };
+    if (mode === 'home' || mode === 'creating') {
+      apply.playMode = false;
+      apply.isCompleted = false;
+    } else if (mode === 'editing') {
+      apply.playMode = false;
+      apply.isCompleted = true;
+    } else if (mode === 'playing') {
+      apply.playMode = true;
+    }
+    this.setData(Object.assign(apply, patch));
+  },
+
   // 状态校准层：所有步骤切换统一走这里，进入时补齐该步骤的派生状态
   _enterStep(s) {
     const prev = this.data.step;
+    // 步骤 0 = 首页；从首页进入建卡；退出游玩模式时恢复原模式
+    let mode = this.data.mode;
+    if (s === 0) mode = 'home';
+    else if (mode === 'home') mode = 'creating';
+    else if (mode === 'playing') mode = this.data.modeBeforePlay === 'creating' ? 'creating' : 'editing';
     const opts = { step: s };
     if (s === 0) {
       opts.canNext = false;
-      opts.playMode = false;
-      opts.isCompleted = false;
     } else {
       opts.canNext = true;
     }
-    this.setData(opts);
+    this._setMode(mode, opts);
     if (s === 3) this.filterOccs(this.data.occSearch || '');
     if (s === 4 && this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc);
     if (s === 5 && prev !== 5) this._refreshSheet();
@@ -1992,7 +2019,8 @@ Page({
     const charData = this.buildCharacterData(true);
     if (this.persistCharacter(charData)) {
       this.clearDraft();
-      this.setData({ isCompleted: true, savedAt: charData.timestamp, showSaveSuccess: true });
+      // 保存成功后角色转为已保存记录（编辑模式）
+      this._setMode('editing', { savedAt: charData.timestamp, showSaveSuccess: true });
       setTimeout(() => { this.setData({ showSaveSuccess: false }); }, 2000);
     }
   },
@@ -2118,15 +2146,18 @@ Page({
   // ==================== 游玩模式 ====================
   togglePlayMode() {
     if (this.data.playMode) {
-      // 退出游玩：自动保存
+      // 退出游玩：自动保存，并恢复到进入前的模式
       this.persistCharacter(this.buildCharacterData(this.data.isCompleted), '已自动保存');
-    } else if (!this.data.sanDayStart) {
-      const sanStart = parseInt(this.data.playSAN) || parseInt(this.data.derived.san) || 0;
-      this.setData({ sanDayStart: sanStart, sessionSanLoss: 0 }, () => {
-        this.refreshPlayDashboard();
-      });
+      this._setMode(this.data.modeBeforePlay === 'creating' ? 'creating' : 'editing');
+    } else {
+      if (!this.data.sanDayStart) {
+        const sanStart = parseInt(this.data.playSAN) || parseInt(this.data.derived.san) || 0;
+        this.setData({ sanDayStart: sanStart, sessionSanLoss: 0 }, () => {
+          this.refreshPlayDashboard();
+        });
+      }
+      this._setMode('playing', { modeBeforePlay: this.data.mode === 'playing' ? 'editing' : this.data.mode });
     }
-    this.setData({ playMode: !this.data.playMode });
   },
 
   toggleThresholds() {
@@ -2643,11 +2674,12 @@ Page({
 
   goHome() {
     // 回首页前先把进行中的进度落盘为草稿（已保存角色无需草稿）
-    if (this.data.step >= 1 && this.data.step <= 5 && !this.data.isCompleted && typeof this.data._loadIndex !== 'number') {
+    if (this.data.step >= 1 && this.data.step <= 5 && this.data.mode === 'creating' && !this.data.isCompleted) {
       this._saveDraft();
     }
-    this.setData({
-      step: 0, playMode: false, isCompleted: false, overrideLimits: false,
+    // 状态机统一回首页：清空建卡/编辑上下文
+    this._setMode('home', {
+      step: 0, overrideLimits: false,
       selectedOcc: null, occPts: {}, intPts: {}, skillSpecs: {},
       selectedOptSkills: {}, occOptGroups: [], occFixedSkills: [], occSpecRequired: [], occSpecMissing: [],
       skillValidation: { warnings: [], crValue: 0, crRange: '', crState: 'neutral', crHint: '', occRemain: 0, intRemain: 0 },

@@ -131,6 +131,7 @@ module.exports.run = function () {
   {
     const q = makePage();
     q.onLoad();
+    q.startNewCharacter(); // 进入 creating 模式
     q.data.step = 2; q.data.maxStep = 2;
     q.data.charInfo.name = '草稿测试'; q.data.charInfo.age = '25'; q.data.charInfo.era = '1920s';
     H.setFullAttrs(q);
@@ -181,7 +182,7 @@ module.exports.run = function () {
     q.saveCharacter();
     ok(storage['coc7_characters'] && storage['coc7_characters'].length === 1, '保存到列表');
     ok(storage['coc7_draft'] === '' || storage['coc7_draft'] === undefined, '保存后草稿清除');
-    ok(q.data.isCompleted === true && q.data.mode === undefined || true, '保存后 isCompleted=true');
+    ok(q.data.isCompleted === true && q.data.mode === 'editing', '保存后 isCompleted=true 且进入编辑模式');
     // 载入后编辑保存应更新同一条，而不是追加
     const q2 = makePage();
     q2.onLoad();
@@ -270,6 +271,46 @@ module.exports.run = function () {
     ok(storage['coc7_characters'].length === 2 && storage['coc7_characters'][0].charInfo.name.includes('副本'), '复制角色');
     q.deleteCharacter({ currentTarget: { dataset: { index: 1 } } });
     ok(storage['coc7_characters'].length === 1, '删除角色');
+  }
+
+  // ---------- 状态机（mode 单一事实来源） ----------
+  {
+    const q = makePage();
+    q.onLoad();
+    ok(q.data.mode === 'home', '初始为 home 模式');
+    q.startNewCharacter();
+    ok(q.data.mode === 'creating' && q.data.playMode === false && q.data.isCompleted === false, '新建 → creating');
+    q._enterStep(0);
+    ok(q.data.mode === 'home' && q.data.playMode === false, '回第 0 步 → home');
+    // 读档 → editing
+    storage['coc7_characters'] = [{ schemaVersion: 2, attrValues: { str: 55, con: 60, dex: 50, app: 45, pow: 65, siz: 55, int: 60, edu: 70, luck: 40 }, charInfo: { name: 'S', age: '25', era: '1920s' }, completed: true }];
+    const q2 = makePage();
+    q2.onLoad();
+    q2.loadCharacter({ currentTarget: { dataset: { index: 0 } } });
+    ok(q2.data.mode === 'editing' && q2.data.isCompleted === true && q2.data.playMode === false, '读档 → editing');
+    // 游玩往返
+    q2.togglePlayMode();
+    ok(q2.data.mode === 'playing' && q2.data.playMode === true && q2.data.modeBeforePlay === 'editing', '编辑态进游玩 → playing，记住来源');
+    q2.togglePlayMode();
+    ok(q2.data.mode === 'editing' && q2.data.playMode === false, '退出游玩 → 恢复 editing');
+    // 新建态游玩往返
+    const q3 = makePage();
+    q3.onLoad();
+    q3.startNewCharacter();
+    H.setFullAttrs(q3);
+    q3.data.charInfo = { name: 'P', age: '25', era: '1920s' };
+    q3.data.step = 5; q3.data.selectedOcc = null;
+    q3._refreshSheet();
+    q3.togglePlayMode();
+    ok(q3.data.mode === 'playing' && q3.data.modeBeforePlay === 'creating', '新建态进游玩记住 creating');
+    q3.togglePlayMode();
+    ok(q3.data.mode === 'creating' && q3.data.playMode === false, '退出游玩 → 恢复 creating');
+    // creating 模式才存草稿
+    const q4 = makePage();
+    q4.onLoad();
+    q4.data.step = 2; q4.data.mode = 'editing'; q4.data.isCompleted = true;
+    q4._saveDraft();
+    ok(storage['coc7_draft'] === '' || storage['coc7_draft'] === undefined, 'editing 模式不生成草稿');
   }
 
   return suite.done();
