@@ -20,10 +20,8 @@ Thumbs.db
 # Build artifacts
 dist/
 
-# 临时脚本目录（持久测试套件 tools/test/ 除外）
-tools/*
-!tools/test/
-!tools/test/**
+# 临时/参考文件：历史改造脚本、原始数据表与规则 PDF 等（不参与版本控制）
+tmp/
 
 # ReasonAI agent workspace artifacts
 .reasonix/
