@@ -32,16 +32,6 @@
       </view>
 
       <view class="home-actions">
-        <view class="draft-card" wx:if="{{draftInfo}}">
-          <view class="draft-main" bindtap="continueDraft">
-            <text class="draft-icon">📝</text>
-            <view class="draft-copy">
-              <text class="draft-title">继续上次未完成</text>
-              <text class="draft-sub">{{draftInfo.name}} · 第 {{draftInfo.step}} 步「{{draftInfo.stepName}}」</text>
-            </view>
-          </view>
-          <text class="draft-discard" catchtap="discardDraft">✕</text>
-        </view>
         <view class="home-action primary" bindtap="startNewCharacter">
           <text class="home-action-icon">＋</text>
           <view class="home-action-copy">
@@ -64,6 +54,19 @@
           </view>
         </view>
       </view>
+    </view>
+
+    <!-- 未完成草稿：位于操作区与已保存列表之间 -->
+    <view class="draft-card" wx:if="{{draftInfo}}">
+      <view class="draft-main" bindtap="continueDraft">
+        <text class="draft-icon">📝</text>
+        <view class="draft-copy">
+          <text class="draft-title">继续上次未完成</text>
+          <text class="draft-sub">{{draftInfo.name}} · 第 {{draftInfo.step}} 步「{{draftInfo.stepName}}」</text>
+        </view>
+        <text class="draft-arrow">›</text>
+      </view>
+      <text class="draft-discard" catchtap="discardDraft">✕</text>
     </view>
 
     <view class="saved-list home-saved-list" wx:if="{{savedCharacters.length > 0}}">
