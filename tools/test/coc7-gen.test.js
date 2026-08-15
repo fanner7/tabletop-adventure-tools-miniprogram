@@ -313,5 +313,33 @@ module.exports.run = function () {
     ok(storage['coc7_draft'] === '' || storage['coc7_draft'] === undefined, 'editing 模式不生成草稿');
   }
 
+  // ---------- 第4步「下一步」判定（不再只看是否拖过技能点） ----------
+  {
+    const setupStep4 = () => {
+      const q = makePage();
+      q.onLoad();
+      q.data.attrValues = { str: 55, con: 60, dex: 50, app: 45, pow: 65, siz: 55, int: 60, edu: 70, luck: 40 };
+      q.data.charInfo = { name: 'T', age: '25', era: '1920s' };
+      q.data.step = 3; q.data.canNext = true; q.data.maxStep = 3;
+      q.filterOccs('');
+      q.selectOccupation({ currentTarget: { dataset: { index: 0 } } }); // 会计师
+      q._doNextStep();
+      return q;
+    };
+    const q1 = setupStep4();
+    ok(q1.data.step === 4 && q1.data.canNext === true, 'CR 自动填充即可下一步（无需手动拖过技能点）');
+    q1.nextStep(); // 剩余点数软提示 → showModal 桩自动确认
+    ok(q1.data.step === 5, '未分配完点数可经确认弹窗继续');
+    const q2 = setupStep4();
+    q2.quickSkillAdjust({ currentTarget: { dataset: { name: '会计', delta: '5' } } });
+    ok(q2.data.canNext === true, '±5 快捷加点后即可下一步');
+    const q3 = setupStep4();
+    q3.data.usedOccPoints = q3.data.totalOccPoints + 5; // 超点（未解除限制）
+    q3.refreshSkillValidation();
+    ok(q3.data.canNext === false, '超点时按钮仍禁用');
+    q3.toggleOverride();
+    ok(q3.data.canNext === true, '解除限制后恢复可下一步');
+  }
+
   return suite.done();
 };

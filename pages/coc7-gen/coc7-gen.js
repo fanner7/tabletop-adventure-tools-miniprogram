@@ -832,7 +832,14 @@ Page({
   },
 
   refreshSkillValidation() {
-    this.setData({ skillValidation: this.buildSkillValidation() });
+    const v = this.buildSkillValidation();
+    const patch = { skillValidation: v };
+    // 第 4 步的「下一步」判定：无硬性阻塞（超点/CR 越界/专攻缺失）即可前进；
+    // 剩余点数等软提示在点击时弹确认。±5 快捷加点、CR 自动填充等路径都会刷新到这里。
+    if (this.data.step === 4) {
+      patch.canNext = this.getBlockingCreationMessages().length === 0;
+    }
+    this.setData(patch);
   },
 
   getBlockingCreationMessages() {
@@ -1732,7 +1739,6 @@ Page({
       skillGroups: groups,
       showDialog: false,
       dialogSkill: null,
-      canNext: newUsedOcc > 0 || newUsedInt > 0,
     }, () => {
       this.refreshSkillValidation();
       this._scheduleDraft();
@@ -1898,6 +1904,7 @@ Page({
     } else {
       this.setData({ step: next, canNext: false, maxStep: Math.max(this.data.maxStep, next) });
       if (next === 3) this.filterOccs(this.data.occSearch || '');
+      if (next === 4) this.refreshSkillValidation();
     }
     this._scheduleDraft();
   },
@@ -1984,6 +1991,7 @@ Page({
     this._setMode(mode, opts);
     if (s === 3) this.filterOccs(this.data.occSearch || '');
     if (s === 4 && this.data.selectedOcc) this.buildSkillList(this.data.selectedOcc);
+    if (s === 4) this.refreshSkillValidation();
     if (s === 5 && prev !== 5) this._refreshSheet();
     this._scheduleDraft();
   },
