@@ -1,7 +1,7 @@
 // pages/about/about.js
 Page({
   data: {
-    version: '1.6.2',
+    version: '1.7.0',
     year: new Date().getFullYear(),
   },
 
