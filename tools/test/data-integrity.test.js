@@ -101,5 +101,37 @@ module.exports.run = function () {
     ok(R.length >= 5 && R.every(s => s.id && s.name && (s.items || s.table)), '守密人规则速查结构合法');
   }
 
+  // ---------- 石冢 Cairn 数据 ----------
+  {
+    const G = require('../../pages/cairn-gen/data/game-data.js');
+    ok(G.CAIRN_SPELLS.length === 100, 'Cairn 法术 100 条');
+    ok(new Set(G.CAIRN_SPELLS.map(s => s.name)).size === 100, 'Cairn 法术名唯一');
+    ok(G.CAIRN_SPELLS.every(s => s.name && s.desc), 'Cairn 法术字段齐全');
+    ok(G.WOUNDS.length === 12 && G.WOUNDS.every(w => w.d && w.t && w.desc && w.sub), 'Cairn 伤痕表 12 条');
+    ok(G.KITS.length === 10 && G.KITS.every(k => k.n && k.e && k.items.length === 6), 'Cairn 套装 10 个各 6 件');
+    ok(G.SHOP_ARMOR.length > 0 && G.SHOP_WEAPONS.length > 0 && G.SHOP_GEAR.length > 30, 'Cairn 商店数据');
+    ok(G.SHOP_GEAR.every(x => x.n && typeof x.p === 'number' && x.s), 'Cairn 商品字段合法');
+    ok(Object.keys(G.PINYIN_MAP).length > 100, 'Cairn 拼音映射表');
+  }
+
+  // ---------- 阈限恐怖 LH 数据 ----------
+  {
+    const G = require('../../pages/liminal-horror-gen/data/game-data.js');
+    ok(G.BACKGROUNDS.length === 20, 'LH 出身 20 条');
+    ok(G.BLOOM_ARCHETYPES.length === 20, 'LH 繁孽范型 20 条');
+    ok(G.SHOP_ITEMS.length > 40 && G.SHOP_ITEMS.every(x => x.cat && x.name && typeof x.price === 'number'), 'LH 商店条目');
+    ok(G.MODULES[0].backgrounds === G.BACKGROUNDS && G.MODULES[1].backgrounds === G.BLOOM_ARCHETYPES, 'LH 模块背景绑定');
+    ok(G.MALE_NAMES.length > 20 && G.FEMALE_NAMES.length > 20, 'LH 姓名库');
+    ok(Object.keys(G.TRAITS).length === 6, 'LH 特质六类');
+    ok(G.APPEARANCES.length > 10 && G.FIRST_ENCOUNTERS.length > 5 && G.IDEOLOGIES.length > 5, 'LH 随机池');
+  }
+
+  // ---------- TES:BotSE 技能数据 ----------
+  {
+    const S = require('../../pages/tes-botse-skills/data/skills.js');
+    ok(Array.isArray(S) && S.length === 64, 'TES 技能 64 条');
+    ok(S.every(x => ['enemy', 'region', 'status'].includes(x.t) && x.n && x.a && x.d), 'TES 条目字段合法');
+  }
+
   return suite.done();
 };
