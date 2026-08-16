@@ -14,7 +14,13 @@
     </block>
     <block wx:elif="{{rolling}}">
       <view class="rolling-indicator">
-        <text class="rolling-dice">🎲</text>
+        <view class="rolling-die">
+          <view class="rd-pip p-tl"></view>
+          <view class="rd-pip p-tr"></view>
+          <view class="rd-pip p-c"></view>
+          <view class="rd-pip p-bl"></view>
+          <view class="rd-pip p-br"></view>
+        </view>
         <text class="rolling-text">投掷中…</text>
       </view>
     </block>
@@ -44,7 +50,9 @@
       bindtap="onTapDice"
       bindlongpress="onLongPressDice"
       data-sides="{{item.sides}}">
-      <text class="dice-card-icon">{{item.icon}}</text>
+      <view class="die-shape s-{{item.sides}}">
+        <text class="die-num">{{item.sides}}</text>
+      </view>
       <text class="dice-card-name">d{{item.sides}}</text>
       <view class="dice-card-count" wx:if="{{diceSelected[item.sides]}}">
         <text>×{{diceSelected[item.sides]}}</text>

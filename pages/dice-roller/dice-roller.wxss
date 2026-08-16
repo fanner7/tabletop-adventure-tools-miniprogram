@@ -92,16 +92,6 @@ page {
   gap: 12rpx;
 }
 
-.rolling-dice {
-  font-size: 60rpx;
-  animation: shake 0.15s infinite;
-}
-
-@keyframes shake {
-  0%, 100% { transform: rotate(-8deg) scale(1); }
-  50% { transform: rotate(8deg) scale(1.1); }
-}
-
 .rolling-text {
   font-size: 26rpx;
   color: #f1c40f;
@@ -193,15 +183,109 @@ page {
   pointer-events: none;
 }
 
-.dice-card-icon {
-  font-size: 40rpx;
-  color: #6a7078;
-  transition: color 0.15s;
+/* ===== 平面骰子图形（纯 WXSS 绘制，风格统一） ===== */
+.die-shape {
+  position: relative;
+  width: 68rpx;
+  height: 68rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dice-color);
+  box-shadow: inset 0 -6rpx 12rpx rgba(0, 0, 0, 0.20), inset 0 4rpx 6rpx rgba(255, 255, 255, 0.25);
+  transition: transform 0.15s;
+}
+.dice-card.active .die-shape {
+  transform: translateY(-4rpx) rotate(-5deg);
+}
+/* d8 选中时保留菱形旋转（transform 会被覆盖，需显式补回） */
+.dice-card.active .s-8 {
+  transform: translateY(-4rpx) rotate(45deg) scale(0.74);
+}
+.die-num {
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.35);
 }
 
-.dice-card.active .dice-card-icon {
-  color: var(--dice-color);
+/* d4 / d20：三角形（数字置于底部宽处） */
+.s-4, .s-20 {
+  clip-path: polygon(50% 2%, 98% 98%, 2% 98%);
+  -webkit-clip-path: polygon(50% 2%, 98% 98%, 2% 98%);
+  align-items: flex-end;
+  padding-bottom: 9rpx;
+  box-sizing: border-box;
 }
+
+/* d6：圆角方片 */
+.s-6 {
+  border-radius: 14rpx;
+}
+
+/* d8：菱形（容器旋转 45°，数字反向矫正） */
+.s-8 {
+  border-radius: 18rpx;
+  transform: rotate(45deg) scale(0.74);
+}
+.s-8 .die-num {
+  transform: rotate(-45deg);
+}
+
+/* d10：五边形 */
+.s-10 {
+  clip-path: polygon(50% 0%, 100% 38%, 81% 100%, 19% 100%, 0% 38%);
+  -webkit-clip-path: polygon(50% 0%, 100% 38%, 81% 100%, 19% 100%, 0% 38%);
+}
+
+/* d12：六边形 */
+.s-12 {
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  -webkit-clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+}
+
+/* d100：圆形 */
+.s-100 {
+  border-radius: 50%;
+}
+
+/* 多位数字号递减，保持形状内可读 */
+.s-10 .die-num, .s-12 .die-num, .s-20 .die-num {
+  font-size: 24rpx;
+}
+.s-100 .die-num {
+  font-size: 20rpx;
+}
+
+/* 投掷中：CSS 点骰翻滚 */
+.rolling-die {
+  position: relative;
+  width: 64rpx;
+  height: 64rpx;
+  background: #f1c40f;
+  border-radius: 16rpx;
+  box-shadow: inset 0 -6rpx 12rpx rgba(0, 0, 0, 0.20), inset 0 4rpx 6rpx rgba(255, 255, 255, 0.28);
+  animation: diceTumble 0.5s infinite ease-in-out;
+}
+@keyframes diceTumble {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-16rpx) rotate(16deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(8rpx) rotate(-12deg); }
+}
+.rd-pip {
+  position: absolute;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #1a1f25;
+}
+.rd-pip.p-tl { top: 12rpx; left: 12rpx; }
+.rd-pip.p-tr { top: 12rpx; right: 12rpx; }
+.rd-pip.p-c { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.rd-pip.p-bl { bottom: 12rpx; left: 12rpx; }
+.rd-pip.p-br { bottom: 12rpx; right: 12rpx; }
 
 .dice-card-name {
   font-size: 28rpx;
@@ -422,10 +506,6 @@ page {
 
 .theme-light .dice-card.active {
   box-shadow: inset 0 0 26rpx rgba(107,76,42,0.06);
-}
-
-.theme-light .dice-card-icon {
-  color: #a39482;
 }
 
 .theme-light .dice-card-name {

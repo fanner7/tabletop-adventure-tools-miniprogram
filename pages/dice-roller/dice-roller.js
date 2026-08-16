@@ -1,11 +1,11 @@
 const DICE = [
-  { sides: 4,   color: '#e74c3c', icon: '△', name: 'd4' },
-  { sides: 6,   color: '#e67e22', icon: '◆', name: 'd6' },
-  { sides: 8,   color: '#f1c40f', icon: '◇', name: 'd8' },
-  { sides: 10,  color: '#2ecc71', icon: '⬠', name: 'd10' },
-  { sides: 12,  color: '#3498db', icon: '⬡', name: 'd12' },
-  { sides: 20,  color: '#9b59b6', icon: '△', name: 'd20' },
-  { sides: 100, color: '#95a5a6', icon: '◈', name: 'd100' },
+  { sides: 4,   color: '#e74c3c' },
+  { sides: 6,   color: '#e67e22' },
+  { sides: 8,   color: '#f1c40f' },
+  { sides: 10,  color: '#2ecc71' },
+  { sides: 12,  color: '#3498db' },
+  { sides: 20,  color: '#9b59b6' },
+  { sides: 100, color: '#95a5a6' },
 ];
 
 const QUICK_ROLLS = [
