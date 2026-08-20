@@ -51,15 +51,8 @@
       bindlongpress="onLongPressDice"
       data-sides="{{item.sides}}">
       <view class="die-shape s-{{item.sides}}">
-        <block wx:if="{{item.sides === 6}}">
-          <view class="wpip p-tl"></view>
-          <view class="wpip p-tr"></view>
-          <view class="wpip p-c"></view>
-          <view class="wpip p-bl"></view>
-          <view class="wpip p-br"></view>
-        </block>
         <view class="d8-line" wx:if="{{item.sides === 8}}"></view>
-        <text class="die-num" wx:if="{{item.sides !== 6}}">{{item.sides}}</text>
+        <text class="die-num">{{item.sides}}</text>
       </view>
       <text class="dice-card-name">d{{item.sides}}</text>
       <view class="dice-card-count" wx:if="{{diceSelected[item.sides]}}">

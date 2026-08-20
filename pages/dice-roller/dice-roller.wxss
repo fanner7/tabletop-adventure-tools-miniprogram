@@ -201,61 +201,53 @@ page {
 
 /* d4 正四面体 → 三角形（数字在底部宽处） */
 .s-4 {
-  clip-path: polygon(50% 4%, 96% 94%, 4% 94%);
-  -webkit-clip-path: polygon(50% 4%, 96% 94%, 4% 94%);
+  clip-path: polygon(50% 8%, 94% 92%, 6% 92%);
+  -webkit-clip-path: polygon(50% 8%, 94% 92%, 6% 92%);
   align-items: flex-end;
   padding-bottom: 9rpx;
   box-sizing: border-box;
 }
 
-/* d6 正方体 → 圆角方片 + 经典五点 */
+/* d6 正方体 → 圆角方片 + 数字 */
 .s-6 {
   border-radius: 14rpx;
 }
-.wpip {
-  position: absolute;
-  width: 14rpx;
-  height: 14rpx;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
-}
-.wpip.p-tl { top: 12rpx; left: 12rpx; }
-.wpip.p-tr { top: 12rpx; right: 12rpx; }
-.wpip.p-c { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.wpip.p-bl { bottom: 12rpx; left: 12rpx; }
-.wpip.p-br { bottom: 12rpx; right: 12rpx; }
 
 /* d8 正八面体 → 上下两个三角形（菱形 + 中缝线） */
 .s-8 {
-  clip-path: polygon(50% 2%, 98% 50%, 50% 98%, 2% 50%);
-  -webkit-clip-path: polygon(50% 2%, 98% 50%, 50% 98%, 2% 50%);
+  clip-path: polygon(50% 6%, 94% 50%, 50% 94%, 6% 50%);
+  -webkit-clip-path: polygon(50% 6%, 94% 50%, 50% 94%, 6% 50%);
 }
 .d8-line {
   position: absolute;
-  left: 20%;
-  right: 20%;
+  left: 22%;
+  right: 22%;
   top: 50%;
   height: 2rpx;
   background: rgba(255, 255, 255, 0.7);
 }
 
-/* d10 / d100 五角偏方三八面体 → 风筝形（平顶、尖底） */
-.s-10, .s-100 {
-  clip-path: polygon(38% 0%, 62% 0%, 100% 38%, 50% 100%, 0% 38%);
-  -webkit-clip-path: polygon(38% 0%, 62% 0%, 100% 38%, 50% 100%, 0% 38%);
+/* d10 五角偏方三八面体 → 风筝形（平顶、尖底，内缩不顶边） */
+.s-10 {
+  clip-path: polygon(46% 6%, 54% 6%, 94% 40%, 50% 94%, 6% 40%);
+  -webkit-clip-path: polygon(46% 6%, 54% 6%, 94% 40%, 50% 94%, 6% 40%);
+}
+
+/* d100 百分骰 → 球形（确有球形 d100） */
+.s-100 {
+  border-radius: 50%;
 }
 
 /* d12 正十二面体 → 五边形 */
 .s-12 {
-  clip-path: polygon(50% 0%, 95% 34%, 78% 96%, 22% 96%, 5% 34%);
-  -webkit-clip-path: polygon(50% 0%, 95% 34%, 78% 96%, 22% 96%, 5% 34%);
+  clip-path: polygon(50% 4%, 92% 36%, 76% 92%, 24% 92%, 8% 36%);
+  -webkit-clip-path: polygon(50% 4%, 92% 36%, 76% 92%, 24% 92%, 8% 36%);
 }
 
 /* d20 正二十面体 → 六边形（面朝视角的外轮廓） */
 .s-20 {
-  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
-  -webkit-clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  clip-path: polygon(50% 4%, 90% 27%, 90% 73%, 50% 96%, 10% 73%, 10% 27%);
+  -webkit-clip-path: polygon(50% 4%, 90% 27%, 90% 73%, 50% 96%, 10% 73%, 10% 27%);
 }
 
 .die-num {
