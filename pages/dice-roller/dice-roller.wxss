@@ -183,7 +183,7 @@ page {
   pointer-events: none;
 }
 
-/* ===== 平面骰子图形（纯 WXSS 绘制，风格统一） ===== */
+/* ===== 平面骰子图形（按真实骰子外形特征绘制，统一 68×68rpx 尺寸） ===== */
 .die-shape {
   position: relative;
   width: 68rpx;
@@ -198,65 +198,77 @@ page {
 .dice-card.active .die-shape {
   transform: translateY(-4rpx) rotate(-5deg);
 }
-/* d8 选中时保留菱形旋转（transform 会被覆盖，需显式补回） */
-.dice-card.active .s-8 {
-  transform: translateY(-4rpx) rotate(45deg) scale(0.74);
-}
-.die-num {
-  color: #fff;
-  font-size: 30rpx;
-  font-weight: 800;
-  line-height: 1;
-  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.35);
-}
 
-/* d4 / d20：三角形（数字置于底部宽处） */
-.s-4, .s-20 {
-  clip-path: polygon(50% 2%, 98% 98%, 2% 98%);
-  -webkit-clip-path: polygon(50% 2%, 98% 98%, 2% 98%);
+/* d4 正四面体 → 三角形（数字在底部宽处） */
+.s-4 {
+  clip-path: polygon(50% 4%, 96% 94%, 4% 94%);
+  -webkit-clip-path: polygon(50% 4%, 96% 94%, 4% 94%);
   align-items: flex-end;
   padding-bottom: 9rpx;
   box-sizing: border-box;
 }
 
-/* d6：圆角方片 */
+/* d6 正方体 → 圆角方片 + 经典五点 */
 .s-6 {
   border-radius: 14rpx;
 }
+.wpip {
+  position: absolute;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.3);
+}
+.wpip.p-tl { top: 12rpx; left: 12rpx; }
+.wpip.p-tr { top: 12rpx; right: 12rpx; }
+.wpip.p-c { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.wpip.p-bl { bottom: 12rpx; left: 12rpx; }
+.wpip.p-br { bottom: 12rpx; right: 12rpx; }
 
-/* d8：菱形（容器旋转 45°，数字反向矫正） */
+/* d8 正八面体 → 上下两个三角形（菱形 + 中缝线） */
 .s-8 {
-  border-radius: 18rpx;
-  transform: rotate(45deg) scale(0.74);
+  clip-path: polygon(50% 2%, 98% 50%, 50% 98%, 2% 50%);
+  -webkit-clip-path: polygon(50% 2%, 98% 50%, 50% 98%, 2% 50%);
 }
-.s-8 .die-num {
-  transform: rotate(-45deg);
+.d8-line {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  top: 50%;
+  height: 2rpx;
+  background: rgba(255, 255, 255, 0.7);
 }
 
-/* d10：五边形 */
-.s-10 {
-  clip-path: polygon(50% 0%, 100% 38%, 81% 100%, 19% 100%, 0% 38%);
-  -webkit-clip-path: polygon(50% 0%, 100% 38%, 81% 100%, 19% 100%, 0% 38%);
+/* d10 / d100 五角偏方三八面体 → 风筝形（平顶、尖底） */
+.s-10, .s-100 {
+  clip-path: polygon(38% 0%, 62% 0%, 100% 38%, 50% 100%, 0% 38%);
+  -webkit-clip-path: polygon(38% 0%, 62% 0%, 100% 38%, 50% 100%, 0% 38%);
 }
 
-/* d12：六边形 */
+/* d12 正十二面体 → 五边形 */
 .s-12 {
+  clip-path: polygon(50% 0%, 95% 34%, 78% 96%, 22% 96%, 5% 34%);
+  -webkit-clip-path: polygon(50% 0%, 95% 34%, 78% 96%, 22% 96%, 5% 34%);
+}
+
+/* d20 正二十面体 → 六边形（面朝视角的外轮廓） */
+.s-20 {
   clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
   -webkit-clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
 }
 
-/* d100：圆形 */
-.s-100 {
-  border-radius: 50%;
+.die-num {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.35);
 }
-
-/* 多位数字号递减，保持形状内可读 */
-.s-10 .die-num, .s-12 .die-num, .s-20 .die-num {
-  font-size: 24rpx;
-}
-.s-100 .die-num {
-  font-size: 20rpx;
-}
+/* 多位数字号递减，保证形状内可读 */
+.s-4 .die-num { font-size: 26rpx; }
+.s-10 .die-num, .s-12 .die-num, .s-20 .die-num { font-size: 22rpx; }
+.s-100 .die-num { font-size: 16rpx; }
 
 /* 投掷中：CSS 点骰翻滚 */
 .rolling-die {
