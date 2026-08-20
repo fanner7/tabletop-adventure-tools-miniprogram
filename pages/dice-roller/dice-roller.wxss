@@ -208,9 +208,11 @@ page {
   box-sizing: border-box;
 }
 
-/* d6 正方体 → 圆角方片 + 数字 */
+/* d6 正方体 → 圆角方片 + 数字（方形缩小以匹配多边形的视觉面积） */
 .s-6 {
-  border-radius: 14rpx;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 13rpx;
 }
 
 /* d8 正八面体 → 上下两个三角形（菱形 + 中缝线） */
