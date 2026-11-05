@@ -117,6 +117,26 @@ page {
 }
 .char-card:active { transform: translateY(-2rpx); }
 .char-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8rpx; margin-bottom: 8rpx; }
+/* ===== 卡片布局 v2：名字独占一行 + 操作条一行（纯图标按钮） ===== */
+.char-card-name-row {
+  font-size: 30rpx; font-weight: bold; color: #3b2e1e;
+  line-height: 1.5; word-break: break-all; padding: 2rpx 0 6rpx;
+}
+.char-card-ops-row { display: flex; align-items: center; gap: 8rpx; flex-wrap: wrap; margin-bottom: 8rpx; }
+.char-card-op {
+  font-size: 26rpx; color: #6b4c2a; background: #f6f1e7;
+  border: 1px solid #e2d5bd; border-radius: 8rpx;
+  padding: 8rpx 14rpx; line-height: 1.4; flex-shrink: 0;
+}
+.char-card-op.off { opacity: 0.45; }
+/* 删除与其余按钮同款形态，仅文字用红色系区分 */
+.char-card-op.danger { color: #c0392b; }
+/* 折叠卡：在原网格位置缩小变扁（不跨行、不影响排布顺序） */
+.char-card.collapsed .char-card-name-row { padding-bottom: 0; }
+.char-card.collapsed .char-card-ops-row { margin-bottom: 0; }
+/* 拖拽中：fixed 跟手（节点不销毁，touch 事件流不断） */
+.char-card.dragging { box-shadow: 0 10px 28px rgba(0,0,0,0.28); transform: scale(1.04); opacity: 0.94; }
+.drag-ghost { visibility: hidden; }
 .char-card-name {
   font-size: 28rpx; font-weight: bold; color: #3b2e1e;
   flex: 1; min-width: 0;
@@ -136,17 +156,18 @@ page {
 
 /* NPC 卡片快捷统计（HP/MP 加减） */
 .npc-card-stats { display: flex; flex-wrap: wrap; gap: 18rpx; margin-top: 10rpx; }
-.npc-card-stat { display: flex; align-items: center; gap: 8rpx; }
-.npc-card-stat-label { font-size: 20rpx; color: #8b7355; font-weight: bold; }
+.npc-card-stat { display: flex; align-items: center; gap: 10rpx; }
+.npc-card-stat-label { font-size: 22rpx; color: #8b7355; font-weight: bold; }
+/* 便捷加减按钮：横向加宽（44→68rpx）便于点按；高度不变，单组总宽 ~260rpx < 列宽，卡片不换行不变形 */
 .npc-card-stat-btn {
-  width: 44rpx; height: 44rpx; line-height: 40rpx;
-  text-align: center; border-radius: 8rpx; font-size: 30rpx; font-weight: bold;
-  box-sizing: border-box;
+  width: 68rpx; height: 44rpx; line-height: 40rpx;
+  text-align: center; border-radius: 10rpx; font-size: 34rpx; font-weight: bold;
+  box-sizing: border-box; flex-shrink: 0;
 }
 .npc-card-stat-btn.plus { border: 2rpx solid #6b4c2a; color: #6b4c2a; background: #fdfaf4; }
 .npc-card-stat-btn.minus { border: 2rpx solid #c4b8a8; color: #8b7355; background: #faf8f4; }
 .npc-card-stat-btn-active { background: #f0e8d8; }
-.npc-card-stat-val { font-size: 28rpx; font-weight: bold; color: #3b2e1e; min-width: 48rpx; text-align: center; }
+.npc-card-stat-val { font-size: 30rpx; font-weight: bold; color: #3b2e1e; min-width: 56rpx; text-align: center; }
 .npc-card-stat-val.zero { color: #c0392b; }
 
 /* NPC 攻击方式 */
@@ -174,12 +195,18 @@ page {
 /* 角色卡样式（精确复刻 coc7-gen step 5） */
 /* ================================================================== */
 
-/* swiper 容器 — 占据剩余高度 */
-.detail-swiper { height: calc(100vh - 220rpx); }
+/* 详情内容容器 — 占据顶栏之外的剩余高度（单 scroll-view 详情，见 WXML 注释） */
+.detail-viewport { height: calc(100vh - 220rpx); }
 .detail-scroll { height: 100%; }
 
 .char-sheet { background: #fff; border-radius: 16rpx; padding: 24rpx; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden; }
 .char-header { text-align: center; border-bottom: 2px solid #3b2e1e; padding-bottom: 16rpx; margin-bottom: 16rpx; }
+/* 窄条详情页卡内切换：‹ › 在角色名两侧（不放页面顶部，避开不同机型的避让区差异） */
+.char-header-nav { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 12rpx; }
+.char-name-col { display: flex; flex-direction: column; align-items: center; min-width: 0; max-width: 68%; }
+.char-name-col .char-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.char-nav-btn { font-size: 44rpx; color: #6b4c2a; padding: 0 14rpx; line-height: 1; }
+.char-nav-btn.disabled { color: #c9bda8; }
 .char-name { font-size: 36rpx; font-weight: bold; color: #3b2e1e; display: block; }
 .char-sub { font-size: 24rpx; color: #7a6b58; display: block; margin-top: 4rpx; }
 
@@ -741,6 +768,9 @@ page {
   color: #f4efe4;
 }
 
+.theme-dark .char-nav-btn.disabled { color: #3a4a62; }
+.theme-dark .char-card-op { background: #262d3c; border-color: #3a4a62; }
+.theme-dark .char-card-op.danger { color: #e07a6a; }
 .theme-dark .keeper-subtitle,
 .theme-dark .section-desc,
 .theme-dark .task-meta,
@@ -827,6 +857,9 @@ page {
 .theme-dark .btn-secondary,
 .theme-dark .btn-subtle,
 .theme-dark .back-btn,
+.theme-dark .char-nav-btn,
+.theme-dark .char-card-name-row,
+.theme-dark .char-card-op,
 .theme-dark .char-card-edit,
 .theme-dark .npc-stat-btn.plus,
 .theme-dark .tools-section-title text,
@@ -1180,6 +1213,19 @@ page {
 }
 .desk-mode-btn:active { background: rgba(255, 255, 255, 0.16); }
 .desk-mode-btn.on { background: #d5a95c; color: #171207; font-weight: bold; }
+/* 悬浮栏折叠：展开态右侧收拢钮 + 折叠态右下角小圆钮 */
+.desk-mode-collapse {
+  color: #cdd6e0; font-size: 13px; padding: 4px 6px; margin-left: 2px;
+  border-left: 1px solid rgba(255, 255, 255, 0.18); cursor: pointer;
+}
+.desk-mode-collapse:active { background: rgba(255, 255, 255, 0.16); }
+.desk-modebar.collapsed { padding: 0; background: transparent; box-shadow: none; }
+.desk-modebar-mini {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(24, 28, 34, 0.88); box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  color: #dbe3ec; font-size: 15px; line-height: 34px; text-align: center;
+}
+.desk-modebar-mini:active { background: rgba(24, 28, 34, 0.96); }
 
 /* ---- 模块化工作台骨架 ---- */
 .desk-dash { display: flex; flex-direction: column; min-height: 100%; }
@@ -1221,16 +1267,17 @@ page {
 .layout-wide .char-card-name { font-size: 14px; line-height: 1.35; }
 .layout-wide .char-card-occ { font-size: 11px; margin-bottom: 5px; }
 .layout-wide .char-card-visible { font-size: 14px; }
+.layout-wide .char-card-op { font-size: 13px; padding: 4px 10px; }
 .layout-wide .char-card-edit { font-size: 15px; }
 .layout-wide .char-card-delete { font-size: 16px; }
 .layout-wide .wound-badge { font-size: 10px; padding: 1px 7px; border-radius: 6px; }
 .layout-wide .npc-card-stats { gap: 10px; margin-top: 6px; }
-.layout-wide .npc-card-stat { gap: 4px; }
-.layout-wide .npc-card-stat-label { font-size: 11px; }
+.layout-wide .npc-card-stat { gap: 5px; }
+.layout-wide .npc-card-stat-label { font-size: 12px; }
 .layout-wide .npc-card-stat-btn {
-  width: 25px; height: 25px; line-height: 21px; font-size: 15px; border-radius: 6px;
+  width: 34px; height: 26px; line-height: 22px; font-size: 17px; border-radius: 6px;
 }
-.layout-wide .npc-card-stat-val { font-size: 15px; min-width: 24px; }
+.layout-wide .npc-card-stat-val { font-size: 16px; min-width: 30px; }
 .layout-wide .npc-card-attack { font-size: 12px; margin-top: 5px; }
 .layout-wide .npc-card-attack-hint { font-size: 10px; padding: 1px 7px; border-radius: 8px; }
 

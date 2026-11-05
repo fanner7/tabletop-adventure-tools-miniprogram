@@ -1,6 +1,9 @@
 // tools/test/run.js — 测试入口：node tools/test/run.js（或 npm test）
 const testFiles = [
   './coc7-gen.test.js',
+  './keeper-qr.test.js',
+  './char-codec.test.js',
+  './dice-st.test.js',
   './data-integrity.test.js',
   './static.test.js',
 ];

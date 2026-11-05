@@ -650,6 +650,8 @@ page {
 /* ===== STEP 5: 角色卡预览 ===== */
 .char-sheet { background: #fff; border-radius: 16rpx; padding: 24rpx; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
 .char-header { text-align: center; border-bottom: 2px solid #3b2e1e; padding-bottom: 16rpx; margin-bottom: 16rpx; }
+.char-name-row { display: flex; align-items: center; justify-content: center; gap: 10rpx; }
+.char-rename-btn { font-size: 26rpx; color: #8b7355; padding: 6rpx 10rpx; }
 .char-name { font-size: 36rpx; font-weight: bold; color: #3b2e1e; display: block; }
 .char-sub { font-size: 24rpx; color: #7a6b58; display: block; margin-top: 4rpx; }
 .char-section-title { font-size: 28rpx; font-weight: bold; color: #6b4c2a; border-bottom: 1px solid #d4c5a9; padding-bottom: 8rpx; margin: 20rpx 0 12rpx; display: block; }
@@ -771,9 +773,11 @@ page {
 .export-options { display: flex; flex-direction: column; gap: 12rpx; margin: 16rpx 0; }
 .export-option { display: flex; align-items: center; gap: 16rpx; padding: 16rpx; background: #faf8f4; border-radius: 12rpx; border: 1px solid #e8ddd0; }
 .export-option:active { background: #f5ead5; }
-.export-option-icon { font-size: 36rpx; }
+.export-option-icon { font-size: 40rpx; }
 .export-option-text { flex: 1; display: flex; flex-direction: column; gap: 4rpx; }
+.export-option-title-row { display: flex; align-items: center; gap: 10rpx; flex-wrap: wrap; }
 .export-option-title { font-size: 28rpx; font-weight: bold; color: #3b2e1e; }
+.export-option-tag { font-size: 18rpx; line-height: 1.5; padding: 0 10rpx; border-radius: 999rpx; background: #efe6d8; color: #7a5c33; border: 1rpx solid #e0d2be; font-weight: normal; }
 .export-option-desc { font-size: 22rpx; color: #8b7355; line-height: 1.4; }
 
 .weapon-picker-meta { font-size:20rpx; color:#8b7355; }
@@ -925,6 +929,11 @@ page {
 .theme-dark .attr-hero {
   background: linear-gradient(135deg, #243044 0%, #33445f 55%, #3f5575 100%);
   box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.30);
+}
+.theme-dark .export-option-tag {
+  background: #2c3a52;
+  color: #c9b98a;
+  border-color: #3f5575;
 }
 .theme-dark .attr-hero-title { color: #f4efe4; }
 .theme-dark .attr-hero-bar { background: rgba(255, 255, 255, 0.15); }
@@ -1138,7 +1147,6 @@ page {
 .theme-dark .occupation-search,
 .theme-dark .char-textarea,
 .theme-dark .age-mod-input,
-.theme-dark .play-stat-input,
 .theme-dark .dice-btn,
 .theme-dark .dice-btn-clear {
   color: #e6edf7;
@@ -1243,6 +1251,14 @@ page {
 .theme-dark .stat-pm:active { background: #2d3b52; }
 .theme-dark .san-preset.on { background: #d5a95c; border-color: #d5a95c; color: #111827; }
 .theme-dark .san-result-line { color: #f4efe4; }
+
+/* 游玩模式状态值输入框：深底亮字（此前仅改文字颜色，白底+亮字看不清） */
+.theme-dark .play-stat-input {
+  background: #161d2b;
+  border-color: #3a4a62;
+  color: #f4efe4;
+}
+.theme-dark .play-stat-input:focus { border-color: #d5a95c; }
 .theme-dark .san-warn { color: #ff7b72; }
 .theme-dark .san-day-line { color: #8fa0b8; }
 .theme-dark .san-day-warn { color: #ff7b72; }

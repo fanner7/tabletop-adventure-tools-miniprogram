@@ -61,41 +61,47 @@
       <button class="btn-subtle btn-third" bindtap="openNpcTemplates">🧟 NPC 模板库</button>
     </view>
 
-    <!-- 调查员卡片 -->
+    <!-- 调查员卡片（⠿ 拖拽排序，▾/▸ 折叠；折叠卡在原位缩小变扁，不影响排布） -->
     <text class="section-title">👤 调查员 ({{currentTask.players.length}})</text>
-    <view class="card-grid" wx:if="{{currentTask.players.length > 0}}">
-      <view class="char-card player-card {{p.visible === false ? 'hidden' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2) ? 'low' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'dead' : ''}}"
-            wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi"
-            bindtap="viewPlayer" data-index="{{pi}}">
-        <view class="char-card-header">
-          <text class="char-card-name">{{p.charInfo.name || '未命名'}}</text>
-          <view class="char-card-actions">
-            <text class="char-card-visible {{p.visible === false ? 'off' : ''}}" catchtap="togglePlayerVisible" data-index="{{pi}}">{{p.visible === false ? '🙈' : '👁'}}</text>
-            <text class="char-card-delete" catchtap="deletePlayer" data-index="{{pi}}">✕</text>
+    <view class="card-grid card-grid-players" wx:if="{{currentTask.players.length > 0}}">
+      <block wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi">
+        <!-- 拖拽占位：被拖卡 fixed 脱离流后撑住原槽位（卡片节点不销毁，保证 touch 事件流不断） -->
+        <view class="drag-ghost" wx:if="{{dragCard && dragCard.list === 'players' && dragCard.from === pi}}" style="height:{{dragH}}px;"></view>
+        <view class="char-card player-card {{p.visible === false ? 'hidden' : ''}} {{p.collapsed ? 'collapsed' : ''}} {{dragCard && dragCard.list === 'players' && dragCard.from === pi ? 'dragging' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2) ? 'low' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'dead' : ''}}"
+              style="{{dragCard && dragCard.list === 'players' && dragCard.from === pi ? 'position:fixed;left:' + dragX + 'px;top:' + dragY + 'px;width:' + dragW + 'px;z-index:99;' : ''}}"
+              bindtap="viewPlayer" data-index="{{pi}}">
+          <text class="char-card-name-row">{{p.charInfo.name || '未命名'}}</text>
+          <view class="char-card-ops-row">
+            <text class="char-card-op" catchtouchstart="onCardDragStart" catchtouchmove="onCardDragMove" catchtouchend="onCardDragEnd" catchtap="onCardDragStart" data-list="players" data-index="{{pi}}">⠿</text>
+            <text class="char-card-op" catchtap="togglePlayerFold" data-index="{{pi}}">{{p.collapsed ? '▸' : '▾'}}</text>
+            <text class="char-card-op {{p.visible === false ? 'off' : ''}}" catchtap="togglePlayerVisible" data-index="{{pi}}">{{p.visible === false ? '🙈' : '👁'}}</text>
+            <text class="char-card-op danger" catchtap="deletePlayer" data-index="{{pi}}">✕</text>
           </view>
+          <block wx:if="{{!p.collapsed}}">
+            <text class="char-card-occ">{{p.selectedOcc ? p.selectedOcc.name : '未知职业'}}<text class="wound-badge" wx:if="{{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2)}}">重伤</text></text>
+            <view class="npc-card-stats">
+              <view class="npc-card-stat" wx:if="{{p.derived.hp !== undefined}}">
+                <text class="npc-card-stat-label">HP</text>
+                <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="hp" data-delta="-1">−</view>
+                <text class="npc-card-stat-val {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-hp' ? 'flash' : ''}}">{{p.playHP !== undefined ? p.playHP : p.derived.hp}}</text>
+                <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="hp" data-delta="1">+</view>
+              </view>
+              <view class="npc-card-stat" wx:if="{{p.derived.san !== undefined}}">
+                <text class="npc-card-stat-label">SAN</text>
+                <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="san" data-delta="-1">−</view>
+                <text class="npc-card-stat-val {{(p.playSAN !== undefined ? p.playSAN : p.derived.san) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-san' ? 'flash' : ''}}">{{p.playSAN !== undefined ? p.playSAN : p.derived.san}}</text>
+                <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="san" data-delta="1">+</view>
+              </view>
+              <view class="npc-card-stat" wx:if="{{p.derived.mp !== undefined}}">
+                <text class="npc-card-stat-label">MP</text>
+                <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="mp" data-delta="-1">−</view>
+                <text class="npc-card-stat-val {{(p.playMP !== undefined ? p.playMP : p.derived.mp) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-mp' ? 'flash' : ''}}">{{p.playMP !== undefined ? p.playMP : p.derived.mp}}</text>
+                <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="mp" data-delta="1">+</view>
+              </view>
+            </view>
+          </block>
         </view>
-        <text class="char-card-occ">{{p.selectedOcc ? p.selectedOcc.name : '未知职业'}}<text class="wound-badge" wx:if="{{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2)}}">重伤</text></text>
-        <view class="npc-card-stats">
-          <view class="npc-card-stat" wx:if="{{p.derived.hp !== undefined}}">
-            <text class="npc-card-stat-label">HP</text>
-            <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="hp" data-delta="-1">−</view>
-            <text class="npc-card-stat-val {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-hp' ? 'flash' : ''}}">{{p.playHP !== undefined ? p.playHP : p.derived.hp}}</text>
-            <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="hp" data-delta="1">+</view>
-          </view>
-          <view class="npc-card-stat" wx:if="{{p.derived.san !== undefined}}">
-            <text class="npc-card-stat-label">SAN</text>
-            <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="san" data-delta="-1">−</view>
-            <text class="npc-card-stat-val {{(p.playSAN !== undefined ? p.playSAN : p.derived.san) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-san' ? 'flash' : ''}}">{{p.playSAN !== undefined ? p.playSAN : p.derived.san}}</text>
-            <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="san" data-delta="1">+</view>
-          </view>
-          <view class="npc-card-stat" wx:if="{{p.derived.mp !== undefined}}">
-            <text class="npc-card-stat-label">MP</text>
-            <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="mp" data-delta="-1">−</view>
-            <text class="npc-card-stat-val {{(p.playMP !== undefined ? p.playMP : p.derived.mp) <= 0 ? 'zero' : ''}} {{flashKey === 'p' + pi + '-mp' ? 'flash' : ''}}">{{p.playMP !== undefined ? p.playMP : p.derived.mp}}</text>
-            <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="mp" data-delta="1">+</view>
-          </view>
-        </view>
-      </view>
+      </block>
     </view>
     <view class="empty-state" wx:if="{{currentTask.players.length === 0}}">
       <text class="empty-state-icon">👤</text>
@@ -103,40 +109,46 @@
       <text class="empty-state-desc">从上方「导入调查员」粘贴角色卡，或手动新建</text>
     </view>
 
-    <!-- NPC 卡片 -->
+    <!-- NPC 卡片（⠿ 拖拽排序，▾/▸ 折叠；折叠卡在原位缩小变扁，不影响排布） -->
     <text class="section-title" style="margin-top:32rpx;">👺 NPC ({{currentTask.npcs.length}})</text>
-    <view class="card-grid" wx:if="{{currentTask.npcs.length > 0}}">
-      <view class="char-card npc-card {{n.visible === false ? 'hidden' : ''}} {{n.hp !== null && n.hp !== undefined && n.hp <= 0 ? 'dead' : ''}}" wx:for="{{currentTask.npcs}}" wx:for-item="n" wx:for-index="ni" wx:key="id"
-            bindtap="viewNPC" data-index="{{ni}}">
-        <view class="char-card-header">
-          <text class="char-card-name">{{n.name}}</text>
-          <view class="char-card-actions">
-            <text class="char-card-visible {{n.visible === false ? 'off' : ''}}" catchtap="toggleNpcVisible" data-index="{{ni}}">{{n.visible === false ? '🙈' : '👁'}}</text>
-            <text class="char-card-edit" catchtap="editNPC" data-index="{{ni}}">✎</text>
-            <text class="char-card-delete" catchtap="deleteNPC" data-index="{{ni}}">✕</text>
+    <view class="card-grid card-grid-npcs" wx:if="{{currentTask.npcs.length > 0}}">
+      <block wx:for="{{currentTask.npcs}}" wx:for-item="n" wx:for-index="ni" wx:key="id">
+        <view class="drag-ghost" wx:if="{{dragCard && dragCard.list === 'npcs' && dragCard.from === ni}}" style="height:{{dragH}}px;"></view>
+        <view class="char-card npc-card {{n.visible === false ? 'hidden' : ''}} {{n.collapsed ? 'collapsed' : ''}} {{dragCard && dragCard.list === 'npcs' && dragCard.from === ni ? 'dragging' : ''}} {{n.hp !== null && n.hp !== undefined && n.hp <= 0 ? 'dead' : ''}}"
+              style="{{dragCard && dragCard.list === 'npcs' && dragCard.from === ni ? 'position:fixed;left:' + dragX + 'px;top:' + dragY + 'px;width:' + dragW + 'px;z-index:99;' : ''}}"
+              bindtap="viewNPC" data-index="{{ni}}">
+          <text class="char-card-name-row">{{n.name}}</text>
+          <view class="char-card-ops-row">
+            <text class="char-card-op" catchtouchstart="onCardDragStart" catchtouchmove="onCardDragMove" catchtouchend="onCardDragEnd" catchtap="onCardDragStart" data-list="npcs" data-index="{{ni}}">⠿</text>
+            <text class="char-card-op" catchtap="toggleNpcFold" data-index="{{ni}}">{{n.collapsed ? '▸' : '▾'}}</text>
+            <text class="char-card-op {{n.visible === false ? 'off' : ''}}" catchtap="toggleNpcVisible" data-index="{{ni}}">{{n.visible === false ? '🙈' : '👁'}}</text>
+            <text class="char-card-op" catchtap="editNPC" data-index="{{ni}}">✎</text>
+            <text class="char-card-op danger" catchtap="deleteNPC" data-index="{{ni}}">✕</text>
           </view>
-        </view>
-        <text class="char-card-occ">NPC<text wx:if="{{n.dex !== null}}"> · DEX {{n.dex}}</text><text wx:if="{{n.db}}"> · DB {{n.db}}</text><text wx:if="{{n.armor && n.armor !== '0'}}"> · 🛡️ {{n.armor}}</text></text>
+          <block wx:if="{{!n.collapsed}}">
+            <text class="char-card-occ">NPC<text wx:if="{{n.dex !== null}}"> · DEX {{n.dex}}</text><text wx:if="{{n.db}}"> · DB {{n.db}}</text><text wx:if="{{n.armor && n.armor !== '0'}}"> · 🛡️ {{n.armor}}</text></text>
 
-        <!-- HP / MP 快捷加减 -->
-        <view class="npc-card-stats" wx:if="{{(n.hp !== null && n.hp !== undefined) || (n.mp !== null && n.mp !== undefined)}}">
-          <view class="npc-card-stat" wx:if="{{n.hp !== null && n.hp !== undefined}}">
-            <text class="npc-card-stat-label">HP</text>
-            <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="hp" data-delta="-1">−</view>
-            <text class="npc-card-stat-val {{n.hp <= 0 ? 'zero' : ''}} {{flashKey === 'n' + ni + '-hp' ? 'flash' : ''}}">{{n.hp}}</text>
-            <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="hp" data-delta="1">+</view>
-          </view>
-          <view class="npc-card-stat" wx:if="{{n.mp !== null && n.mp !== undefined}}">
-            <text class="npc-card-stat-label">MP</text>
-            <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="mp" data-delta="-1">−</view>
-            <text class="npc-card-stat-val {{n.mp <= 0 ? 'zero' : ''}} {{flashKey === 'n' + ni + '-mp' ? 'flash' : ''}}">{{n.mp}}</text>
-            <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="mp" data-delta="1">+</view>
-          </view>
-        </view>
+            <!-- HP / MP 快捷加减 -->
+            <view class="npc-card-stats" wx:if="{{(n.hp !== null && n.hp !== undefined) || (n.mp !== null && n.mp !== undefined)}}">
+              <view class="npc-card-stat" wx:if="{{n.hp !== null && n.hp !== undefined}}">
+                <text class="npc-card-stat-label">HP</text>
+                <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="hp" data-delta="-1">−</view>
+                <text class="npc-card-stat-val {{n.hp <= 0 ? 'zero' : ''}} {{flashKey === 'n' + ni + '-hp' ? 'flash' : ''}}">{{n.hp}}</text>
+                <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="hp" data-delta="1">+</view>
+              </view>
+              <view class="npc-card-stat" wx:if="{{n.mp !== null && n.mp !== undefined}}">
+                <text class="npc-card-stat-label">MP</text>
+                <view class="npc-card-stat-btn minus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="mp" data-delta="-1">−</view>
+                <text class="npc-card-stat-val {{n.mp <= 0 ? 'zero' : ''}} {{flashKey === 'n' + ni + '-mp' ? 'flash' : ''}}">{{n.mp}}</text>
+                <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustNpcCardStat" data-index="{{ni}}" data-key="mp" data-delta="1">+</view>
+              </view>
+            </view>
 
-        <!-- 攻击方式（未填写则不显示；点按检定） -->
-        <view class="npc-card-attack" wx:if="{{n.attack}}" catchtap="openAttackCheck" data-attack="{{n.attack}}" data-index="{{ni}}">⚔️ {{n.attackDisplay || n.attack}} <text class="npc-card-attack-hint">检定 ›</text></view>
-      </view>
+            <!-- 攻击方式（未填写则不显示；点按检定） -->
+            <view class="npc-card-attack" wx:if="{{n.attack}}" catchtap="openAttackCheck" data-attack="{{n.attack}}" data-index="{{ni}}">⚔️ {{n.attackDisplay || n.attack}} <text class="npc-card-attack-hint">检定 ›</text></view>
+          </block>
+        </view>
+      </block>
     </view>
     <view class="empty-state" wx:if="{{currentTask.npcs.length === 0}}">
       <text class="empty-state-icon">👺</text>
@@ -219,16 +231,18 @@
           </view>
           <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.players}}">
             <view class="card-grid" wx:if="{{currentTask.players.length > 0}}">
-              <view class="char-card player-card {{p.visible === false ? 'hidden' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2) ? 'low' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'dead' : ''}}"
+              <view class="char-card player-card {{p.visible === false ? 'hidden' : ''}} {{p.collapsed ? 'collapsed' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2) ? 'low' : ''}} {{(p.playHP !== undefined ? p.playHP : p.derived.hp) <= 0 ? 'dead' : ''}}"
                     wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi"
                     bindtap="viewPlayer" data-index="{{pi}}">
                 <view class="char-card-header">
                   <text class="char-card-name">{{p.charInfo.name || '未命名'}}</text>
                   <view class="char-card-actions">
+                    <text class="char-card-fold {{p.collapsed ? 'on' : ''}}" catchtap="togglePlayerFold" data-index="{{pi}}">{{p.collapsed ? '▸' : '▾'}}</text>
                     <text class="char-card-visible {{p.visible === false ? 'off' : ''}}" catchtap="togglePlayerVisible" data-index="{{pi}}">{{p.visible === false ? '🙈' : '👁'}}</text>
                     <text class="char-card-delete" catchtap="deletePlayer" data-index="{{pi}}">✕</text>
                   </view>
                 </view>
+                <block wx:if="{{!p.collapsed}}">
                 <text class="char-card-occ">{{p.selectedOcc ? p.selectedOcc.name : '未知职业'}}<text class="wound-badge" wx:if="{{(p.playHP !== undefined ? p.playHP : p.derived.hp) > 0 && (p.playHP !== undefined ? p.playHP : p.derived.hp) <= ((p.derived.hp || 0) / 2)}}">重伤</text></text>
                 <view class="npc-card-stats">
                   <view class="npc-card-stat" wx:if="{{p.derived.hp !== undefined}}">
@@ -250,6 +264,7 @@
                     <view class="npc-card-stat-btn plus" hover-class="npc-card-stat-btn-active" catchtap="adjustPlayerStat" data-index="{{pi}}" data-key="mp" data-delta="1">+</view>
                   </view>
                 </view>
+                </block>
               </view>
             </view>
             <view class="empty-state" wx:if="{{currentTask.players.length === 0}}">
@@ -274,16 +289,18 @@
           </view>
           <view class="desk-panel-body" wx:if="{{!deskToolCollapsed.npcs}}">
             <view class="card-grid" wx:if="{{currentTask.npcs.length > 0}}">
-              <view class="char-card npc-card {{n.visible === false ? 'hidden' : ''}} {{n.hp !== null && n.hp !== undefined && n.hp <= 0 ? 'dead' : ''}}" wx:for="{{currentTask.npcs}}" wx:for-item="n" wx:for-index="ni" wx:key="id"
+              <view class="char-card npc-card {{n.visible === false ? 'hidden' : ''}} {{n.collapsed ? 'collapsed' : ''}} {{n.hp !== null && n.hp !== undefined && n.hp <= 0 ? 'dead' : ''}}" wx:for="{{currentTask.npcs}}" wx:for-item="n" wx:for-index="ni" wx:key="id"
                     bindtap="viewNPC" data-index="{{ni}}">
                 <view class="char-card-header">
                   <text class="char-card-name">{{n.name}}</text>
                   <view class="char-card-actions">
+                    <text class="char-card-fold {{n.collapsed ? 'on' : ''}}" catchtap="toggleNpcFold" data-index="{{ni}}">{{n.collapsed ? '▸' : '▾'}}</text>
                     <text class="char-card-visible {{n.visible === false ? 'off' : ''}}" catchtap="toggleNpcVisible" data-index="{{ni}}">{{n.visible === false ? '🙈' : '👁'}}</text>
                     <text class="char-card-edit" catchtap="editNPC" data-index="{{ni}}">✎</text>
                     <text class="char-card-delete" catchtap="deleteNPC" data-index="{{ni}}">✕</text>
                   </view>
                 </view>
+                <block wx:if="{{!n.collapsed}}">
                 <text class="char-card-occ">NPC<text wx:if="{{n.dex !== null}}"> · DEX {{n.dex}}</text><text wx:if="{{n.db}}"> · DB {{n.db}}</text><text wx:if="{{n.armor && n.armor !== '0'}}"> · 🛡️ {{n.armor}}</text></text>
 
                 <view class="npc-card-stats" wx:if="{{(n.hp !== null && n.hp !== undefined) || (n.mp !== null && n.mp !== undefined)}}">
@@ -302,6 +319,7 @@
                 </view>
 
                 <view class="npc-card-attack" wx:if="{{n.attack}}" catchtap="openAttackCheck" data-attack="{{n.attack}}" data-index="{{ni}}">⚔️ {{n.attackDisplay || n.attack}} <text class="npc-card-attack-hint">检定 ›</text></view>
+                </block>
               </view>
             </view>
             <view class="empty-state" wx:if="{{currentTask.npcs.length === 0}}">
@@ -716,7 +734,9 @@
   </block>
 
   <!-- ================================================================== -->
-  <!-- 调查员详情视图（窄条：swiper） -->
+  <!-- 调查员详情视图（窄条：单 scroll-view + ‹ › 切换） -->
+  <!-- 说明：swiper 原生组件与内嵌 scroll-view 纵向滚动存在手势竞争（iOS 尤其明显），
+       改为单 scroll-view 条件渲染当前玩家，滚动路径纯粹，切换用顶部按钮 -->
   <!-- ================================================================== -->
   <block wx:if="{{viewingType === 'player' && viewingData && !isWide}}">
     <view class="task-header-bar">
@@ -724,13 +744,17 @@
       <text class="task-header-name">{{viewingData.charInfo.name || '未命名'}}</text>
       <text class="task-header-count">{{viewingData.selectedOcc ? viewingData.selectedOcc.name : ''}} · {{viewingIndex + 1}}/{{currentTask.players.length}}</text>
     </view>
-    <swiper class="detail-swiper" current="{{viewingIndex}}" bindchange="onPlayerSwiperChange" duration="300" circular indicator-dots="{{false}}">
-      <swiper-item wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi">
-        <scroll-view class="detail-scroll" scroll-y enhanced show-scrollbar="{{false}}" bindscroll="onDetailScroll" scroll-top="{{detailScrollTop}}" scroll-with-animation="{{false}}">
-          <view class="char-sheet">
-            <view class="char-header">
-              <text class="char-name">{{p.charInfo.name || '未命名'}}</text>
-              <text class="char-sub">{{p.selectedOcc ? p.selectedOcc.name + ' | ' + p.charInfo.era : p.charInfo.era}}</text>
+    <view class="detail-viewport">
+      <scroll-view class="detail-scroll" scroll-y enhanced show-scrollbar="{{false}}" bindscroll="onDetailScroll" scroll-top="{{detailScrollTop}}" scroll-with-animation="{{false}}">
+        <block wx:for="{{currentTask.players}}" wx:for-item="p" wx:for-index="pi" wx:key="pi">
+          <view class="char-sheet" wx:if="{{pi === viewingIndex}}">
+            <view class="char-header char-header-nav">
+              <text class="char-nav-btn {{viewingIndex <= 0 ? 'disabled' : ''}}" catchtap="prevPlayer">‹</text>
+              <view class="char-name-col">
+                <text class="char-name">{{p.charInfo.name || '未命名'}}</text>
+                <text class="char-sub">{{p.selectedOcc ? p.selectedOcc.name + ' | ' + p.charInfo.era : p.charInfo.era}}</text>
+              </view>
+              <text class="char-nav-btn {{viewingIndex >= currentTask.players.length - 1 ? 'disabled' : ''}}" catchtap="nextPlayer">›</text>
             </view>
             <text class="char-section-title">📊 属性</text>
             <view class="char-attr-row">
@@ -784,9 +808,9 @@
             <block wx:if="{{p.charCompanions}}"><text class="char-section-title">👥 调查员伙伴</text><view class="char-text-block"><text>{{p.charCompanions}}</text></view></block>
             <block wx:if="{{p.charAssets}}"><text class="char-section-title">💰 资产</text><view class="char-text-block"><text>{{p.charAssets}}</text></view></block>
           </view>
-        </scroll-view>
-      </swiper-item>
-    </swiper>
+        </block>
+      </scroll-view>
+    </view>
   </block>
 
   <!-- ================================================================== -->
@@ -1534,13 +1558,27 @@
     <view class="dialog-handle"></view>
     <text class="dialog-title">📥 导入调查员</text>
     <view class="dialog-body-padded">
-      <text class="dialog-hint" style="display:block;margin-bottom:8px;">推荐方式：在「🐙 COC 调查员工具」中创建/加载角色卡，点导出后复制，再回到这里粘贴导入（完整属性、技能、武器）。</text>
+      <text class="dialog-hint" style="display:block;margin-bottom:8px;">推荐方式：在「🐙 COC 调查员工具」生成分享卡片（右下角内嵌角色二维码），扫码即可导入属性/技能/武器；完整数据仍可复制 JSON 粘贴导入。</text>
       <view class="task-io-options">
+        <view class="task-io-option" bindtap="scanQrImport">
+          <text class="task-io-icon">📷</text>
+          <view class="task-io-text">
+            <text class="task-io-title">摄像头扫码导入</text>
+            <text class="task-io-desc">直接扫描调查员手机上的分享卡片二维码</text>
+          </view>
+        </view>
+        <view class="task-io-option" bindtap="scanQrImportAlbum">
+          <text class="task-io-icon">🖼</text>
+          <view class="task-io-text">
+            <text class="task-io-title">相册二维码导入</text>
+            <text class="task-io-desc">识别相册中已保存的角色卡图片（扫码页可切相册选图）</text>
+          </view>
+        </view>
         <view class="task-io-option" bindtap="doImportPlayer">
           <text class="task-io-icon">📋</text>
           <view class="task-io-text">
             <text class="task-io-title">从剪贴板导入</text>
-            <text class="task-io-desc">读取剪贴板中的调查员 JSON 数据</text>
+            <text class="task-io-desc">读取剪贴板中的完整调查员 JSON 数据</text>
           </view>
         </view>
         <view class="task-io-option" bindtap="openNewPlayer">
@@ -1632,16 +1670,22 @@
   </view>
 
   <!-- ================================================================== -->
-  <!-- 桌面端布局模式切换栏（仅桌面平台显示） -->
+  <!-- 桌面端布局模式切换栏（仅桌面平台显示；可折叠为右下角小圆钮） -->
   <!-- ================================================================== -->
-  <view class="desk-modebar" wx:if="{{isDesktopPlatform}}">
-    <text class="desk-mode-hint">{{isWide ? '🖥 全屏' : '📱 窄条'}} · {{winWidth}}×{{winHeight}}{{vpW ? ' · VP ' + vpW + '×' + vpH : ''}}{{statusBarH ? ' · 栏' + statusBarH : ''}}{{deskTopInsetRpx > 0 ? ' · 顶' + deskTopInsetRpx + 'rpx' : ''}}</text>
-    <view class="desk-mode-btn {{layoutMode === 'auto' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="auto">自动</view>
-    <view class="desk-mode-btn {{layoutMode === 'wide' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="wide">🖥 全屏</view>
-    <view class="desk-mode-btn {{layoutMode === 'narrow' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="narrow">📱 窄条</view>
-    <view class="desk-mode-btn" bindtap="adjustTopInset" data-delta="1">顶+</view>
-    <view class="desk-mode-btn" bindtap="adjustTopInset" data-delta="-1" wx:if="{{deskTopInsetRpx > 0}}">顶−</view>
-    <view class="desk-mode-btn" bindtap="resetDeskLayout" wx:if="{{isWide}}">↺ 重置</view>
+  <view class="desk-modebar {{modebarCollapsed ? 'collapsed' : ''}}" wx:if="{{isDesktopPlatform}}">
+    <block wx:if="{{!modebarCollapsed}}">
+      <text class="desk-mode-hint">{{isWide ? '🖥 全屏' : '📱 窄条'}} · {{winWidth}}×{{winHeight}}{{vpW ? ' · VP ' + vpW + '×' + vpH : ''}}{{statusBarH ? ' · 栏' + statusBarH : ''}}{{deskTopInsetRpx > 0 ? ' · 顶' + deskTopInsetRpx + 'rpx' : ''}}</text>
+      <view class="desk-mode-btn {{layoutMode === 'auto' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="auto">自动</view>
+      <view class="desk-mode-btn {{layoutMode === 'wide' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="wide">🖥 全屏</view>
+      <view class="desk-mode-btn {{layoutMode === 'narrow' ? 'on' : ''}}" bindtap="onModeBtnTap" data-mode="narrow">📱 窄条</view>
+      <view class="desk-mode-btn" bindtap="adjustTopInset" data-delta="1">顶+</view>
+      <view class="desk-mode-btn" bindtap="adjustTopInset" data-delta="-1" wx:if="{{deskTopInsetRpx > 0}}">顶−</view>
+      <view class="desk-mode-btn" bindtap="resetDeskLayout" wx:if="{{isWide}}">↺ 重置</view>
+      <view class="desk-mode-collapse" bindtap="toggleModebar">▾</view>
+    </block>
+    <block wx:else>
+      <view class="desk-modebar-mini" bindtap="toggleModebar">🖥</view>
+    </block>
   </view>
 
 </view>

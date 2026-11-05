@@ -31,6 +31,13 @@ Page({
         url: '/pages/coc-keeper/coc-keeper'
       },
       {
+        id: 'unit-converter',
+        icon: '📏',
+        title: '英制公制换算',
+        desc: '英制（美制）单位到公制的快捷换算。',
+        url: '/pages/unit-converter/unit-converter'
+      },
+      {
         id: 'liminal-horror-gen',
         icon: '🚪',
         title: '阈限恐怖 调查员工具',

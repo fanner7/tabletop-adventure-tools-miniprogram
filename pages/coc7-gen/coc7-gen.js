@@ -21,6 +21,9 @@ var WEAPONS_1920S = require('./data/weapons').WEAPONS_1920S;
 var traits_dictionary = require('./data/traits').traits_dictionary;
 var PRESET_CHARACTERS = require('./data/presets').PRESET_CHARACTERS;
 var KEEPER_RULES = require('../coc-keeper/data/rules').RULES_SECTIONS;
+var KeeperQR = require('../../utils/keeper-qr.js');   // 分享卡片内嵌二维码（C7K2 格式）
+var CharCodec = require('../../utils/char-codec.js'); // 剪贴板角色码（C7C1 全保真紧凑格式）
+var DiceSt = require('../../utils/dice-st.js');       // 骰娘 .st 角色卡解析（海豹骰/塔塔兼容）
 
 // ---------- 武器分类 ----------
 function getWeaponCategory(w) {
@@ -1125,12 +1128,28 @@ Page({
   },
 
   // ==================== 导入调查员 ====================
+  // 三通道：旧 JSON（兼容历史导出）→ C7C1 角色码（本工具导出）→ 骰娘 .st（海豹骰/塔塔）
+  parseImportText(text) {
+    // 通道 1：旧版全量 JSON
+    try {
+      const obj = JSON.parse(text);
+      if (obj && obj.attrValues && obj.charInfo) return obj;
+    } catch (e) { /* 不是 JSON，继续下一通道 */ }
+    // 通道 2：C7C1 角色码
+    const r = CharCodec.decode(text);
+    if (r && !r.error && r.player) return r.player;
+    // 通道 3：骰娘 .st 角色卡
+    const st = DiceSt.parseSt(text);
+    if (st && !st.error && st.player) return st.player;
+    return null;
+  },
+
   importCharacter() {
     wx.getClipboardData({
       success: (res) => {
         try {
-          const charData = JSON.parse(res.data);
-          if (!charData.attrValues || !charData.charInfo) {
+          const charData = this.parseImportText(res.data);
+          if (!charData) {
             wx.showToast({ title: '剪贴板内容不是有效的调查员数据', icon: 'none' });
             return;
           }
@@ -1271,6 +1290,32 @@ Page({
 
   // ==================== STEP 2：基础信息 ====================
   onCharInfoChange(e) { this.setData({ [`charInfo.${e.currentTarget.dataset.field}`]: e.detail.value }); this.checkStep2CanNext(); this._scheduleDraft(); },
+
+  // 完成页快捷改名（不打断建卡流程；已保存角色同步更新存档；游玩模式隐藏入口并防御）
+  renameCharacter() {
+    if (this.data.playMode) return;
+    const cur = this.data.charInfo.name || '';
+    const that = this;
+    wx.showModal({
+      title: '修改调查员名称',
+      editable: true,
+      placeholderText: '输入新名称',
+      content: cur ? '当前名称：' + cur : '',
+      success: (res) => {
+        if (!res.confirm) return;
+        const name = String(res.content == null ? '' : res.content).trim();
+        if (!name) { wx.showToast({ title: '名称不能为空', icon: 'none' }); return; }
+        that.setData({ 'charInfo.name': name });
+        if (that.data.mode === 'editing') {
+          // 已保存角色：直接更新存档（persistCharacter 内部会刷新列表与 savedAt）
+          that.persistCharacter(that.buildCharacterData(true), '✅ 已改名');
+        } else {
+          that._scheduleDraft();
+          wx.showToast({ title: '✅ 已改名', icon: 'success' });
+        }
+      },
+    });
+  },
   randomMaleName() { const n = MALE_NAMES[Math.floor(Math.random() * MALE_NAMES.length)]; this.setData({ 'charInfo.name': n, 'charInfo.gender': '男', genderIndex: 0 }); this.checkStep2CanNext(); this._scheduleDraft(); },
   randomFemaleName() { const n = FEMALE_NAMES[Math.floor(Math.random() * FEMALE_NAMES.length)]; this.setData({ 'charInfo.name': n, 'charInfo.gender': '女', genderIndex: 1 }); this.checkStep2CanNext(); this._scheduleDraft(); },
   onAgeChange(e) {
@@ -1902,7 +1947,12 @@ Page({
       this._refreshSheet();
       this.setData({ step: next, maxStep: Math.max(this.data.maxStep, next) });
     } else {
-      this.setData({ step: next, canNext: false, maxStep: Math.max(this.data.maxStep, next) });
+      this.setData({
+        step: next,
+        // 顺序建卡进入职业页需先选职业；回退场景已选过职业则直接可下一步
+        canNext: next === 3 ? !!this.data.selectedOcc : false,
+        maxStep: Math.max(this.data.maxStep, next),
+      });
       if (next === 3) this.filterOccs(this.data.occSearch || '');
       if (next === 4) this.refreshSkillValidation();
     }
@@ -1985,6 +2035,9 @@ Page({
     const opts = { step: s };
     if (s === 0) {
       opts.canNext = false;
+    } else if (s === 3) {
+      // 已选过职业（回退场景）直接可下一步，避免被误判为"未选职业"而要求重选
+      opts.canNext = !!this.data.selectedOcc;
     } else {
       opts.canNext = true;
     }
@@ -2038,11 +2091,24 @@ Page({
     this.setData({ showExportDialog: !this.data.showExportDialog });
   },
 
+  // 导出弹窗内「生成分享卡片」入口：先关弹窗，再走既有的 canvas 生成流程
+  doExportShareCard() {
+    this.setData({ showExportDialog: false }, () => this.generateShareCard());
+  },
+
   doExportClipboard() {
     const charData = this.buildCharacterData(true);
+    const code = CharCodec.encode(charData);
+    // 字节数（小程序无 Buffer：用 encodeURIComponent 转义法估算 UTF-8 长度）
+    let bytes = code.length;
+    try { bytes = unescape(encodeURIComponent(code)).length; } catch (e) { /* 保持字符数估算 */ }
+    const sizeLabel = bytes < 1024 ? bytes + 'B' : (bytes / 1024).toFixed(1) + 'KB';
     wx.setClipboardData({
-      data: JSON.stringify(charData, null, 2),
-      success: () => { wx.showToast({ title: '已复制到剪贴板', icon: 'success' }); this.setData({ showExportDialog: false }); },
+      data: code,
+      success: () => {
+        wx.showToast({ title: '已复制角色码（' + sizeLabel + '）', icon: 'success' });
+        this.setData({ showExportDialog: false });
+      },
       fail: () => { wx.showToast({ title: '复制失败', icon: 'none' }); }
     });
   },
@@ -2758,14 +2824,39 @@ Page({
     const totalSkills = skillCats.reduce((n, g) => n + (g.skills ? g.skills.length : 0), 0);
     const skillRows = skillCats.reduce((n, g) => n + (g.skills && g.skills.length ? Math.ceil(g.skills.length / 2) : 0), 0);
 
-    const headerH = 300;                       // 标题 + 角色名 + 职业行
-    const attrsH = 3 * 96 + 40;                // 3 行 × 3 列属性
+    const headerH = 350;                       // 标题 + 角色名 + 职业行 + 角色信息行
+    const attrsH = 3 * 118 + 40;               // 3 行 × 3 列属性（含检定阈值行）
     const derivH = 2 * 56 + 30;                // 衍生值两行
     const skillTitleH = 64;
-    const skillH = skillCats.length * 60 + skillRows * 46 + (skillCats.length > 0 ? 10 : 0);
+    const skillH = skillCats.length * 60 + skillRows * 58 + (skillCats.length > 0 ? 10 : 0);
     const weaponH = weapons.length > 0 ? 64 + weapons.length * 44 + 12 : 0;
-    const footerH = 90;
-    const H = Math.min(headerH + attrsH + derivH + skillTitleH + skillH + weaponH + footerH, 4096);
+    const footerH = 380;                       // 底部信息区（含守密人二维码 267px）
+
+    // 背景故事：自动换行，最多展示 12 行（估算宽度：中文=字号，ASCII≈0.55×字号）
+    const BS_FONT = 28;
+    const estWidth = (text) => {
+      let w = 0;
+      for (const ch of String(text)) w += ch.charCodeAt(0) > 127 ? BS_FONT : BS_FONT * 0.55;
+      return w;
+    };
+    const backstory = (d.charBackstory || '').trim();
+    const backRows = backstory ? (() => {
+      const rows = [];
+      const maxW = W - M * 2;
+      for (const raw of backstory.split('\n')) {
+        let line = '';
+        for (const ch of raw) {
+          if (line && estWidth(line + ch) > maxW) { rows.push(line); line = ch; }
+          else line += ch;
+        }
+        rows.push(line);
+      }
+      return rows;
+    })() : [];
+    const backShown = Math.min(backRows.length, 12);
+    const backH = backRows.length ? 64 + backShown * 40 + (backRows.length > 12 ? 30 : 0) : 0;
+
+    const H = Math.min(headerH + attrsH + derivH + skillTitleH + skillH + weaponH + backH + footerH, 4096);
 
     const dpr = (wx.getWindowInfo && wx.getWindowInfo().pixelRatio) || 2;
     canvas.width = W * dpr;
@@ -2786,6 +2877,7 @@ Page({
       base: '28px "PingFang SC", "Microsoft YaHei", sans-serif',
       small: '24px "PingFang SC", "Microsoft YaHei", sans-serif',
       tiny: '20px "PingFang SC", "Microsoft YaHei", sans-serif',
+      mini: '18px "PingFang SC", "Microsoft YaHei", sans-serif',
     };
     const C = { title: '#c9a45c', main: '#e8e2d4', sub: '#9aa3b2', dim: '#6b7280' };
 
@@ -2810,11 +2902,22 @@ Page({
     ctx.fillStyle = C.sub; ctx.font = F.base;
     const occLine = fit((d.selectedOcc ? d.selectedOcc.name + ' · ' : '') + (d.charInfo.era || '') + (d.charTag ? ' · ' + d.charTag : ''), F.base, W - M * 2);
     ctx.fillText(occLine, M, y);
-    y += 54;
+    // 角色信息行：玩家名 · 性别 · 年龄（有值才显示）
+    y += 38;
+    const infoParts = [
+      d.charInfo.player ? '玩家 ' + d.charInfo.player : '',
+      d.charInfo.gender || '',
+      d.charInfo.age ? d.charInfo.age + '岁' : '',
+    ].filter(Boolean);
+    if (infoParts.length > 0) {
+      ctx.fillStyle = C.dim; ctx.font = F.tiny;
+      ctx.fillText(fit(infoParts.join(' · '), F.tiny, W - M * 2), M, y);
+    }
+    y += 44;
     ctx.fillStyle = C.dim; ctx.font = F.tiny;
     ctx.fillText('生成于 ' + new Date().toLocaleString() + ' · 桌面冒险工具集', M, y);
 
-    // 属性（3 列）
+    // 属性（3 列，含困难/极难检定阈值）
     y = headerH - 30;
     ctx.fillStyle = C.title; ctx.font = F.mid;
     ctx.fillText('属性', M, y);
@@ -2824,15 +2927,20 @@ Page({
       const col = i % 3;
       const row = Math.floor(i / 3);
       const cx = M + col * cellW;
-      const cy = y + 10 + row * 96;
+      const cy = y + 10 + row * 118;
       ctx.fillStyle = C.sub; ctx.font = F.small;
       ctx.fillText(fit(attrs[i].label, F.small, cellW - 24), cx, cy);
       ctx.fillStyle = C.main; ctx.font = F.mid;
       ctx.fillText(String(attrs[i].value), cx, cy + 52);
+      // 检定阈值：困难 = ⌊值/2⌋，极难 = ⌊值/5⌋（旧数据无 hard/extreme 时兜底计算）
+      const hard = attrs[i].hard !== undefined ? attrs[i].hard : Math.floor((attrs[i].value || 0) / 2);
+      const extreme = attrs[i].extreme !== undefined ? attrs[i].extreme : Math.floor((attrs[i].value || 0) / 5);
+      ctx.fillStyle = C.dim; ctx.font = F.mini;
+      ctx.fillText('难' + hard + ' 极' + extreme, cx, cy + 80);
     }
 
     // 衍生值（两行三列）
-    y += 3 * 96 + 30;
+    y += 3 * 118 + 30;
     ctx.fillStyle = C.title; ctx.font = F.mid;
     ctx.fillText('状态', M, y);
     y += 26;
@@ -2848,7 +2956,7 @@ Page({
       ctx.fillText(String(derivedItems[i].v), cx, cy + 38);
     }
 
-    // 技能（双栏）
+    // 技能（双栏，含困难/极难检定阈值）
     y += 2 * 56 + 30;
     ctx.fillStyle = C.title; ctx.font = F.mid;
     ctx.fillText('技能', M, y);
@@ -2861,7 +2969,7 @@ Page({
       y += 58;
       const skills = g.skills || [];
       for (let i = 0; i < skills.length; i += 2) {
-        if (y + 44 > H - footerH) break;
+        if (y + 56 > H - footerH) break;
         for (let k = 0; k < 2; k++) {
           const sk = skills[i + k];
           if (!sk) break;
@@ -2871,8 +2979,13 @@ Page({
           ctx.fillText(name, cx, y);
           ctx.fillStyle = C.sub;
           ctx.fillText(String(sk.total) + '%', cx + colW - 90, y);
+          // 检定阈值：困难 = ⌊总值/2⌋，极难 = ⌊总值/5⌋
+          const hard = sk.hard !== undefined ? sk.hard : Math.floor((sk.total || 0) / 2);
+          const extreme = sk.extreme !== undefined ? sk.extreme : Math.floor((sk.total || 0) / 5);
+          ctx.fillStyle = C.dim; ctx.font = F.mini;
+          ctx.fillText('难' + hard + ' 极' + extreme, cx, y + 24);
         }
-        y += 44;
+        y += 58;
       }
       y += 10;
     }
@@ -2894,11 +3007,39 @@ Page({
       }
     }
 
-    // 底部
+    // 背景故事（自动换行，超 12 行省略）
+    if (backRows.length > 0) {
+      y += 16;
+      ctx.fillStyle = C.title; ctx.font = F.mid;
+      ctx.fillText('背景故事', M, y);
+      y += 30;
+      for (let i = 0; i < backShown; i++) {
+        if (y + 36 > H - footerH) break;
+        ctx.fillStyle = C.main; ctx.font = F.base;
+        ctx.fillText(backRows[i], M, y);
+        y += 40;
+      }
+      if (backRows.length > backShown) {
+        ctx.fillStyle = C.dim; ctx.font = F.tiny;
+        ctx.fillText('……', M, y);
+        y += 30;
+      }
+    }
+
+    // 底部：左侧标语 + 右侧守密人导入二维码（C7K2 格式，v16-Q，267px，3px/模块）
     ctx.fillStyle = '#1f232b';
     ctx.fillRect(0, H - footerH, W, footerH);
     ctx.fillStyle = C.dim; ctx.font = F.tiny;
-    ctx.fillText('在黑暗与疯狂之间，保留一张清晰的卡。', M, H - footerH / 2 + 8);
+    ctx.fillText('在黑暗与疯狂之间，保留一张清晰的卡。', M, H - footerH + 56);
+    ctx.fillText('角色数据已内嵌二维码 · 守密人可扫码导入', M, H - footerH + 92);
+    const qrSize = 267;
+    const qx = W - M - qrSize;
+    const qy = H - footerH + 36;
+    KeeperQR.drawKeeperQR(ctx, KeeperQR.encodeKeeperQR(this.buildCharacterData(true)), qx, qy, qrSize);
+    ctx.fillStyle = C.sub; ctx.font = F.tiny;
+    ctx.textAlign = 'center';
+    ctx.fillText('扫码导入守密人', qx + qrSize / 2, qy + qrSize + 34);
+    ctx.textAlign = 'left';
 
     // 导出图片
     wx.canvasToTempFilePath({

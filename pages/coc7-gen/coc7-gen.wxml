@@ -323,7 +323,7 @@
     </view>
 
     <view class="char-sheet {{playMode ? 'play-sheet' : ''}}">
-      <view class="char-header"><text class="char-name">{{charInfo.name || '未命名'}}</text><text class="char-sub">{{selectedOcc ? selectedOcc.name + ' | ' + charInfo.era : charInfo.era}}</text></view>
+      <view class="char-header"><view class="char-name-row"><text class="char-name">{{charInfo.name || '未命名'}}</text><text class="char-rename-btn" wx:if="{{!playMode}}" catchtap="renameCharacter">✏️</text></view><text class="char-sub">{{selectedOcc ? selectedOcc.name + ' | ' + charInfo.era : charInfo.era}}</text></view>
 
       <text class="char-section-title">📊 属性 {{playMode ? '(点击检定)' : ''}}</text>
       <view class="char-attr-row">
@@ -506,9 +506,6 @@
         <button class="btn btn-secondary" bindtap="togglePlayMode">🎮 游玩模式</button>
       </view>
       <view class="btn-row">
-        <button class="btn btn-secondary" bindtap="generateShareCard">🖼 分享卡片</button>
-      </view>
-      <view class="btn-row">
         <button class="btn btn-secondary" bindtap="goToStep" data-step="4">✏️ 编辑</button>
         <button class="btn btn-secondary" bindtap="goHome">🏠 返回创建页面</button>
       </view>
@@ -574,26 +571,46 @@
   <view class="dialog-sheet export-dialog {{showExportDialog ? 'active' : ''}}">
     <view class="dialog-handle"></view>
     <text class="dialog-title">📤 导出角色</text>
+    <text class="dialog-sub">选择导出格式：数据型用于备份/交换与建档，图片/文本用于展示与 AI 跑团</text>
     <view class="export-options">
       <view class="export-option" bindtap="doExportClipboard">
         <text class="export-option-icon">📋</text>
         <view class="export-option-text">
-          <text class="export-option-title">导出到剪贴板</text>
-          <text class="export-option-desc">复制完整角色数据 JSON，可用于备份或导入其他工具</text>
+          <view class="export-option-title-row">
+            <text class="export-option-title">复制角色码</text>
+            <text class="export-option-tag">备份 · 交换</text>
+          </view>
+          <text class="export-option-desc">无损紧凑数据格式（约 1/10 体积），粘贴到本工具或守密人即可导入，适合存档与跨工具交换</text>
+        </view>
+      </view>
+      <view class="export-option" bindtap="doExportShareCard">
+        <text class="export-option-icon">🖼️</text>
+        <view class="export-option-text">
+          <view class="export-option-title-row">
+            <text class="export-option-title">生成分享卡片</text>
+            <text class="export-option-tag">发群展示 · 扫码导入</text>
+          </view>
+          <text class="export-option-desc">生成角色卡图片，右下角内嵌数据二维码，守密人扫码即可导入，适合群里展示角色</text>
         </view>
       </view>
       <view class="export-option" bindtap="doExportDice">
         <text class="export-option-icon">🎲</text>
         <view class="export-option-text">
-          <text class="export-option-title">导出到骰娘</text>
-          <text class="export-option-desc">生成海豹骰 .st 导入文本（塔塔等骰娘兼容），复制后粘贴到骰娘聊天即可</text>
+          <view class="export-option-title-row">
+            <text class="export-option-title">导出到骰娘</text>
+            <text class="export-option-tag">海豹骰 · 塔塔</text>
+          </view>
+          <text class="export-option-desc">生成 .st 建档文本，粘贴到海豹骰/塔塔等骰娘聊天即可建档投骰</text>
         </view>
       </view>
       <view class="export-option" bindtap="doExportText">
         <text class="export-option-icon">📄</text>
         <view class="export-option-text">
-          <text class="export-option-title">导出文本角色卡</text>
-          <text class="export-option-desc">生成可读文本（属性/技能/武器/背景），适合贴群聊或打印</text>
+          <view class="export-option-title-row">
+            <text class="export-option-title">AI 跑团文本卡</text>
+            <text class="export-option-tag">AI 跑团</text>
+          </view>
+          <text class="export-option-desc">纯文字角色卡（无数据格式），主要供 AI 跑团/文字冒险识别角色，也可贴群展示</text>
         </view>
       </view>
     </view>

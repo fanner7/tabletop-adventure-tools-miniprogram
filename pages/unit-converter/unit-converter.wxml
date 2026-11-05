@@ -1,0 +1,67 @@
+<!-- pages/unit-converter/unit-converter.wxml — 英制→公制 快捷换算 -->
+<view class="page theme-{{theme}}">
+
+  <!-- ===== 顶部输入区（始终固定可见） ===== -->
+  <view class="input-bar">
+    <view class="input-wrap">
+      <text class="input-prefix">#</text>
+      <input
+        class="num-input"
+        type="digit"
+        placeholder="输入英制数值，如 6、30、100"
+        placeholder-style="color:{{theme === 'dark' ? '#768398' : '#b6aa98'}}"
+        value="{{value}}"
+        bindinput="onInput"
+        confirm-type="done"
+      />
+      <text class="input-clear" wx:if="{{value}}" bindtap="onClear">✕</text>
+    </view>
+    <input
+      class="filter-input"
+      placeholder="过滤单位（可选，如 ft、磅、米）"
+      placeholder-style="color:{{theme === 'dark' ? '#768398' : '#b6aa98'}}"
+      value="{{keyword}}"
+      bindinput="onKeyword"
+    />
+  </view>
+
+  <!-- ===== 换算结果列表 ===== -->
+  <scroll-view class="result-list" scroll-y enhanced show-scrollbar="{{false}}">
+
+    <block wx:if="{{rows.length === 0}}">
+      <view class="empty-hint">没有匹配的单位</view>
+    </block>
+
+    <view class="group" wx:for="{{rows}}" wx:for-item="g" wx:key="group">
+      <view class="group-head" bindtap="onToggleGroup" data-group="{{g.group}}" hover-class="group-head-hover">
+        <text class="group-title">{{g.group}}</text>
+        <text class="group-chevron {{g.collapsed ? 'collapsed' : ''}}">▾</text>
+      </view>
+
+      <view class="group-body {{g.collapsed ? 'collapsed' : ''}}">
+        <view class="row {{u.selected ? 'selected' : ''}}"
+          wx:for="{{g.units}}" wx:for-item="u" wx:key="id"
+          bindtap="onToggleSelect"
+          data-id="{{u.id}}"
+          hover-class="row-hover"
+        >
+          <view class="row-mark">
+            <view class="mark-dot"></view>
+          </view>
+          <view class="row-left">
+            <text class="row-from">{{u.inputText}}</text>
+            <text class="row-en">{{u.en}}</text>
+          </view>
+          <text class="row-arrow">=</text>
+          <view class="row-right">
+            <text class="row-to">{{u.numText || '—'}}</text>
+            <text class="row-to-unit">{{u.to}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="foot-note">点击分组标题可折叠/展开；点击单位行可做"专注标记"（再点取消）。</view>
+  </scroll-view>
+
+</view>

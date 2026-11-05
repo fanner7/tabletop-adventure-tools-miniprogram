@@ -1,5 +1,8 @@
 // pages/coc-keeper/coc-keeper.js — COC 守密人助手
 const STORAGE_KEY = 'coc_keeper_tasks';
+var KeeperQR = require('../../utils/keeper-qr.js');     // 调查员二维码解码（C7K2 格式）
+var CharCodec = require('../../utils/char-codec.js');   // 剪贴板角色码解码（C7C1 格式）
+var DiceSt = require('../../utils/dice-st.js');         // 骰娘 .st 角色卡解析（海豹骰/塔塔兼容）
 
 // ========== 桌面端大屏布局 ==========
 // 宽屏判定阈值（CSS px）：桌面平台且窗口不小于该尺寸时自动进入"全屏布局"
@@ -83,6 +86,9 @@ Page({
     viewingData: null,
     viewingIndex: -1,
     detailScrollTop: 0,
+    // 卡片拖拽排序状态（dragCard 非空 = 拖拽中；from 为当前被拖卡下标）
+    dragCard: null,
+    dragX: 0, dragY: 0, dragW: 0, dragH: 0,
     showCreateTask: false,
     createTaskName: '',
     showCombatDialog: false,
@@ -189,6 +195,7 @@ Page({
     deskGridH: 0,                // 工作台总高度 px
     deskReady: false,            // 首次排布完成前隐藏模块，避免闪烁
     deskTopInsetRpx: 0,          // PC 端顶部补偿（rpx，随窗口宽度等比；可手动微调）
+    modebarCollapsed: false,     // 右下角悬浮栏折叠状态（PC 端诊断/模式切换条）
     statusBarH: 0,               // 系统报告的顶部栏高度（诊断用）
     vpW: 0,                      // selectViewport 实测视口宽（诊断用）
     vpH: 0,                      // selectViewport 实测视口高（诊断用）
@@ -292,6 +299,7 @@ Page({
     // 顶部补偿：PC 端 statusBarHeight 恒为 0（微信不报告窗口装饰高度），无法自动检测，
     // 由用户通过「顶+ / 顶−」一次性微调并记忆；rpx 单位随窗口宽度等比，各尺寸下保持一致。
     var inset = (typeof saved.topInset === 'number' && saved.topInset >= 0 && saved.topInset <= 240) ? saved.topInset : 0;
+    var modebarCollapsed = saved.modebarCollapsed === true;
 
     this.setData({
       isDesktopPlatform: isPC || platform === 'devtools',
@@ -301,7 +309,8 @@ Page({
       layoutMode: mode,
       deskToolOrder: order,
       deskToolCollapsed: collapsed,
-      deskTopInsetRpx: inset
+      deskTopInsetRpx: inset,
+      modebarCollapsed: modebarCollapsed
     });
     this._applyLayout();
   },
@@ -420,9 +429,16 @@ Page({
         mode: this.data.layoutMode,
         toolOrder: this.data.deskToolOrder,
         collapsed: this.data.deskToolCollapsed,
-        topInset: this.data.deskTopInsetRpx
+        topInset: this.data.deskTopInsetRpx,
+        modebarCollapsed: this.data.modebarCollapsed
       });
     } catch (e) { /* 存储失败不影响使用 */ }
+  },
+
+  // 右下角悬浮栏折叠/展开（PC 端；状态随布局配置持久化）
+  toggleModebar() {
+    this.setData({ modebarCollapsed: !this.data.modebarCollapsed });
+    this._persistLayout();
   },
 
   // PC 端顶部补偿微调（rpx：随窗口宽度等比缩放，保证任何窗口大小下补偿一致）
@@ -748,31 +764,83 @@ Page({
     });
   },
 
+  // 校验并导入一个调查员对象（剪贴板 / 二维码共用）。成功返回 true
+  importPlayerObject(data) {
+    if (!data || !data.attrValues || !data.charInfo) return false;
+    var that = this;
+    var tasks = that.data.tasks;
+    var task = tasks.find(function (t) { return t.id === that.data.currentTaskId; });
+    if (!task) return false;
+    var name = data.charInfo.name || '未命名';
+    if (task.players.find(function (p) { return p.charInfo && p.charInfo.name === name; })) {
+      wx.showToast({ title: '已存在同名调查员「' + name + '」', icon: 'none' }); return false;
+    }
+    task.players.push(data);
+    that.saveTasks(tasks);
+    that.setData({ currentTask: task });
+    wx.showToast({ title: '✅ 已导入「' + name + '」', icon: 'success' });
+    return true;
+  },
+
   doImportPlayer() {
     var that = this;
     wx.getClipboardData({
       success: function (res) {
-        try {
-          var data = JSON.parse(res.data);
-          if (!data.attrValues || !data.charInfo) {
-            wx.showToast({ title: '剪贴板内容不是有效的调查员数据', icon: 'none' }); return;
-          }
-          var tasks = that.data.tasks;
-          var task = tasks.find(function (t) { return t.id === that.data.currentTaskId; });
-          if (!task) return;
-          var name = data.charInfo.name || '未命名';
-          if (task.players.find(function (p) { return p.charInfo && p.charInfo.name === name; })) {
-            wx.showToast({ title: '已存在同名调查员「' + name + '」', icon: 'none' }); return;
-          }
-          task.players.push(data);
-          that.saveTasks(tasks);
-          that.setData({ currentTask: task, showImportPlayerDialog: false });
-          wx.showToast({ title: '✅ 已导入「' + name + '」', icon: 'success' });
-        } catch (e) {
-          wx.showToast({ title: '数据解析失败，请检查剪贴板', icon: 'none' });
+        var data = null;
+        // 通道 1：旧版全量 JSON（兼容历史导出）
+        try { data = JSON.parse(res.data); } catch (e) { data = null; }
+        if (!data || !data.attrValues || !data.charInfo) {
+          // 通道 2：C7C1 剪贴板角色码（调查员工具当前导出格式）
+          var r = CharCodec.decode(res.data || '');
+          if (r && !r.error && r.player) data = r.player;
+        }
+        if (!data || !data.attrValues || !data.charInfo) {
+          // 通道 3：骰娘 .st 角色卡（海豹骰/塔塔等）
+          var st = DiceSt.parseSt(res.data || '');
+          if (st && !st.error && st.player) data = st.player;
+        }
+        if (!data || !data.attrValues || !data.charInfo) {
+          wx.showToast({ title: '剪贴板内容不是有效的调查员数据', icon: 'none' }); return;
+        }
+        if (that.importPlayerObject(data)) {
+          that.setData({ showImportPlayerDialog: false });
         }
       },
       fail: function () { wx.showToast({ title: '读取剪贴板失败，请先复制调查员数据', icon: 'none' }); }
+    });
+  },
+
+  // ==================== 二维码导入调查员（分享卡右下角 C7K2 码） ====================
+  scanQrImport() { this._scanQrImport(true); },          // 摄像头直扫
+  scanQrImportAlbum() { this._scanQrImport(false); },    // 扫码页（可切相册选图识别）
+  _scanQrImport(onlyFromCamera) {
+    var that = this;
+    wx.scanCode({
+      scanType: ['qrCode'],
+      onlyFromCamera: onlyFromCamera,
+      success: function (res) {
+        var r = KeeperQR.decodeKeeperQR(res.result || '');
+        if (r.error) {
+          var msg = r.error === 'CRC' ? '二维码读取不完整，请重试'
+            : r.error === 'TABLE' ? '角色卡版本较新，请更新小程序后重试'
+            : r.error === 'VERSION' ? '不支持的二维码版本，请更新小程序后重试'
+            : '不是有效的调查员二维码';
+          wx.showToast({ title: msg, icon: 'none', duration: 2000 });
+          return;
+        }
+        if (!that.importPlayerObject(r.player)) return;
+        wx.showModal({
+          title: '✅ 已导入「' + (r.player.charInfo.name || '未命名') + '」',
+          content: '继续扫码导入下一位调查员？',
+          confirmText: '继续',
+          cancelText: '完成',
+          success: function (m) {
+            if (m.confirm) that._scanQrImport(onlyFromCamera);
+            else that.setData({ showImportPlayerDialog: false });
+          },
+        });
+      },
+      fail: function () { /* 用户取消扫码：静默 */ },
     });
   },
 
@@ -893,6 +961,8 @@ Page({
   // ==================== 详情查看 ====================
   viewPlayer(e) {
     var index = e.currentTarget.dataset.index;
+    this._scrollPos = this._scrollPos || {};
+    this._scrollPos[index] = 0;
     this.setData({
       viewingType: 'player',
       viewingData: this.data.currentTask.players[index],
@@ -917,15 +987,27 @@ Page({
   },
 
   closeNpcDetail() { this.setData({ showNpcDetail: false }); },
-  onPlayerSwiperChange(e) {
-    var index = e.detail.current;
-    this.setData({ viewingIndex: index, viewingData: this.data.currentTask.players[index] });
+
+  // 详情页 ‹ › 切换玩家（方案 C：无 swiper，纯按钮切换）
+  prevPlayer() { this._switchPlayer(this.data.viewingIndex - 1); },
+  nextPlayer() { this._switchPlayer(this.data.viewingIndex + 1); },
+  _switchPlayer(index) {
+    var players = this.data.currentTask && this.data.currentTask.players;
+    if (!players || index < 0 || index >= players.length) return;
+    this._scrollPos = this._scrollPos || {};
+    this.setData({
+      viewingIndex: index,
+      viewingData: players[index],
+      detailScrollTop: this._scrollPos[index] || 0,
+    });
   },
-  onNPCSwiperChange(e) {
-    var index = e.detail.current;
-    this.setData({ viewingIndex: index, viewingData: this.data.currentTask.npcs[index] });
+
+  // 滚动位置只记录到实例属性（不 setData）：
+  // 滚动事件高频触发，若回写 scroll-top 会形成 setData 反馈环导致滚动卡顿（iOS 尤其明显）
+  onDetailScroll(e) {
+    this._scrollPos = this._scrollPos || {};
+    this._scrollPos[this.data.viewingIndex] = e.detail.scrollTop;
   },
-  onDetailScroll(e) { this.setData({ detailScrollTop: e.detail.scrollTop }); },
   closeDetail() {
     this._closeAllDialogs();
     this.setData({ viewingType: '', viewingData: null, viewingIndex: -1, detailScrollTop: 0 });
@@ -1097,6 +1179,116 @@ Page({
     var patch = {};
     patch['currentTask.npcs[' + index + '].visible'] = task.npcs[index].visible;
     this.setData(patch);
+  },
+
+  // ==================== 卡片折叠（玩家/NPC，折叠后只剩名字） ====================
+  togglePlayerFold(e) {
+    var index = e.currentTarget.dataset.index;
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
+    if (!task || !task.players[index]) return;
+    task.players[index].collapsed = !task.players[index].collapsed;
+    this.saveTasks(tasks);
+    var patch = {};
+    patch['currentTask.players[' + index + '].collapsed'] = task.players[index].collapsed;
+    this.setData(patch);
+  },
+
+  toggleNpcFold(e) {
+    var index = e.currentTarget.dataset.index;
+    var tasks = this.data.tasks;
+    var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
+    if (!task || !task.npcs[index]) return;
+    task.npcs[index].collapsed = !task.npcs[index].collapsed;
+    this.saveTasks(tasks);
+    var patch = {};
+    patch['currentTask.npcs[' + index + '].collapsed'] = task.npcs[index].collapsed;
+    this.setData(patch);
+  },
+
+  // ==================== 卡片拖拽排序（窄条版，玩家/NPC 通用） ====================
+  // 手柄 catchtouchstart → 异步取卡片槽位矩形 → catchtouchmove 节流交换数组 +
+  // 被拖卡 fixed 跟手 → catchtouchend 落定并持久化
+  onCardDragStart(e) {
+    var list = e.currentTarget.dataset.list;
+    var index = e.currentTarget.dataset.index;
+    var t = e.touches && e.touches[0];
+    if (!t || (list !== 'players' && list !== 'npcs')) return;
+    var that = this;
+    this._dragList = list;
+    this._dragFrom = index;
+    this._dragReady = false;
+    this._dragLastMove = 0;
+    this._dragLastTarget = index;
+    this._dragStartTouch = t;
+    this.createSelectorQuery()
+      .selectAll('.card-grid-' + list + ' .char-card')
+      .boundingClientRect(function (rects) {
+        if (that._dragList !== list) return;   // 拖拽已结束
+        if (!rects || !rects.length) return;
+        var r = rects[index];
+        if (!r || r.width <= 0) return;
+        that._dragRects = rects;
+        that._dragReady = true;
+        that._dragDX = that._dragStartTouch.clientX - r.left;
+        that._dragDY = that._dragStartTouch.clientY - r.top;
+        that.setData({
+          dragCard: { list: list, from: index },
+          dragX: r.left, dragY: r.top, dragW: r.width, dragH: r.height,
+        });
+      })
+      .exec();
+  },
+
+  onCardDragMove(e) {
+    if (!this._dragReady || !this.data.dragCard) return;
+    var t = e.touches && e.touches[0];
+    if (!t) return;
+    var now = Date.now();
+    if (now - this._dragLastMove < 30) return;   // 节流：30ms 一次 setData
+    this._dragLastMove = now;
+    var rects = this._dragRects;
+    var from = this._dragFrom;
+    // 手指位置 → 目标槽位
+    var target = from;
+    for (var i = 0; i < rects.length; i++) {
+      var r = rects[i];
+      if (r.width <= 0 || r.height <= 0) continue;
+      if (t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom) {
+        target = i; break;
+      }
+    }
+    var patch = {};
+    if (target !== from) {
+      var list = this._dragList;
+      // 必须同步改 tasks 数组里的 task：saveTasks 会回写 currentTask，
+      // 若只改 currentTask.players，松手后视图会被旧顺序覆盖（顺序"还原"的根因）
+      var tasks = this.data.tasks;
+      var task = tasks.find(function (t) { return t.id === this.data.currentTaskId; }.bind(this));
+      if (!task) return;
+      var arr = (list === 'players' ? task.players : task.npcs).slice();
+      // 插入语义（拖到哪插到哪，其余卡顺移，符合拖拽排序直觉）
+      var card = arr.splice(from, 1)[0];
+      arr.splice(target, 0, card);
+      if (list === 'players') task.players = arr; else task.npcs = arr;
+      patch['currentTask.' + list] = arr;
+      this._dragFrom = target;
+      patch['dragCard.from'] = target;
+    }
+    patch.dragX = t.clientX - this._dragDX;
+    patch.dragY = t.clientY - this._dragDY;
+    this.setData(patch);
+  },
+
+  onCardDragEnd() {
+    if (!this.data.dragCard) return;
+    this._dragReady = false;
+    this._dragRects = null;
+    this._dragList = null;
+    this._dragFrom = null;
+    this._dragLastMove = 0;
+    this.setData({ dragCard: null });
+    this.saveTasks(this.data.tasks);   // 排序结果持久化
   },
 
   // ==================== NPC 编辑 / 手动新建 ====================
